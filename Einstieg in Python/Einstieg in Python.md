@@ -969,3 +969,147 @@ berechnung(5,2,3)
 ```
 
 Es werden genau drei Parameter erwartet, bei beiden Aufrufen werden auch drei Werte übermittelt. Wie Sie am Ergebnis erkennen, ist die Reihenfolge der Parameter wichtig.
+* Beim ersten Aufruf erhält x den Wert 2, y den Wert 3 und z den Wert 5. Das Ergebnis der Rechnung: (2+3) * 5 = 25.
+* Beim zweiten Aufruf werden dieselben Zahlen übergeben, aber in anderer Reihenfolge. Es erbit sich die Rechnung: (5 + 2) * 3 = 21.
+
+#### 3.7.4 Funktionen mit Rückgabewert
+
+Funktionen werden häufig zur Berechnung von Ergebnissen eingestezt. Zu diesem Zweck können Funktionen ihre Ergebnisse als sogenannte Rückgabewerte zurückliefern.
+
+Im Unterschied zu vielen anderen Programmiersprachen können Funktionen in Python mehr als einen Rückgabewert liefern, siehe Abschnitt 5.7.4, Mehrere Rückgabewerte. In diesem Abschnitt werden aber zunächst nur Funktionen betractet werden, die enau einen Rückgabewert zur Verfügung stellen.
+
+Im folgendne beispiel wird eine Funktion, die einen Rückgabewert liefert, auf verschienene Arten vom Hauptprogramm aus aufgerufen.
+
+```py
+# Definition der Funktion
+def mittelwert(x,y):
+    ergebnis = (x+y)/2
+    return ergebnis
+
+# Hauptprogramm
+c = mittelwert(3,9)
+print("Mittelwert:", c)
+x = 5
+print("Mittelwert:", mittelwert(x,4))
+```
+```
+Mittelwert: 6,0
+Mittelwert: 4,5
+```
+
+Innerhalb der Funktion wird zunächst das Ergebnis berechnet. Es wir anschließend mithilfe der Anweisung return an die aufrugende Stelle zurückgeliefert. Die Anweisung return beendet außerdem unmittelbar den Ablauf der Funktion.
+
+Beim ersten Aufruf wird der Rückgabewert in der Variablen c zwischengespeichert. Es kann im weiteren Verlauf des Programms an beliebiger Stelle verwendet werden.
+
+Beim Zweifen Aufruf eschen zwei Dinge gleichzeitig: Die Funktion mittelwert() wird aufgerufen und liefer ein Ergebnis. Außerdem wird dieses Ergebnis unmittelbar ausgegeben.
+
+#### 3.7.5 Spiel, Version mit Funktionen
+
+Das Programm mit dem Kopfrechenspiel umfasst nun zwei Funktionen, die erste Funktion dient zur Ermittlung der Aufgabe, die zweite zur Bewertung der Eingabe.
+
+Die Ausgabe hat sich nicht geändert.
+
+In der Funktion *aufgabe()* werdne die beiden Zufallszahlen ermittelt, und die Aufgabe wird auf dem Bildschirm ausgegeben. Ußerdem wird das Ergebnis der Aufgabe als Rückgabewert an das Hauptprogramm zurückgeliefert.
+
+Der Funktion *kommentar()* werden zwei Zahlen als parameter übermittelt: die Lösung des Anwenders und das richtige Ergebnis. Innerhalb der Funktion wird die eingegebene Lösung untersucht, und ein entsprechender Kommentar wird ausgegeben. Die Funktion hat keinen Rückgabewert.
+
+### 3.8 Das fertige Spiel
+
+Zum Abschluss des Programmierkurses erweitern wir das Kopfrechenspiel noch etwas - dabei nutzen wir die Programmiermittel, die Ihnen inzwischen zur Verfügung stehen.
+
+Die Erweiterungen:
+* Es werden bis zu zehn Aufgaben nacheinander gestellt. der Benutzer kann dabei die Anzahl selbst bestimmen.
+
+* Zusätzlich zur Addition kommen die weiteren Grundrechenarten zum Einsatz: Subtraktion, Multiplikation und Division.
+
+* Die Bereiche, aus denen die zufälligen Zahlen gewält werden, hängen von der Rechenart ab. ei der Multiplikation wird z. B. mit kleineren Zahlen gerechnet als bei der Addition.
+
+* Der Benutzer hat maximal drei Versuche pro Aufgabe.
+
+* Die Anzahl der richtig gelösten Aufgaben wird ermittelt.
+
+Die einzelnen Abschnitte des Programms sind nummeriert. Diese Nummern finden sich in der Erkläuterung wieder. In späteren Kapiteln kommen weitere Ergänzungen hinzu. Es folgt das Programm:
+
+```py
+# 1 Zufallsgenerator
+import random
+random.seed()
+
+# 2 Anzahl Aufgaben
+anzahl = -1
+while anzahl<0 or anzahl >10:
+    try:
+        print("Wie veile Aufgaben (1 bis 10):")
+        anzahl = int(input())
+    except:
+        continue
+
+# 3 Anzahl richtige Ergebnisse
+richtig = 0
+
+# 4 Schelife mit Anzahl Aufgaben
+for aufgabe in range(1, anzahl+1):
+
+    # 5 Operator Auswahl
+    opzahl = random.randint(1,4)
+
+    # 6 Operandenauswahl
+    if opzahl == 1:
+        a = random.randint(-10,30)
+        b = random.randint(-10,30)
+        op = "+"
+        c = a + b
+    
+    if opzahl == 2:
+        a = random.randint(1,30)
+        b = random.randint(1,30)
+        op = "-"
+        c = a - b
+    
+    if opzahl = 3:
+        a = random.randint(1,10)
+        b = random.randint(1,10)
+        op = "*"
+        c = a * b
+
+    # 7 Sonderfall Divison
+
+    if opzahl = 4:
+        b = random.randint(1,10)
+        c = random.randint(1,10)
+        op = "/"
+        a = c * b
+    
+    # 8 Aufgabenstellung
+
+    print("Aufgabe", aufgabe, "von" annzahl, ":", a, op, b)
+
+    # 9 Schelife mit 3 Versuchen
+
+    for versuch in range(1,4):
+        
+        # 10 Eingabe
+        try:
+            print("Bitte eine Zahl eingeben:")
+            zahl = int(input())
+        except:
+            # Falls Umwandlung nicht erfolgreich
+            print("Sie haben keine Zahl eingegeben")
+            # Schleife unmittelbar fortsetzen
+            continue
+
+        # 11 Kommentar
+
+        if zahl == c:
+            print(zahl, "ist richtig!")
+            richtig = richtig + 1
+            break
+        else:
+            print(zahl, "ist falsch!")
+
+    # 12 Richtiges Ergebnis der Aufgabe
+    print("Ergebnis:", c)
+
+# 13 Anzahl richtige Ergebnisse
+print ("Richtig:" richtig, "von", anzahl)
+```

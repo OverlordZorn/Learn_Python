@@ -1,44 +1,81 @@
-# RNG
+# 1 Zufallsgenerator
 import random
 random.seed()
 
-# Werte und Berechnung
-
-a = random.randint(1,10)
-b = random.randint(1,10)
-c = a + b
-print("Die Aufgabe:", a, "+", b)
-
-# Schleife und Anzahl initialisieren
-zahl = c+1
-versuch = 0
-
-# Schleife mit while
-while zahl != c:
-    # Anzahl Versuche
-    versuch = versuch + 1
-
-    # Eingabe
-    print("Bitte eine ganze Zahl eingeben:")
-    z = input()
-
-    # Versuch der Umwandlung
-
+# 2 Anzahl Aufgaben
+anzahl = -1
+while anzahl<0 or anzahl >10:
     try:
-        zahl = int(z)
+        print("Wie veile Aufgaben (1 bis 10):")
+        anzahl = int(input())
     except:
-        # Falls umwandlung nicht erfolgreich
-        print("Sie haben keine ganze Zahl eingegeben")
-        # Schleife unmittelbar fortsetzen
         continue
 
-    # Verzweigung
-    if zahl == c:
-        print(zahl, "ist richtig!")
-    else:
-        print(zahl, "ist falsch!")
+# 3 Anzahl richtige Ergebnisse
+richtig = 0
 
-# Anzahl Versuche
+# 4 Schelife mit Anzahl Aufgaben
+for aufgabe in range(1, anzahl+1):
 
-print("Ergebnis:", c)
-print("Anzahl Versuche:", versuch)
+    # 5 Operator Auswahl
+    opzahl = random.randint(1,4)
+
+    # 6 Operandenauswahl
+    if opzahl == 1:
+        a = random.randint(-10,30)
+        b = random.randint(-10,30)
+        op = "+"
+        c = a + b
+    
+    if opzahl == 2:
+        a = random.randint(1,30)
+        b = random.randint(1,30)
+        op = "-"
+        c = a - b
+    
+    if opzahl == 3:
+        a = random.randint(1,10)
+        b = random.randint(1,10)
+        op = "*"
+        c = a * b
+
+    # 7 Sonderfall Divison
+
+    if opzahl == 4:
+        b = random.randint(1,10)
+        c = random.randint(1,10)
+        op = "/"
+        a = c * b
+    
+    # 8 Aufgabenstellung
+
+    print("Aufgabe", aufgabe, "von", anzahl, ":", a, op, b)
+
+    # 9 Schelife mit 3 Versuchen
+
+    for versuch in range(1,4):
+        
+        # 10 Eingabe
+        try:
+            print("Bitte eine Zahl eingeben:")
+            zahl = int(input())
+        except:
+            # Falls Umwandlung nicht erfolgreich
+            print("Sie haben keine Zahl eingegeben")
+            # Schleife unmittelbar fortsetzen
+            continue
+
+        # 11 Kommentar
+
+        if zahl == c:
+            print(zahl, "ist richtig!")
+            richtig = richtig + 1
+            break
+        else:
+            print(zahl, "ist falsch!")
+
+    # 12 Richtiges Ergebnis der Aufgabe
+    print("Ergebnis:", c)
+
+# 13 Anzahl richtige Ergebnisse
+print ("Richtig:", richtig, "von", anzahl)
