@@ -57,6 +57,10 @@
       - [3.6.3 Eingabe wiederholen](#363-eingabe-wiederholen)
       - [3.6.4 Exkurs: Schleifenfortsetzung mit `continue`](#364-exkurs-schleifenfortsetzung-mit-continue)
       - [3.6.5 Spiel, Version mit Ausnahmebedingung](#365-spiel-version-mit-ausnahmebedingung)
+    - [3.7 Funktionen und Module](#37-funktionen-und-module)
+      - [3.7.1 Einfache Funktionen](#371-einfache-funktionen)
+      - [3.7.2 Funktionen mit einem Parameter](#372-funktionen-mit-einem-parameter)
+      - [3.7.3 Funktionen mit mehreren Parametern](#373-funktionen-mit-mehreren-parametern)
 
 
 ## 1 Einführung
@@ -871,3 +875,97 @@ Die Schleife durchläuft alle Zahlen von 1 bis 6. Alle diese Zahlen werden auch 
 
 #### 3.6.5 Spiel, Version mit Ausnahmebedingung
 
+Die Ausnahmebehandlung und die Anweisung `continue` werden nun auch im KOpfrechenspiel eingesetzt. Damit kann ein Eingabefehler abgefangen und das Programm reulär fortgesetzt werden.
+
+Die umwandlung der Eingabe steht in einem `try-except` Block. Falls die Umwandlung aufgrund einer falschen Eingabe nicht gelingt, erscheint eine entsprechende Meldung. 
+Der Rest der Schleife wird übergangen, und die nächste Eingabe wird unmittelbar angefordert.
+
+### 3.7 Funktionen und Module
+
+Die Modularisierung, also die Zerlegung eines Programms in selbst geschriebene Funktionen, bietet besonders bei größeren Programmen unübersehbare Vorteile:
+* Programmteile, die mehrmals benötigt werden, müssen nur einmal definiert werden.
+* Nützliche Programmteile können in mehrerenProgrammen verwendet werden.
+* Umfangreiche Programme können in übersichtliche Teile zerlegt werden.
+* Pflege und Wartung von Programmen werden erleichtert.
+* Der Programmcode ist für den Programmierer selbst (zu einem späteren Zeitpunkt) und für andere Programmierer leichter zu verstehen.
+
+Neben den selbst geschriebenen Funktionen gibt es in Python, wie in jeder anderen Programmiersprache auch, zahlreiche vordefinierte Funktionen, die dem Entwickler viel Arbeit abnehmen können. Diese Funktionen sind entweder fest eingebaut oder über die Einbindung spezieller Module verfügbar.
+
+Als Beispiel für eine fest eingebaute Funktion wird bereits `input()` eingesetzt. Jede Funktion hat eine spezielle Aufgabe. So hält bspw. die Funktion input() das Programm an und nimmt eine Eingabe entgegen.
+
+Wie viele (aber nicht alle) Funktionen hat `input()` einen sogenannten Rückgabewert, liefert also ein Ergebnis an die Stelle des Programms zurück, von der sie aufgerufen wird: die eingegebene Zeichenkette.
+
+Es folgen zwei Hinweise für fortschrittene Leser, die bereits mit einer anderen Programmiersprache gearbeitet haben:
+* Funktionen können in Python nicht überladen werden. Falls Sie eine Funktion mehrfach definieren, gegebenenfalls mit unterschiedlichen Parametern, so gilt nur die jeweils letzt Definition.
+* Seit Python 3.5 können Sie mithilfe eines Typenhinweises angeben, welche Datentyp der Rückgabewert einer Funktion haben soll. Beachten Sie dazu bitte Abschnitt 3.2.6.
+
+#### 3.7.1 Einfache Funktionen
+
+Einfache Funktionen führen bei Aufruf stets die gleiche Aktion aus. Im folgenden Beispiel führt jeder Aufruf der funktion `stern()` dazu, dass eine optische Trennung auf dem Bildschirm ausgegeben wird:
+
+```py
+# Definition der Funktion
+def stern():
+    print("----------------")
+    print("*** Trennung ***")
+    print("----------------")
+
+# Hauptprogramm
+x = 12
+y = 5
+
+stern()
+print("x =", x, ", y =", y)
+stern()
+print("x + y =", x + y)
+stern()
+print("x - y =", x - y)
+stern()
+```
+
+Im oberen Teil des Programms wird die Funktion stern() definiert. Nach der Anweisun `def` folgt der Name der Funktion (stern), anschließend folgen runde Klammern und der bereits bekannte Doppelunkt. Innerhalb der Klammern könnten Werte an die Funktion übergeben werden. Dazu mehr im Abschnitt 3.7.2 Parameter, und in Abschnitt 3.7.3 Mehrere Parameter. Die nachfolgenden eingerückten ANweisungen werden jedes Mal durchgeführt, wenn die Funktion aufgerufen wird.
+
+Eine Funktion wird zunächst nur definiert und nicht durchgeführt. Sie steht sozusagen zum späteren Gebrauch bereit. Im unteren Teil der Datei beginnt das eigentliche Programm. Es werden einige Rechenoperationen mit zwei Variablen durchgeführt. Mithilfe der Funktion `stern()` werden die Ausgabezeilen otpsich voneinander getrennt. Sie wird insgesamt viermal aufgerufen. Nach Bearbeitung der Funktion fährt das Programm jedes Mal mit der Anweisung fort, die dem Aufruf der Funktion folgt.
+
+Eine Funktion wird aufgerufen, indem Sie ihren Namen, gefolgt von runden Klammern, notieren. Falls Sie Informationen an die Funktion übergeben möchten, notieren Sie sie innerhalb der runden Klammern.
+
+Den Namen einer Funktion können Sie weitgehend frei wählen - es gelten die gleichen Regeln wie bei den Namen von Variablen, siehe auch Abschnitt 2.1.5, `Variablen und Zuweisung`: Der Name kann aus den Buchstaben a-z, A-Z, 0-9 und _ bestehen. Er darf nicht mit einer Ziffer beginnen und keinem reservierten Wort in Python entsprechen.
+
+#### 3.7.2 Funktionen mit einem Parameter
+
+Bei einem Aufruf können auch Informationen An Funktionen übermittelt werden, sogenannte `Parameter`. Diese Informationen können innerhalb der Funktion ausgewertet werden und führen gegebenenfalls bei jedem Aufruf zu unterschiedlichen Ergebnissen. Ein Beispiel:
+
+```py
+# Definition der Funktion
+def quadrat(x):
+    q = x * x
+    print("Zahl: " x, "Quadrat:", q)
+
+# Hauptprogramm
+quadrat(4.5)
+a = 3
+quadrat(a)
+quadrat(a*2)
+``` 
+
+Die Definition der Funktion quadrat() enthält eine Variable innerhalb der KLammern. Beim Aufruf wird ein Wert an die Funktion übermittelt und dieser Variablen zugwiesen.
+
+**Hinweis**
+ Die Funktion erwartet genau einen Wert. Sie darf also nicht ohne einen Wert oder mit mehr als einen Wert aufgerufen werden, sonst bricht das Programm mit einer Fehlermeldung ab.
+
+#### 3.7.3 Funktionen mit mehreren Parametern
+
+Eine Funktion kann noch vielseitiger werden, wenn Sie ihr mehrere Parameter übermitteln. Dabei ist auf die übereinstimmende Anzahl und die richte Reihenfolge der Parameter zu achten. Ein Beispiel:
+
+```py
+# Definition der Funktion
+def berechnung(x,y,z):
+    ergebnis = (x+y) * z
+    print:("Ergebnis:", ergebnis)
+
+# Hauptprogramm
+berechnung(2,3,5)
+berechnung(5,2,3)
+```
+
+Es werden genau drei Parameter erwartet, bei beiden Aufrufen werden auch drei Werte übermittelt. Wie Sie am Ergebnis erkennen, ist die Reihenfolge der Parameter wichtig.

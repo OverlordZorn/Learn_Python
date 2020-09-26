@@ -1,36 +1,44 @@
-# Import Modul Random
+# RNG
 import random
-random.seed() #Zufallsgenerator initialisieren
+random.seed()
 
-# Zufallswerte 
-a = random.randint(1,100)
-b = random.randint(1,100)
+# Werte und Berechnung
+
+a = random.randint(1,10)
+b = random.randint(1,10)
 c = a + b
 print("Die Aufgabe:", a, "+", b)
 
-# Schleife mit while
-
-# Schleife initialisieren
-zahl = c + 1
-
-# Anzahl initialisieren
+# Schleife und Anzahl initialisieren
+zahl = c+1
 versuch = 0
 
-# Eingabe
+# Schleife mit while
 while zahl != c:
-    #Anzahl Versuche
+    # Anzahl Versuche
     versuch = versuch + 1
-     
+
     # Eingabe
-    print("Bitte eine Zahl eingeben:")
-    zahl = int(input())
+    print("Bitte eine ganze Zahl eingeben:")
+    z = input()
+
+    # Versuch der Umwandlung
+
+    try:
+        zahl = int(z)
+    except:
+        # Falls umwandlung nicht erfolgreich
+        print("Sie haben keine ganze Zahl eingegeben")
+        # Schleife unmittelbar fortsetzen
+        continue
 
     # Verzweigung
     if zahl == c:
         print(zahl, "ist richtig!")
     else:
-        print(zahl, "ist falsch")
+        print(zahl, "ist falsch!")
 
-# Anzahl ausgeben
-print("Ergebnis: ", c)
-print("Anzahl der Versuche:", versuch)
+# Anzahl Versuche
+
+print("Ergebnis:", c)
+print("Anzahl Versuche:", versuch)
