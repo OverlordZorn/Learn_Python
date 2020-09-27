@@ -1113,3 +1113,110 @@ for aufgabe in range(1, anzahl+1):
 # 13 Anzahl richtige Ergebnisse
 print ("Richtig:" richtig, "von", anzahl)
 ```
+
+Nach der Initialisierung des Zufallsgenerators (1) wird die gewünschte Anzahl der Aufgaben eingelesen (2). Da der Benutzer einen Fehler bei der Eingabe machen könnte, findet eine Ausnahmebehandlung statt.
+
+Der Rückgabewert der Funktion `input()` wird unmittelbar als Parameter der Funktion `int()`genutzt. So werden zwei Schritte auf einmal erledigt.
+
+Der Zähler für die Anzahl der Richtig gelösten Aufgaben (`richtig`) wird auf `0` gestellt (3). Es wird eine äußere `for`-Schleife mit der gewünschten Anzahl gestartet (4).
+
+Der Operator wird per Zufallsgenerator ermittelt (5). Für jeden Operator gibt es andere Bereiche, aus denen die Zahlen ausgewählt werden (6). Der Operator selbst und das Ergebnis werden gespeichert.
+
+Eine Besonderheit ist bei der Division zu beachten (7): Es sollen nur ganze Zahlen vorkommen. Die beiden zufälligen Operanden (a und b) werden daher aus dem Ergebnis einer Multiplikation ermittelt.
+
+Die Aufgabe wird gestellt (8). Dabei werden zur besseren Orientierung des Benutzers auch die laufende Nummer und die Gesamtanzahl der Aufgaben ausgegeben. Es wird eine innere `for`-Loop für maximal drei Versuche gestartet (9).
+
+Die Eingaben des Benutzers (10) werden komentiert (11). Nach maximal drei Versuchen wird das richtige Ergebnis ausgegeben (12). Zuletzt wird die Anzahl der richtig gelösten Aufgaben ausgegeben (13).
+
+
+## 4 Datentypen
+
+Dieses Kapitel beschäftigt sich mit den Eigenschaften und Vorteilen der verschiedenen Objekttypen. Es werden Operationen, Funktionen und Operatoren für die jeweiligen Datentypen vorgestellt. Ein eigener Abschnitt über Objektreferenzen und Objektidentität vervollständigt die Objektbetrachtung.
+
+Der Datentyp einer Variablen muss in Python nicht festgelegt werden. Alle Daten werden als Objekte gespeichert. Es gibt grundsätzlich zwei Typen von Objekten:
+1. einzelne Objekte, wie z.B. Zahlen oder Zeichen
+2. zusammengehörige Gruppen von Objekten, wie zB. Strings, listen, Tupel, Dictionarys und Sets
+
+In diesem Kapitel geht es zunächst um Zahlen. Später folgen die anderen Objekttypen. Dabei stelle ich auch die Gemeinsamkeiten und Unterschiee der Objekttypen vor.
+
+Seit Python 3.6 können Sie angeben, welchen Datentyp eine Variable haben soll. Beachten Sie dazu Abschnitt 3.2.6 `Typhinweise`.
+
+### 4.1 Zahlen
+
+Ganze Zahlen, Zahlen mit Nachkommastellen, Brücke und Operationen mit Zahlen sind Themen dieses Abschnitts. Es gibt einige fest eingebaute Funktionen für Zahlen. Zudem enthält das Modul `math` eine Reihe von mathematischen Funktionen.
+
+#### 4.1.1 Ganze Zahlen
+Als Objekttyp für ganze Zahlen dient `int` (von engl `integer` für ganzzahlig). Zahlen dieses Typs sind unendlich genau.
+
+Üblicherweise wird das dezimale Zahlensystem mit der Basis 10 benutzt. Außerdem stehen in Python die folgenden Zahlensysteme zur Verfügung:
+
+* Das duale Zahlensystem (mit der Basis 2)
+* Das oktale Zahlensystem (mit der Basis 8)
+* das hexadezimale Zahlensystem (mit der Basis 16)
+
+Ein Beispiel:
+
+```py
+a = 27
+print("Dezimal:", a)
+print("Hexadeimal:", hex(a))
+print("Oktal:", oct(a))
+print("Dual:", bin(a))
+
+b = 0x1a + 12 + 0b101 + 0o67
+print("Summe:", b)
+```
+```
+Dezimal: 27
+Hexadezimal: 0x1b
+Oktal: 0o33
+Dual: 0b11011
+Summe: 98
+```
+
+Die dezimale Zahl 27 wird in die drei anderen Zahlensysteme umgerechnet und ausgegeben.
+
+Die Funktion `hex()` dient zur Umrechnung und Ausgabe der Zahl in das hexadezimale System. Dieses System nutzt neben den Ziffern 0 bis 9 die Buchstaben a bis f (oder auch A bis F) als Ziffern für die Werte von 10 bis 15. Die zahl 0x1b entspricht dem folgenden Wert:
+
+1 x 16^1 + B x 16^0 = 1 x 16^1 + 11 x 16^0 = 16 + 11 = 27
+
+Zur Umrechnung und die Ausgabe der Zahl in das oktale system dient die Funktion `oct()`. Das oktale System nuttzt nur die Ziffern 0 bis 7. Die Zahl 0o33 entspricht dem folgenden Wert:
+
+3x8^1 + 3x8^0 = 24 + 3 = 27
+
+Die Funktion `bin()` dient zur Umrechnung und Ausgabe der Zahl in das duale / binäre System. Dieses System nutzt nur die Ziffern 0 und 1. Die Zahl 0b11011 entspricht dem folgenden Wert:
+
+1x2^4 + 1x2^3 + 0x2^2 + 1x2^1 + 1x2^0 = 16 + 8 + 0 + 2 + 1 = 27
+
+Sie können auch direkt mit Zahlen in anderen Zahlensystemen rechnen.
+Die Berechnung der Variablen b ergibt:
+
+0x1a + 12 + 0b101 + 0o67 =
+1x16^1 + a x 16^0 + 12 + 1x2^2 + 0x2^1 + 1x1^0 + 6x8^1 + 7x8^0 =
+16 + 10 + 12 + 4 + 0 + 1 + 48 + 7 = 98
+
+Bei der Eingabe oder Zuweisung muss das Präfix `0x`, `0b` bzw. `0o` or der eigentlichen Ziffernfolge stehen, damit das zugehörige Zahlensystem erkannt wird.
+
+Zahlen setzten sich auf der niedrigsten Ebene aus Bits und Bytes zusammen. Im Abschnitt 4.1.8 werden Sie noch ein wenig intensiver mit Dualzahlen, der Funktion `bin()` und den sogenannten Bitoperatoren arbeiten, die Ihnen den Zugriff auf Bit-Ebene erleichtern.
+
+#### 4.1.2 Zahlen mit Nachkommastellen
+
+Der Datentyp für Zahlen mit Nachkommastellen heißt `float`. Diese sogenannten Fließkommazahlen werden mithilfe des Dezimalpunkts und gegebenenfalls der Exponentialschreibweise angegeben.
+
+Dazu ein kleines Beispiel:
+
+```py
+a = 7.5
+b = 2e2
+c = 3.5E3
+d = 4.2e-3
+e = 1_250_000.500_001
+
+print(a,b,c,d,e)
+```
+
+```
+7.5 200.0 3500.0 0.0042 1250000.500001
+```
+
+Die 
