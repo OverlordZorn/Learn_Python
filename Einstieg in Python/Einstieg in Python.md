@@ -75,6 +75,10 @@
       - [4.1.7 Weitere mathematische Funktionen](#417-weitere-mathematische-funktionen)
       - [4.18 Bitoperatoren](#418-bitoperatoren)
       - [4.1.9 Brüche](#419-brüche)
+    - [4.2 Zeichenketten](#42-zeichenketten)
+      - [4.2.1 Eigenschaften](#421-eigenschaften)
+      - [4.2.2 Operatoren](#422-operatoren)
+      - [4.2.3 Operationen](#423-operationen)
 
 
 ## 1 Einführung
@@ -1557,3 +1561,130 @@ print("Wert:", wert)
 print("rel. Fehler:", abs((x-wert)/x))
 ```
 
+Es wird die Zahl 1.84953 untersucht. Sie entspricht dem Bruch 184953/100000. Mithilfe der Methode `limit_denominator()` wird der Nenner auf die Zahl 100 begrenzt.
+
+Dann wird der Bruch gesucht, der 
+* einen Nenner mit dem maximal 100 hat und
+* der Zahl 1,84953 am nächsten kommt.
+
+Im vorliegenden Fall ist das der Bruch 172/93. Er hat den Wert 1,8494623655913978 und kommt der ursprünglichen Zahl recht nahe. Der relative Fehler zwischen diesem Wert und der untersuchten Zahl beträgt nur 3,65684301429 x 10^-5.
+
+Er wird mithilfe der eingebauten Funktion `abs()` zur Berechnung des Betrags ermittelt. Beim Betrag handelt es sich um den Absolutwert einer Zahl, also der Zahl ohne das Vorzeichen.
+
+Sollten Sie die Methode `gcd()`zur Ermittelung des größten gemeinsamen Teilers vermissen: Seit Python 3.5 gehört sie zum Modul `math` und wird im Modul `fractions` als veraltet bezeichnet.
+
+### 4.2 Zeichenketten
+
+Zeichenketten sind Sequenzen von einzelnen Zeichen - also Texte. Auch andere Objekttypen gehören zu den Sequenzen. Anhand von Zeichenketten folgt eine Einführung in die Sequenzen.
+
+#### 4.2.1 Eigenschaften
+
+Zeichenketten (Strings) sind Objekte des Datentyps `str`. Strings bestehen aus mehreren Zeichen oder Wörtern. Sie werden gekennzeichnet, indem man sie in einfache, doppelte oder dreimal doppelte Hochkommata setzt.
+
+```py
+t1 = "Hallo Welt"
+t2 = 'Auch das ist eine Zeichenkette' 
+t3 = """Diese Zeichenkette
+        steht in
+        mehreren Zeilen"""
+t4 = 'Hier sind "doppelte Hochkommata" gespeichert'
+print("Bittegeben Sie einen Text ein")
+t5 = input()
+
+print("t1:", t1)
+print("t2:", t2)
+print("t3:", t3)
+print("t4:", t4)
+print("t5:", t5)
+
+print("Typ:", type(t1))
+```
+
+```
+[...]
+t3: Diese Zeichenkette
+steht in
+mehreren Zeilen
+[...]
+Typ: <class 'str'>
+```
+
+Die Zeichenkette `t1` ist in doppelte Hochkommata, die Zeichenkette `t2` in einfachen Hochkommata und die Zeichenkette `t3` darf sich über mehrere Zeilen strecken. Sie wird auch so ausgegeben.
+
+Die Zeichenkette `t4` verdeutlicht den Vorteil, den das Vorhandensein mehrerer Alternativen bietet: Die doppelten HOchkommata sind hier Bestandteil des TExts und werden auch ausgegeben.
+
+Die eingebaute Funktion `input()` ist bereits bekannt. Sie dient zur Eingabe von Zeichenketten und liefert als Ergebnis den eingegebenen Text zurück. Er wird in der Variablen `t5` gespeichert. Mithilfe der Funktion `type()` wird für die Zeichenkette `t1` der Objekttyp ausgegeben.
+
+#### 4.2.2 Operatoren
+
+Die Operatoren `+` und `*` dienen zur Verkettung mehrer Sequenzen bzw. Vervielfachung einer Sequenz. Mithilfe des OPerators `in`stellen Sie fest, ob ein bestimmtes Element in einer Sequenz enthalten ist. Betrachten Sie das folgende Beispiel für diese Operatoren, angewendet für Strings:
+
+```py
+# Operatoren + und *
+t1 = "Teil 1"
+t2 = "Teil 2"
+tgesamt = t1 + ", " + t2
+
+t3 = "-ooo-"
+t4 = "***"
+tlinie = t4 + t3*3 + t4
+
+print(tgesamt)
+print(tlinie)
+
+# Operator in
+tname = "Robinson Crusoe"
+print("Text:", tname)
+
+if "b" in tname:
+    print("b: ist enthalten")
+
+if "p" not in tname:
+    print("p: ist nicht enthalten")
+```
+
+Die Zeichenkette `tgesamt` wird mithilfe des Verkettungsoperators `+` aus drei Teilen zusammengesetzt: den beidne Zeichenketten `t1` und `t2` und dem Text mit KOmma und Leerzeichen.
+
+Die Zeichenkette `tlinie` wird mithilfe des Verkettungsoperators `+` und des Vervielfachungsoperators `*` zusammengesetzt. Dabei wird der Ausdruck `"-ooo-"` dreimal hintereinander in `tlinie` gespeichert.
+
+Mithilfe des Operators `in`wird festgestellt, ob das Element `b` in der Sequenzenthalten ist. Der logsiche Operator `not` dient (zusammen mit `in`) der Feststellung, ob das Element `p` nicht enthalten ist.
+
+#### 4.2.3 Operationen
+Teilbereiche von Sequenzen werden als `Slices` bezeichnet. Der Einsatz von Slices wird am Beispiel eines Strings verdeutlicht. Auf die gleiche Art und Weise sind Slices auch auf andere Sequenzen anwendbar.
+
+Als Beispiel für eine Sequenz wird wiederum die Zeichenkette `Robinson Crusoe` in der Variablen `tname` gespeichert. Tabelle 4.1 stellt die einzelnen Elemente von `tname` mit dem zugehörigen index dar. Die Nummerierung beginnt bei 0; alternativ können Sie auch eine negative Nummeriung nutzen, die mit 1 endet (siehe unterste Zeile der Tabelle).
+
+|Index  |0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|
+|-----  |-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+|Element|R|o|b|i|n|s|o|n| |C|r|u|s|o|e|
+Negativer Index | 15 | 14|13|12|11|10|9|8|7|6|5|4|3|2|1|
+
+Ein Slice wird durch die Angabe eines Bereichs in eckigen Klammern (`[]`) hinter der sequenziellen Variablen erzeugt. Er beginnt mit einem Start-index, gefolgt von einem Doppelpunkt und einem Endindex. Ein Slice, der nur aus einem einzelnen Zeichen besteht, wird druch die Eingabe eines einzelnen Index erzeugt.
+
+Die eingebaute Funktion `len()` ermittelt die Anzahl der Elemente einer sequenz. IM Fall eines Strings spricht man hierbei auch von der Länge der Zeichenkette.
+
+```py
+# Beispielsequenz, hier Zeichenkette
+tname = "Robinson Crusoe"
+print("Text:", tname)
+
+# Anzahl der Elemente
+lg = len(tname)
+print("Anzahl der Elemente:", lg)
+
+# Teilbereiche, Elemente
+ts = tname[5:8]
+print("[5:8]:", ts)
+ts = tname[:8]
+print("[:8]:", ts)
+ts = tname[9:]
+print("[9:]:", ts)
+ts = tname[9]
+print("[9]:", ts)
+ts = tname[9:-3]
+print("[9:-3]:", ts)
+
+# Elemente einzeln
+for zeichen in tname[5:8]:
+    print(zeichen)
+```
