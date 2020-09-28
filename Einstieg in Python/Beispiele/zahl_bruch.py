@@ -4,7 +4,7 @@ import fractions
 # Bruch
 z = 12
 n = 28
-print("bruch:", z, "/", n)
+print("Bruch:", z, "/", n)
 
 # als Fraction
 
