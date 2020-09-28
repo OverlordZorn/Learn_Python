@@ -1219,4 +1219,125 @@ print(a,b,c,d,e)
 7.5 200.0 3500.0 0.0042 1250000.500001
 ```
 
-Die 
+Die Variable `a` erhält den Wert 7.5. Die Nachkommastellen werden mit einem Dezimalpunkt abgetrennt. Dies gilt auch für die Eingabe einer Zahl mit Nachkommastellen mithilfe der Funktion input(). Die Ariable `b` erhält den Wert 200 (= 2x10^2 = 2x100). Die Variable `c` erhält den wert 3.500 (= 3,5 x 10^3 = 3,5 x 1.000), die Variable `d` den wert 0,0042 (=4,2 x 10^-3 = 4,2 x 0,001).
+
+Bei der Zuweisung der Exponentialschreibweise wir dmithilfe des `e` (oder `E`) ausgedrückt, um wie viele Stellen und in welche Richtung der Dezimalpunkt innerhalb der Zahl verschoben wird. Diese Schreibweise eignet sich z.B. für sehr große oder sehr kleine Zahlen, da sie die Eingabe vieler Nullen erspart.
+
+Seit Python 3.6 können Sie einen Unterstrich benutzen, um Zahlen mit vielen Ziffern lesbarer zu machen. Es bietet sich an, ihn nach jeder dritten Ziffer einzufügen.
+
+#### 4.1.3 Typ ermitteln
+Es ist häufig nützlich zu wissen, ob es sich bei einer Zahl um eine ganze Zahl (Datentyp `int`) oder eine Fließkommazahl (Datentyp `float`) handelt. Die Funktion type() gibe den Typ(Die Klasse) eines Objekts aus, nicht nur für Zahlentypen. Hierzu ein Programmbeispiel:
+
+```py
+a = 2
+print("Typ:", type(a))
+b = 12/6
+print("Typ:", type(b))
+print("Modulo liefert:", 12 % 6 == 0)
+```
+
+```
+Typ: <class 'int'>
+Typ: <class 'float'>
+Modulo liefert: True
+```
+
+Die Variable `a`enthält den Wert 2 und ist vom Typ `int`. Die Variable `b` enthält den gleich Wert, allerdings als Ergebnis von 12/6. Es handelt sich um ein Objekt vom Typ `float`. Die Information, dass ein Ergebnis ganzzahlig ist, erhalten Sie mithilfe des Modulo-Operators (%).
+
+#### 4.1.4 Operator **
+
+Neben den bereits behandelten Rechenoperatoren + (Addition), - (Subtraktion), * (Multiplikation), / (Division) und % (Modulo, Rest einer Ganzzahldivision) wird der Operator ** (Potenz) eingesetzt.
+
+```py
+z = 5 ** 3
+print("5 hoch 3 =", z)
+z = 5.2 ** 3
+print("5.2 hoch 3 =", z)
+z = -5.2 ** 3
+print("-5.2 hoch 3 =", z)
+z = 5.2 ** 3.8
+print("5.2 hoch 3.8 =", z)
+```
+```
+5 hoch 3 = 125
+5.2 hoch 3 = 140.608
+-5.2 hoch 3 = -140.608
+5.2 hoch 3.8 = 525.790...
+```
+Der Variablen z wird nacheinancher Das Ergebnis verschienener Exponentialrechnungen zugewiesen. Anschließend wird ihr jeweils aktueller Wert mit einem Kommentar ausgegeben.
+
+#### 4.1.5 Rundung und Konvertierung
+
+In diesem Abschnitt folgt ein Vergleich der Ergebnisse bei beiden eingebauten Funktionen `round()` und `int()`.
+Die Funktion `round()` dient zur Rundung einer Zahl - im Unterschied zu der bereits bekannten Funktion int() zur Konvertierun (Umwandlung) in eine ganze Zahl.
+
+```py
+# Positive Zahl
+x = 12/7 
+print("x:",x)
+
+# Rundung und Konvertierung
+rx = round(x,3)
+print("x gerundet auf 3 Nachkomma-stellen:", rx)
+rx = round(x)
+print("x gerundet auf 0 Nachkomma-stellen:", rx)
+ix = int(x)
+print("int(x):", ix)
+
+print()
+
+# Negative Zahl
+x = -12/7
+print("x:", x)
+
+# Rundung und Konvertierung
+rx = round(x,3)
+print("x gerundet auf 3 Nachkomma-stellen:", rx)
+rx = round(x)
+print("x gerundet auf 0 Nachkomma-stellen:", rx)
+ix = int(x)
+print("int(x):", ix)
+```
+```
+x: 1.7142857142857142
+x gerundet auf 3 Nachkomma-stellen: 1.714
+x gerundet auf 0 Nachkomma-stellen: 2
+int(x): 1
+
+x: -1.7142857142857142
+x gerundet auf 3 Nachkomma-stellen: -1.714
+x gerundet auf 0 Nachkomma-stellen: -2
+int(x): -1
+```
+
+Es wird die Division 12/7 ausgeführt. Das Rechenergebnis wird anschließend auf drei verschiedene Arten umgewandelt:
+
+1. Mithilfe der eingebauten Funktion `round()` wird das Ergebnis auf drei Stellen nach dem Komma gerundet.
+2. Mit der gleichen Funktion wird das Ergebnis auf die nächsthöhere oder nächstniedrigere ganze Zahl gerundet.
+3. Mithilfe der eingebauten funktion `int()` wird adas ergebnis in eine ganze Zahl umgewandelt. Dabei werden - im Unterschied zum runden - die stellen nach dem Komma einfach weggeschnitten.
+
+Die gleichen Operationen werden mit einer negativen Zahl mit Nachkommastellen durchgeführt.
+
+#### 4.1.6 Winkelfunktionen
+
+Im Modul `math` finden Sie u. a. die trigonometrischen Funktionen `sin()`, `cos()`, und `tan()`.
+
+```py
+# Modul math
+inport math
+
+# Trigonometrische Funktionen
+x = 30
+xbm = math.radians(x)
+print("Sinus", x, "Grad:", math.sin(xbm))
+print("Cosinus", x, "Grad:", math.cos(xbm))
+print("Tangens", x, "Grad:", math.tan(xbm))
+```
+```
+Sinus 30 Grad: 0.49999..
+Cosinus 30 Grad: 0.866925..
+Tangens 30 Grad: 0.5773..
+```
+Nach dem Import des Moduls `math` werden der Sinus, der Kosinus und der Tangens des Winkels 30 Grad berechnet.
+Alle Funktionen beziehen sich auf eine Angabe des Winkels im Bogenmaß. Daher wird der Winkel zuvor mithilfe der Funktion `radians()`.
+
