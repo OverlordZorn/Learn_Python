@@ -61,6 +61,20 @@
       - [3.7.1 Einfache Funktionen](#371-einfache-funktionen)
       - [3.7.2 Funktionen mit einem Parameter](#372-funktionen-mit-einem-parameter)
       - [3.7.3 Funktionen mit mehreren Parametern](#373-funktionen-mit-mehreren-parametern)
+      - [3.7.4 Funktionen mit Rückgabewert](#374-funktionen-mit-rückgabewert)
+      - [3.7.5 Spiel, Version mit Funktionen](#375-spiel-version-mit-funktionen)
+    - [3.8 Das fertige Spiel](#38-das-fertige-spiel)
+  - [4 Datentypen](#4-datentypen)
+    - [4.1 Zahlen](#41-zahlen)
+      - [4.1.1 Ganze Zahlen](#411-ganze-zahlen)
+      - [4.1.2 Zahlen mit Nachkommastellen](#412-zahlen-mit-nachkommastellen)
+      - [4.1.3 Typ ermitteln](#413-typ-ermitteln)
+      - [4.1.4 Operator **](#414-operator-)
+      - [4.1.5 Rundung und Konvertierung](#415-rundung-und-konvertierung)
+      - [4.1.6 Winkelfunktionen](#416-winkelfunktionen)
+      - [4.1.7 Weitere mathematische Funktionen](#417-weitere-mathematische-funktionen)
+      - [4.18 Bitoperatoren](#418-bitoperatoren)
+      - [4.1.9 Brüche](#419-brüche)
 
 
 ## 1 Einführung
@@ -1339,5 +1353,207 @@ Cosinus 30 Grad: 0.866925..
 Tangens 30 Grad: 0.5773..
 ```
 Nach dem Import des Moduls `math` werden der Sinus, der Kosinus und der Tangens des Winkels 30 Grad berechnet.
-Alle Funktionen beziehen sich auf eine Angabe des Winkels im Bogenmaß. Daher wird der Winkel zuvor mithilfe der Funktion `radians()`.
+Alle Funktionen beziehen sich auf eine Angabe des Winkels im Bogenmaß. Daher wird der Winkel zuvor mithilfe der Funktion `radians()` von Grad in Bogenmaß umgewandelt. Die funktion `degrees()` ermöglicht die umgekerhte Umwandlung, also von Bogenmaß in Grad.
+
+#### 4.1.7 Weitere mathematische Funktionen
+
+Ebenfalls im Modul `math` finden Sie einige Funktionenen und Konstanten, von denen Sie einige auch von IHrem Taschenrechner kennen.
+
+```py
+import math
+
+a = 4.75
+print("Variable a: ", a)
+print("Quadratwurzel von a:", math.sqrt(a))
+
+print("Natürlicher Logartihmus von a:", math.log(a))
+print("e hoch a:", math.exp(a))
+print("10er-Logarithmus von a:", math.log10(a))
+print()
+
+b = 34
+print("Ganzzahlige Quadratwurzel:", math.isqrt(b))
+print()
+
+print("Kreiszahl pi:", math.pi)
+print("Eulersche Zahl e:", math.e)
+print()
+
+t = 3, 2, -7
+print("Produkt:", math.prod(t))
+print("Fakultät von 5:", math.factorial(5))
+print("Größter gem. Teiler von 60 und 135:", math.gcd(60,135))
+print("Rest:", math.remainder(10.8, 2.5))
+print("Rest:", math.remainder(11.8, 2.5))
+print()
+
+if math.isclose(3, 2.96, rel_tol=0.01):
+    print("Nahe dran")
+else:
+    print("Nicht nahe dran")
+```
+```
+Variable a:  4.75
+Quadratwurzel von a: 2.179449471770337
+Natürlicher Logartihmus von a: 1.55814461804655
+e hoch a: 115.58428452718766
+10er-Logarithmus von a: 0.6766936096248666
+
+Ganzzahlige Quadratwurzel: 5
+
+Kreiszahl pi: 3.141592653589793
+Eulersche Zahl e: 2.718281828459045
+
+Produkt: -42
+Fakultät von 5: 120
+Größter gem. Teiler von 60 und 135: 15
+Rest: 0.8000000000000007
+Rest: -0.6999999999999993
+
+Nicht nahe dran
+```
+
+Zunächst werden die Funktion `sqrt()`zur Berechnung der Quadratwurzel einer positiven Zahl,
+`log()` und die Funktion `log10()` zur Berechnung der Logarithmen einer positiven Zahl zur Basis e und zur Basis 10
+und die Funktion `exp()` zur Berechnung von e^x aufgerufen.
+
+Seit Python 3.8 können Sie mithilfe der Funktion `isqrt()` die ganzzahlige Quadratwurzel einer Zahl berechnen. Das ist der größte ganzzahlige Wert, der kleiner ist als die eigentliche Quadratwurzel einer Zahl.
+
+Zudem gibt es die mathematischen Konstanten `pi` und `e`. Solche Konstanten stehen für unveränderbare Werte. Sie werden eingesetzt, weil man sich den Namen einer Konstanten meist besser merken kann als ihren Wert.
+
+Seit Python 3.8 lässt sich mithilfe der Funktion `prod()` das Produkt der Elemente eines iterierbaren Objekts ermitteln, hier eines Tupels. Mehr zum Thema Tupel finden Sie in Abschnitt 4.4. Der Wert der Fakultät darf mathematisch und mithilfe der Funktion `factorial()` nur von positiven ganzen Zahlen berechnet werden.
+
+Seit Python 3.5 gibt es die Funktion `gcd()`. Sie ermittelt den größten gemeinsamen Teiler (GGT, englisch greatest common divisor) zweier ganzer Zahlen. Das ist die größte Zahl, durch die sich beide Zahlen ohne Rest teilen lassen.
+
+Seit Python 3.7 lässt sich mithilfe der Funktion `remainder()` der Rest einer Division gemäß dem IEEE-754-Standard berechnen. Dabei handelt es sich um die Differenz zur nächsten ganzen Zahl. Was bedeutet das? Im vorliegenden Beispiel werden 10.8 bzw. 11.8 durch 2.5 geteilt. Das mathematische Ergebnis liegt jeweils zwischen den beiden ganzen Zahlen 4 (4x 2.5 = 10) und 5 (4x 2.5 = 12.5). Im Fall von 10.8 liegt der Wert 10 näher, daher liefert die Funktion `remainder()` den Wert 0.8 (= 10.8 - 10). Im Fall von 11.8 liegt der Wert 12.5 näher, daher liefert die Funktion `remainder()`den Wert -0.7 (= 11.8 - 12.5).
+
+Seit Python 3.5 können Sie mithilefe der Funktion `isclose()` feststellen, ob zwei Zahlen einander nahe sind. In den beiden obigen Beispielen wird mit hilfe der relativen Toleranz `0.01` festgestellt, ob die beiden Zahlen -um maximal 1% voneinander abweichen. Sie können einen von zwei benannten Parametern nutzen. Neben `rel_tol` gibt es auch `abs_tol`für die Messung mit einer absoluten Tolleranz.
+
+#### 4.18 Bitoperatoren
+
+Sämtliche Daten, ob nun Zahlen oder Zeichenketten, setzten sich auf der Hardwareebene aus Bits und Bytes zusammen. Auf dieser Ebene können Sie mit Dualzahlen (siehe 4.1.1),, der Funktion `bin()` und den sogenannten Bitoperatoren arbeiten.
+
+```py
+# Nur 1 Bit gesetzt
+bit0 = 1        # 0000 0001
+bit3 = 8        # 0000 1000
+print(bin(bit0), bin(bit3))
+
+# Bitweises AND
+a = 5           # 0000 0101
+bit0 = 1        # 0000 0001
+erg = a & bit0  # 0000 0001
+if erg:
+    print(a, "ist ungerade")
+
+# Bitweises OR
+erg = 0             # 0000 0000
+bit0 = 1            # 0000 0001
+erg = erg | bit0    # 0000 0001
+bit3 = 8            # 0000 1000
+erg = erg | bit3    # 0000 1001
+print("Bits nacheinander gesetzt:", erg, bin(erg))
+
+# Bitweises Exclusive-OR
+a = 21              # 0001 0101
+b = 19              # 0001 0011
+erg = a ^ b         # 0000 0110
+print("UngleicheBits:", erg, bin(erg))
+
+# Bitweise Inversion, aus x wird -(x+1)
+a = 11              # 0000 1011
+erg = ~a            # 1111 0100
+print("Bitweise Inversion:", erg, bin(erg))
+
+# Bitweise schieben
+a = 11              # 0000 1011
+erg = a >> 1        # 0000 0101
+print("Um 1 nach rechts geschoben:", erg, bin(erg))
+erg = a << 2        # 0010 1100
+print("Um 2 nach links geschoben:", erg, bin(erg))
+```
+
+Zunächst werden die beiden Variablen `bit0` und bit `bit3` eingeführt, die bei einigen der nachfolgenden Berechnungen benötigt werden. Sie haben die werte 1 und 8. Am ende der Programmzeile sehen Sie sie als Dualzahl, also mithilfe von 8 Bit (= 1 Byte) notiert. Das letzte Bit eines Bytes wird als Bit 0 genannt, das vorletzte Bit ist Bit 1 usw. Die Werte der beiden Variablen `bit0` und `bit3` sind so gewählt, dass jeweils nur ein Bit gesetzt ist (=1), die restlichen Bits sind nicht gesetzt (=0).
+
+Sie können sich auch eine Reihe von acht Leuchtioden vorstellen, die entweder an oder aus sind. Diese Information kann innerhalb eines Bytes gespeichert werden. Falls eines Bits gesetzt ist, ist die betreffende LED an, ansonsten aus. Zur Verdeutlichung werden die beiden Variablen `bit0` und `bit3` mithilfe der Funktion `bin()` als Dualzahl ausgegeben.
+
+Sie können den Bitoperator `&` zur bitweisen Und-Verknüpfung zweier Zahlen nutzen. ÄHnlich wie beim logischen Operator `and` wird ein bestimmtes Bit im Ergebnis nur gesetzt, wenn diese Bit in beiden Zahlen gesetzt ist. Diese Operation wird für jedes einzelne Bit durchgeführt. 
+
+Falls Sie wissen möchten, bo ein bestimmtes Bit innerhalb einer Zahl gesetzt ist, verknüpfen Sie diese Zahl mithilfe des Bitoperators & mit einer anderen Zahl, in der nun dieses eine gesuchte Bit gesetzt ist. Falls es sich um das Bit 0 handelt, wissen Sie darüber hinaus, ob die Zahl gerade (Bit 0 = 0) oder ungerade (Bit 0 = 1) ist.
+
+Der Bitoperator `|` dient zut bitweisen Oder-Verknüpfung zweier Zahlen. Ähnlich wie beim logsichen Operator `or` wird ein bestimmtes Bit im Ergebnis gesetzt, wenn dieses Bit in einer der beiden Zahlen oder in beiden Zahlen gesetzt ist. Diese Operation wird auch für jedes einzelne Bit durchgeführt. 
+
+Falls sie einzelne Bits einer Zahl setzen möchten, verknüpfen Sie diese Zahl mithilfe der Bitoperators `|` mit einer anderen Zahl, in der nur dieses eine gesuchte Bit gesetzt ist.
+
+Der Bitoperator `^`  dient zur bitweisen Exklusiv-Oder-Verknüpfung zweier Zahlen. Ein bestimmtes Bit im Ergebnis wird gesetzt, wenn dieses Bit nur in einer der beiden zahlen gesetzt ist. Falls das Bit in beiden Zahlen gesetzt ist, wird das Ergebnis-Bit nicht gesetzt. Diese OPeration wird ebenfalls für jedes einzelne Bit durchgeführt.
+
+Sie können den Bitoperator `~` zur bitweisen INversion einer Zahl nutzen. Dabei wird aus der Zahl x die Zahl -(x+1), aus 11 wird also die -12.
+
+Die beiden Bitoperatoren `>>` und `<<` dienen zum Schieben von Bits innerhalb einer Zahl:
+* Mithilfe von `>>` werden alle Bits um eine bestimmte Anzahl von Stellen nach rechts geschoben. Die Bits, die dabei nach rechts `Hinausfallen`, sind v erloren. Eine Verschiebung um n Bit nach rechts entspricht einer ganzzahligen Division durch 2^n. Eine Verschiebung um 1 Bit nach rechts entspricht also einer ganzahligen Division durch 2.
+* Mithilfe von `<<` werden Alle Bits um eine bestimmte Anzahl von Stellen nach links geschoben. Eine Verschiebung um n Bit nach links entspricht also einer Multiplikation mit 2.
+
+#### 4.1.9 Brüche
+
+Python kann auch mit Brüchen rechnen bzw. Informationen über >Brüche zur Verfügung stellen. Dazu wird das Modul `fractions` genutzt:
+
+```py
+# Import des Moduls
+import fractions
+
+# Bruch
+z = 12
+n = 28
+print("bruch:", z, "/", n)
+
+# als Fraction
+
+b1 = fractions.Faction(z,n)
+print("Fraction:", b1)
+print("Z, N:", b1.numerator, b1.denominator)
+wert = b1.numerator / b1.denominator
+print("Wert:", wert)
+print()
+
+# Umrechnen
+
+x = 2.375
+print("Zahl:", x)
+b2 = fractions.Fraction(x)
+print("Fraction:", b2)
+```
+
+Zunächst wird ein Beispielbruch in der bekannten FOrm dargestellt. Er wird gebildet aus zwei Zahlen: Zähler und Nenner.
+
+Die Funktion `Fraction()` aus dem Modul `fractions` beitet verschiedene Möglichkeiten, einen Bruch zu erzeugen. Genauer gesatzt, handelt es sich bei `Fraction()` um den Konstruktor der Klasse `Fraction`. Damit wird eine Instanz (ein Objekt) der KLasse erzeugt und eine Referenz auf dieses Objekt zurückgeliefert. Klassen, Instanzen, Konstruktoren und andere Begriffe aus der objektorientierten Programmierung werden in Kapitel 6 genauer erkläutert.
+
+Der Bruch `b1`, der aus 12/28 gebildet wird, wird bei der Erzeugung automatische auf 3/7 gekürzt.
+
+Zähler und Nenner des Bruchs stehen in den Eigenschaften `numerator` und `denominator` einzeln zur Verfügung. Der Wert eines Bruchs lässt sich darüber berechnen: 3/7 = 0,428...
+
+Umgekerht können Sie auch eine Zahl mit Nachkommastellen in einen Bruch umrechnen. Dazu übergeben Sie die Zahl der Konstruktormethode `Fraction()`: Aus 2.375 wird 19/8.
+
+Im nachfolgenden Programm wird ein Bruch dazu genutzt, eine Zahl mit Nachkommastellen zu approximieren, also anzunähern. Dazu dient die Methode `limit_denominator()`.
+
+```py
+# Import des Moduls
+import fractions
+
+# untersuchte Zahl
+x = 1.84953
+print("Zahl:", x)
+
+# als Bruck
+b3 = fractions.Fraction(x)
+print("Fraction:", b3)
+
+# approximiert
+b4 = b3.limit_denominator(100)
+print("Approximiert auf Nenner max. 100:", b4)
+
+# Genauigkeit
+wert = b4.numerator / b4.denominator
+print("Wert:", wert)
+print("rel. Fehler:", abs((x-wert)/x))
+```
 
