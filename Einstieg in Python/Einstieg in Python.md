@@ -2031,5 +2031,229 @@ Listen können, im Gegensatz zu Strings, verändert werden. Sie können aber nic
 Falls Sie ein einzelnes Element durch einen Teilbereich ersetzen, wird eine neue eingebettete Liste erzeugt. Es folgt ein Programm mnit einigen Listenoperationen, die Elemente oder Teilbereiche betreffen. Das Schlüsselwort `del` dient zum Löschen:
 
 ```py
+# Originalliste
+
+fr = ["Paris", "lyon", "Marseille", "Bordeaux"]
+print("Original:")
+print(fr)
+
+# Ersetzen eines Elements durch ein Element
+fr[2] = "Lens"
+print("Element ersetzt:")
+print(fr)
+
+# Ersetzen eines Teilbereiches durch eine Liste
+fr[1:3] = ["Nancy", "Metz", "Gap"]
+print("Teil ersetzt:")
+print(fr)
+
+# Entnehmen eines Teilbereiches
+del fr[3:]
+print("Teil entnommen:")
+print(fr)
+
+# Ersetzen eines Elements durch eine Liste
+fr[0] = ["Paris-Nord", "Paris-Sud"]
+print("Element durch Liste ersetzt:")
+print(fr)
+```
 
 ```
+Original:
+['Paris', 'lyon', 'Marseille', 'Bordeaux']
+Element ersetzt:
+['Paris', 'lyon', 'Lens', 'Bordeaux']
+Teil ersetzt:
+['Paris', 'Nancy', 'Metz', 'Gap', 'Bordeaux']
+Teil entnommen:
+['Paris', 'Nancy', 'Metz']
+Element durch Liste ersetzt:
+[['Paris-Nord', 'Paris-Sud'], 'Nancy', 'Metz']
+```
+
+Die Originalliste, bestehend aus vier Zeichenketten, wird erstellt. Ein einzelnes Element wird durch eine andere Zeichenkette ersetzt. Ein Teilbereich wird durch eine Liste ersetzt. Ein Teilbereich wird mithilfe von `del` aus der Liste gelöscht. Ein Element wird durch eine Lsite ersetzt; dadruch wird eine neue eingebettete Liste erzeugt.
+
+Im nachfolgenden Programm wird eine Reihe von weiteren Funktionen zur Analyse und Bearbeitung von Listen verdeutlicht:
+
+```py
+# Originalliste
+fr = ["Paris", "Lyon", "Marseille"]
+print("Original:")
+print(fr)
+
+# Einsetzen eines Elements
+fr.insert(0, "Nantes")
+print("Nach Einsetzen:")
+print(fr)
+
+# Sortieren der Elemente
+fr.sort()
+print("Nach Sortierung der Elemente")
+print(fr)
+
+# Umdrehen der Liste
+fr.reverse()
+print("Nach Umdrehen:")
+print(fr)
+
+# Entfernen eines Elements
+fr.remove("Nantes")
+print("Nach Entfernen:")
+print(fr)
+
+# Ein Element am Ende hinzufügen
+fr.append("Paris")
+print("Ein Element hinzu:")
+print(fr)
+
+# Anzahl bestimmter Elemente
+print("Anzahl Elemente Paris:", fr.count("Paris"))
+
+# Suchen bestimmter Elemente
+print("Erste Position Paris:", fr.index("Paris"))
+```
+```
+Original:
+['Paris', 'Lyon', 'Marseille']
+Nach Einsetzen:
+['Nantes', 'Paris', 'Lyon', 'Marseille']
+Nach Sortierung der Elemente
+['Lyon', 'Marseille', 'Nantes', 'Paris']
+Nach Umdrehen:
+['Paris', 'Nantes', 'Marseille', 'Lyon']
+Nach Entfernen:
+['Paris', 'Marseille', 'Lyon']
+Ein Element hinzu:
+['Paris', 'Marseille', 'Lyon', 'Paris']
+Anzahl Elemente Paris: 2
+Erste Position Paris: 0
+```
+
+Die Originalliste, bestehend aus drei Zeichenketten, wird erstellt. Anschließend wird ein Element mit der Funktion `insert()` an Position 0 eingefügt, also zu Beginn der Liste.
+
+Die Liste wird mit der Funktion `sort()` intern sortiert. Falls es sich um eine Liste von Zeichenketten handelt, wird alphabetisch sortiert. Eine Liste von Zahlen wird nah der Größe sortiert. Bei anderen listenelementen oder bei gemsichen Listen ist der Einsatz der Funktion `sort()` nur bedingt sinnvoll.
+
+Die Liste wird mit der Funktion `reverse()` intern umgedreht.
+
+Ein bestimmtes Element (hier: Nantes) wird innerhalb der Liste gesucht. Falls es vorhanden ist, wird das erste Vorkommen dieses Elements mit der Funktion `remove()` gelöscht. Falls es nicht vorhandne ist, wird eine Ausnahme ausgelöst.
+
+Ein Element wird am ende der Liste mit `append()` angefügt.
+
+Die Anzahl der Vorkommen eines bestimmten Elements (hier `Paris`) wird mit der Funktion `count()` ermittelt.
+
+Die POsition des ersten Vorkommens eines bestimmten Elements (hier: `Paris`) wird mit der Funtion `index()` ermittelt. Ist das Element nicht vorhanden, wird eine Ausnahme ausgelöst.
+
+### 4.4 Tupel
+
+In diesem Abschnitt werden Tupel und ihre besonderen Eigenschaften sowie Operationen mit Tupeln erläutert.
+
+#### 4.4.1 Eigenschaften
+
+Der Unterschied zwischen einem Tupel und einer Liste: Eine Tupel kann nicht verändert werden. Ansonsten gelten die gleichen Regeln, und es können die gleichen Operationen und Funktionen auf Tupel wie auf Listen angewendet werden, sofern sie keine Veränderung des Tupels hervorrufen.
+
+#### 4.4.2 Operationen
+
+Einige Beispiele und Besonderheiten:
+```py
+# Tupel mit und ohne Klammer
+z = (3, 6, -8, 5.5)
+print("Tupel 1:", z)
+
+z = 6, 8, -3
+print("Tupel 2:", z)
+
+# mehrdimensionales Tupel, unterschiedliche Objekte
+x = (("Paris", "Fr", 3500000),["Rom", "It", 4200000])
+print("mehrdimensionales Tupel")
+print(x)
+
+# Ersetzen
+try:
+    x[0][0] = "Lyon"    # nicht erlaubt, weil Tupel
+except:
+    print("Fehler")
+
+x[1][0] = "Pisa"        # erlaubt, weil Liste
+print("Listenelement ersetzt:", x[1]) 
+
+# Tupel bei For-Schleife:
+for i in 4,5, 12:
+    print("i:", i)
+
+# Zuweisung mit Tupel
+x,y = 2,18
+
+print("x:", x, "y:", y)
+```
+
+Tupel können mit runden Klammern (statt eckiger Klammern bei Listen) oder ganz ohne Klammern erzeugt werden. Sie können gleichzeitig Zahlen, Zeichenketten und andere Objekte enthalten.
+
+Durch Einbettung können sie mehrdimensionale Tupel erzeugen. Hier ist dies das Tupel `x`, bestehend wiederrum aus einem Tupel und einer Liste.
+
+Die versuchte Veränderung des inneren Tupels erzeugt eine Ausnahme. Erlaubt ist dagegen die Veränderung der inneren Liste, die in ein Tupel eingebettet ist (hier für `x[1][0]`).
+Die `for`-Schleifen in diesem Buch werden meist mithielfe von Tupeln geschrieben, ohne dass dieser Begriff bisher gesondert erwähnt wurde.
+
+Mithilfe eines TUpels können Sie mehrere Werte gleichzeitig zuweisen. Im vorliegenden Beispiel werden die Werte 2 und 18 den Einzelvariablen x bzw. y zugewiesen. Mehr dazu folgt im nächsten Abschnitt.
+
+#### 4.4.3 Tupel entpacken
+
+Innerhalb eines Tupels sind mehrere unveränderliche Werte gespeichert. Mithilfe eines Tupels kann eine mehrfache Zuweisung erfolgen. Dabei werden in einer Anweisung gleichzeitig mehreren Veriablen Werte zugewiesen, was Ihnen Schreibarbeit erspart. Hier sind einige Besonderheiten zu beachten, die das folgende Programm verdeutlicht:
+
+```py
+# 1: Mehrfache Zuweisung
+x, y, z = 3, 5.2, "Hallo"
+print("Mehrfache Zuweisung:", x, y, z)
+
+# 2: Auswirkungen erst danach
+a = 12
+b = 15
+c = 22
+a, b, c, = c, a, a+b
+print("Auswirkung:", a, b, c)
+
+# 3: Verpacken eines Tupels
+p = 3, 4
+print("Verpackt:", p)
+
+# 4 Entpacken eines Tupels
+m, n = p
+print("Entpackt: m:", m, "n:", n)
+
+# 5 Falsche Zuweisung eines Tupels
+try:
+    s, t = 3, 4, 12
+except:
+    print("Fehler")
+
+# 6: Rest in Liste
+print()
+x, *y, z = 3, 5.2, "hallo", 7.3, 2.9
+print(x)
+print(y)
+print(z)
+
+# kein Rest, Liste leer
+print()
+x, *y, z = 3, 5.2
+print(x)
+print(y)
+print(z)
+```
+
+```
+Mehrfache Zuweisung: 3 5.2 Hallo
+Auswirkung: 22 12 27
+Verpackt: (3, 4)
+Entpackt: m: 3 n: 4
+Fehler
+
+3
+[5.2, 'hallo', 7.3]
+2.9
+
+3
+[]
+5.2
+```
+
+Zu 1: Bei der mehrfachen Zuweisung erhält die Variable `x` den Wert `3`, die Variable `y` den Wert `5.2` und die Variable `z` den wert `hallo`. Die Anweisungen auf drei zeilen getrennt würde dasselbe, würen aber drei Programmzeilen statt einer bea
