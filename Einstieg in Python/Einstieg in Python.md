@@ -79,6 +79,14 @@
       - [4.2.1 Eigenschaften](#421-eigenschaften)
       - [4.2.2 Operatoren](#422-operatoren)
       - [4.2.3 Operationen](#423-operationen)
+      - [4.2.4 Funktionen](#424-funktionen)
+      - [4.2.5 Umwandlung einer Zeichenkette in eine Zahl](#425-umwandlung-einer-zeichenkette-in-eine-zahl)
+      - [4.2.6 Umwandlung einer Zahl in eine Zeichenkette](#426-umwandlung-einer-zahl-in-eine-zeichenkette)
+      - [4.2.7 Datentyp "bytes"](#427-datentyp-bytes)
+    - [4.3 Listen](#43-listen)
+      - [4.3.1 Eigenschaften](#431-eigenschaften)
+      - [4.3.2 Operatoren](#432-operatoren)
+      - [4.3.3 Funktionen und Operationen](#433-funktionen-und-operationen)
 
 
 ## 1 Einführung
@@ -1687,4 +1695,341 @@ print("[9:-3]:", ts)
 # Elemente einzeln
 for zeichen in tname[5:8]:
     print(zeichen)
+```
+
+Die LÄnge der Sequenz, aslo die Anzal der Zeichen in der Zeichenkette, wird mithilfe der Funktion `len()` ermittelt. Es folgen einige Slices:
+* Slice [5:8]: Der Bereich erstreckt sich von dem Element, das durch den Startindex gekennzeichnet wird, bis vor das Element, das durch den Endindex gekennziechnet wird. Ergebnis: son
+* Slice [:8]: Wenn der Startindex weggelassen wird, beginnt der Bereich bei 0. Ergebnis: Robinson
+* Slice [9:]: Wenn der Endindex weggelassen wird, endet der Bereich am Ende der Zeichenkette. Ergebnis: Crusoe
+* Slice [9]: Wird nur ein Index angegeben, besteht der Bereich nur aus einem einzelnen Element. C
+* Slice [9:-3]: Wird ein Index mit einer negativen Zahl angegeben, wird vom Ende aus gemessen, beginnend bei 1. Cru
+
+Eine for-Schleife kann genutzt werden, um eine ganze Zeichenkette oder einen Teil der Zeichenkette Zeichen für Zeichen durchzugehen.
+
+Anhand des nachfolgenden Beispiels sehen Sie, dass Strings nicht veränderbar sind. Es können keine einzelnen Zeichen oder Bereiche aus Strings durch andere Zeichen oder Slices ersetzt werden:
+
+```py
+tname = "Robinson Crusoe"
+
+try:
+    tname[3] = "e"
+except:
+    print("fehler")
+
+try: 
+    tname[3.5] = "el"
+except:
+    print("fehler")
+```
+
+Die einzige Möglichkeit zur Veränderung eines Strings ist die Erzeugung eines neuen String-Objekts.
+
+#### 4.2.4 Funktionen
+
+Neben der eingebauten funktion `len()` gibt es für Objekte des Datentypes `str` eine REihe von nützlichen Funktionenen zur Bearbeitung udn Analyse von Zeichenketten. Anhand des folgenden Beispiels werden einige FUnktionen zum Suchen von Teiltexten verdeutlicht:
+
+```py
+test = "Das ist ein Beispielsatz"
+print("Text:", test)
+
+# Anzahl der Suchtexte
+
+such = "ei"
+anz = test.count(such)
+print("count: Der String", such, "kommt", anz, "mal vor.")
+
+# Erste Position des Suchtextes 
+anfpos = test.find(such)
+print("find 1: Zum ersten am lan Position", anfpos)
+
+# Weitere Position des Suchtextes
+nextpos = test.find(such, anfpos+1)
+print("find 2: Ein weiteres Mal an Position", nextpos)
+
+# Letzte Position des Suchtextes
+endpos = test.rfind(such)
+print("rfind: Zum letzten Mal an Position", endpos)
+
+# Suchtext nicht gefunden
+such = "am"
+pos = test.find(such)
+if pos == -1:
+    print("find 3:", such, "wurd nicht gefunden")
+else:
+    print("find 3:", such, "an Position", pos, "gefunden")
+
+# Ersetzen von Text
+
+test = test.replace("ist", "war")
+print("replace", test)
+```
+
+Die Funktion `count()` ergibt die Anzahl der Vorkommen eines Suchtexts (hier in der Variablen `such`) innerhalb des analysierten Texts.
+
+Die Funktion `find()` ergibt die Position, an der ein Suchtext innerhalb eines analysierten Texts vorkommt. Zur Erinnerung: Das erste Element einer Sequenz hat die POsition 0.
+
+Bei der Funktion `find()` können Sie optional einen zweiten Parameter angeben. Dieser Parameter bestimmt die Position, ab der gesucht wird. Im vorliegenden Fall ist das die Position des Zeichens hinter der ersten Fundstelle. Diese Technik wird häufig verwendet, um mithilfe einer Schleife alle Vorkommen eines Suchtexts zu finden.
+
+Die Funktion `rfind()` ergibt die Position des letzten Vorkommens des Suchtexts innerhalb des analysierten Texts. Falls der gesuchte Text nicht vorkommt, liefert `find()` bzw. `rfind()` den Wert `-1` zurück.
+
+Die Funktion `replace()` ersetzt einen gesuchten Teiltext durch einen anderen und liefert den geänderten Text zurück.
+
+Das nachfolgende Beispiel zeigt hauptsächlich Funktionen zum Zerlegen von Texten in Teiltexte:
+
+```py
+# Beispielsatz
+test = "Das ist ein Beispielsatz"
+print("Test:", test)
+
+# Beginn, Ende
+
+if test.startswith("Das"):
+    print("Text beginnt mit Das")
+
+if not test.endswith("Das"):
+    print("Text endet nicht mit Das")
+
+# Zerlegung
+
+teile = test.partition("ei")
+print(teile)
+print("vor der 1. Teilung:", teile[0])
+print("nach der 1. Teilung:", teile[2])
+
+teile = test.rpartition("ei")
+print("vor der 2. Teilung:", teile[0])
+print("nach der 2. Teilung:", teile[2])
+
+# Zerlegung in Liste
+wliste = test.split()
+print(wliste)
+for i in range(0,3):
+    print("Element:", i, "-", wliste[i])
+```
+
+Mithilfe der Funktion `startswith()` und `endswith()` untersuchen Sie, ob eine Zeichenkette mit einem bestimmten TExt beginnt oder endet. Beide Funktionen liefern einen Wahrheitswert (`true` or `false`), daher kann der Rückgabewert direkt als Bedingung genutzt werden.
+
+Die Funktion `partition()` und `rpartition()` zerlegen eine Zeichenkette in einzelne Teile anhand eines TEilungstexts. Diese Teile werden in einem Tupel geliefert.
+* Das erste Element des Tupels (element 0) enthält den Text bis zum Teilungstext, 
+  das zweite Element (element 1) enthält den teilungstext selbst und 
+  das dritte Element (element 2) enthält den Text hinter dem Teilungstext.
+* Die Funktion `partition()` sucht den Teilungstext ausgehend vom Beginn der Zeichenkette, die Funktion `rpartition()` sucht ihn ausgehend vom Ende der Zeichenkette.
+* Wird der Teilungstext nicht gefunden, steht die gesamte Zeichenkette im ersten Element des Tupels.
+* Weiter Informationen zu den Tupeln erhalten sie in Abschnitt 4.4.
+  
+Die Funktion `split()` zerlegt einen Text in einzelne Teile, die in einer Liste gespeichert werden. Das Leerzeichen wird dabei als Trennzeichen angesehen. Zur Verduetlichung werden im voranliegenden Beispiel die drei ersten Elemente der Liste zusammen mit der laufenden Nummer innerhalb der Liste ausgegeben (weitere Informationen zu Listen gibt es in Abschnit 4.3).
+
+Falls sie bei der Funktion `split()` ein anderes Trennzeichen verenden möchten, wie z. B. das Semikolon oder das Rautezeichen, übergeben Sie dieses Trennzeichen als Parameter an die FUnktion, zB.: `split(";")`.
+
+#### 4.2.5 Umwandlung einer Zeichenkette in eine Zahl
+
+Enthält eine Zeichenkette eine Zahl, etwa eine vom Benutzer eingegebene Zeichenkette oder einen Kommandozeilenparameter (siehe Abschnitt 5.11, Parameter der Kommandozeile), muss diese Zeichenkette zunächst konvertiert werden.
+
+Zur Umwandlung in eine ganze Zahl oder in eine Zahlmit Nachkommastellen dienen die beiden Funktionen `int()` bzw. `float()`. Anschließend kann mit deiser Zahl gereichnet werden.
+
+Das folgende Beispiel verdeutlicht den Unterschied in der Behandlung von Zahlen un Strings:
+
+```py
+# Erste Zeichenkette
+x = "15.3"
+
+ergebnis = x * 2
+print(ergebnis)
+
+x = float(x)
+ergebnis = x * 2
+print(ergebnis)
+
+# Zweite Zeichenkette
+x = "17"
+ergebnis = x * 2
+print(ergebnis)
+
+x = int(x)
+ergebnis = x * 2
+print(ergebnis)
+```
+In der ersten Zeichenkette steht `15.3`. Wird diese Zeichenkette mit 2 *multipliziert*, ergibt sich die Zeichenkette `15.315.3`. Wird die Zeichenkette dagegen mithilfe von `float()` in eine Zahl mit Nachkommasetellen verwandelt, kann mit ihr gerechnet werden. Eine Multiplikation mit 2 ergibt mathematisch korrekt die Ausgabe `30.6`.
+
+Ähnlich sieht es bei der Umwandlung in eine ganze Zahl aus. In der zweiten Zeichenkette steht `17`. Wenn diese Zeichenkette mit 2 *multipliziert*  wird, ergibt sich die Zeichenkette `1717`. Wird die Zeichenkette dagegen mithilfe von `int()` in eine ganze Zahl verwandelt, aknn mit ihr gerechnet werden. Eine Multiplikation mit 2 ergbit in diesem Fall mathemathisch korrekt 34.
+
+Falls versucht wird, eine Zeichenkette, die keine gültige Zahl enthält, in eine Zahl umzuwandeln, tritt eine Ausnahme auf. Daher sollten Sie die Umwandlung von Benutzereingaben oder KOmmandzeilenparametern in eine Ausnahmebehandlung einbetten:
+
+```py
+# Fehler abfangen
+x = "15.3p"
+
+try:
+    x = float(x)
+    print(x*2)
+except:
+    print("Zeichenkette kann nicht umgewandelt werden")
+```
+
+In der Zeichenkette steht eine nicht gültiges Zeichen(hier das `p`). Dies führt zu einer Ausnahme, und es erscheint eine Fehlermeldung.
+
+#### 4.2.6 Umwandlung einer Zahl in eine Zeichenkette
+
+Muss eine Zahl in eine Zeichenkette umgewandelt werden, etwa zur Ausgabe der Zahl in eine Datei (siehe 8.3.1 - Sequenzielles Schreiben) könnnen Sie die FUnktion `str()` verwenden.
+```py
+a = 23
+b = 7.5
+c = a + b
+
+# 1. Ausgabe
+print(a, "+", b, "=", c)
+
+# 2. Ausgabe
+print(str(a) + "+" + str(b) + "=" + str(c))
+```
+```
+23 + 7.5 = 30.5
+23+7.5=30.5
+```
+
+Die erste Ausgabe erfolgt wie gewohnt. Sie setzt sich aus den einzelnen Variablen und den verbindenden TExten zusammen. Nach jedem Teil der Ausgabe wird automatisch ein  Leerziechen eingefügt.
+
+Für die zweite Ausgabe werden die Zahlen zunächst mithilfe der Funktion `str()` in Zeichenketten umgewandelt. Abschließend werden die verschiedenen Zeichenketten mit dem Verkettungsoperator `+` verbunden. In der Ausgabe kommen keine Leerzeichen mehr vor.
+
+Eine weiter Möglichkeit zur Gestaltung von Ausgaben zeige ich Ihnen im Abschnitt 5.2.2, Formatierung mit String-Literalen.
+
+#### 4.2.7 Datentyp "bytes"
+
+Objekte des Datentyps `bytes` bestehen aus Zeichen, deren Zeichencode im Bereich von 0 bis 255 liegt. Jedes Zeichen kann mithilfe eines Bytes gespeichert werden. Sie können `bytes`-Objekte mithilfe von Byte-LIteralen erzeugen oder mithilfe der eingebauten FUnktion `bytes()`. Im Unterschied zu `bytes`-Objekten werden die üblichen Zeichenketten, also `str`-Objekte aus Unicode-Zeichen gebildetet.
+
+Byte-Literale beginnen mit einem `b` oder einem `B`. Dies ist bei der Eingabe oder Zuweisung zu beachten. Bei der Ausgabe wird ein `b` vorangestellt.
+
+```py
+# Datentyp str
+st = "Hallo"
+print(st, type(st))
+
+# Datentyp bytes
+by = b'Hallo'
+print(by, type(by))
+
+# Umwandlung von str in bytes
+by = bytes("Hallo", "UTF-8")
+print(by, type(by))
+
+# Umwandlung von bytes in str
+by = b'Hallo'
+st = by.decode()
+print(st, type(st))
+```
+
+
+Zunächst werden ein `str` Objekt und ein bytes Objekt per Zuweisung erzeugt und asugegeben. Beachten Sie beim Byte Literal das vorangestellt b, zu Umwanldung eines str Objekts in ein bytes Objekt wird die eingebaute Funktion `bytes()` genutzt. Dabei wird die Codierung des `str`-Objekts angegeben, hier UTF-8. Zur Umwnadlung eines bytes-Objekts in ein str-Objekt wird die Methode `decode()` verwendet.
+
+### 4.3 Listen
+
+Eine Liste ist eine Sequenz von Objekten in ihrer allgemeinsten Form. Sie kann Elemente utnerschiedlichen Objekttyps enthalten. Eine Liste bietet vielfältige Möglichkeiten, u. a. die Funktionalität von ein- und mehrdimensionalen Feldern (Arrays), wie man sie aus anderen Programmiersprachen kennt.
+
+#### 4.3.1 Eigenschaften
+
+Eine Liste ist im Gegensatz zu einem String veränderbar. Davon abgesehen ist ein String, vereinfacht gesagt, nur eine Liste zur Speicherung von einzelnen Zeichen. Einige Beispiele für Listen:
+
+```py
+# Liste von Zahlen 
+z = [3,6,12.5,-8, 5.5]
+print (z)       # gesamt Liste
+print(z[0])     # ein Element
+print(z[0:3])   # Slice
+
+# Liste von Zeichenketten
+s = ["Hamburg", "Augsburg", "Berlin"]
+print(s)
+
+# Anzahl Elemente
+print("Anzahl:", len(s))
+```
+
+```
+[3, 6, 12.5, -8, 5.5]
+3
+[3, 6, 12.5]
+['Hamburg', 'Augsburg', 'Berlin']
+Anzahl: 3
+```
+
+Listen werden innerhalb von eckigen Klammern angegeben. Darin listen Sie die einzelnen Elemente durch KOmmata getrennt auf.
+
+Die Variable `z` enthält eine Liste von Zahlen. Wie bei STrings ermitteln Sie ein Einzelnes Element einer LIste durch Angabe eines Index (hier z[0]). Einen Teilbereich erhalten Sie mithilfe eines Slices (hier: z[0:3]).
+
+Die Variable `s` enthält eine Liste von Zeichenketten. Die Länge einer Sequenz, also auch einer Liste, ermitteln Sie mit der Funktion `len()`. 
+
+Im nachfolgenden Beispiel sehen Sie eine mehrdimensionale Liste. Eine LIste kann Elemente unterschiedlicher Objekttypen enthalten. Diese Elemente können wiederum Listen sein.
+
+```py
+# mehrdimensionale Liste, utnerschiedliche Objekte
+x = [["Paris", "Fr", 3500_000], ["Rom", "It", 4200_000]]
+print(x)
+
+# Teilliste
+print(x[0])
+
+# einzelne Elemente
+print(x[0][0], "hat", x[0][2], "Einwohner")
+print(x[1][0], "hat", x[1][2], "Einwohner")
+
+# Teile von Elementen
+print(x[0][1][:1])
+```
+```
+[['Paris', 'Fr', 3500000],['Rom', 'It', 4200000]]
+['Paris', 'Fr', 3500000]
+Paris hat 3500000 Einwohner
+Rom hat 4200000 Einwohner
+F
+```
+
+Die Variable `x` enthält zwei Listen. Innerhalb jeder Teilliste (oder eingebetteten Liste) sind zwei Zeichenketten und eine Zahl gespeichert. Eine oder mehrere eingebettete Listen erreichen Sie über die Angabe eines einzelnen Index oder eines Slices.
+
+Einzelne Elemente von eingebetteten LIsten erreichen Sie durch Angabe mehrer Indizes oder Slices. Die erste Angabe in eckigen Klammern kennzeichnet hier die eingebettete Liste mit dem Index 0, die zweite Angabe in eckigen KLammern kennzeichnet das Element mit dem Index 2 innerhalb dieser eingebetteten Liste.
+
+Einzelne Elemente der Liste sind wiederum Sequenzen, falls es sich um Zeichenketten handelt. Daher können Sie z. B. das erste Zeichen des Elements `x[0][1]` miothilfe von `x[0][1][:1]` ermitteln.
+
+#### 4.3.2 Operatoren
+
+Die Operatoren `+` und `*` können Sie bei Sequenzen, also auch bei Listen zur Verkettung oder Vervielfachung einsetzen. Außerdem werden Listen, zusammen mit dem Operator `in` häufig zur Erstellung einer `for` Schleife genutzt. Ein gemeinsames Beispiel für die Beiden genannten Fälle:
+
+```py
+# zwei Listen
+fr = ["Paris", "Lyon", "Marseille"]
+it = ["Rom", "Pisa"]
+
+# Listen zusammensetzen
+stadtliste = fr + it * 2
+print(stadtliste)
+
+# Liste teilweise durchlaufen
+for stadt in stadtliste[3:6]:
+    print(stadt)
+```
+
+```
+['Paris', 'Lyon', 'Marseille', 'Rom', 'Pisa', 'Rom', 'Pisa']
+Rom
+Pisa
+Rom
+```
+
+In den beiden Listen `fr` und `it` werden einige Zeichenketten gespeichert.
+
+Die Liste `stadtliste` ist eine neue Liste. Sie enthält die Elemente der Liste `fr` und zweimal nacheinander die Elemente der liste `it`. Sie wird als vollständige Liste ausgegeben.
+
+Anschließend wird ein Teil der Liste mithielfe einer `for`-Schleife und eines Slices Element für Element ausgegeben.
+
+#### 4.3.3 Funktionen und Operationen
+
+Listen können, im Gegensatz zu Strings, verändert werden. Sie können aber nicht nur Elemente oder Teilbereche auswählen, sondern auch:
+* Elemente oder Teilbereiche am Ende oder am Anfang hinzufügen
+* vorhandene Elemente oder Teilbereiche verändern
+* Elemente oder Teilbereiche innerhalb der Liste einfügen
+* Elemente oder Teilbereiche löschen
+
+Falls Sie ein einzelnes Element durch einen Teilbereich ersetzen, wird eine neue eingebettete Liste erzeugt. Es folgt ein Programm mnit einigen Listenoperationen, die Elemente oder Teilbereiche betreffen. Das Schlüsselwort `del` dient zum Löschen:
+
+```py
+
 ```
