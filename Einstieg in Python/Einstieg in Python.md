@@ -2256,4 +2256,941 @@ Fehler
 5.2
 ```
 
-Zu 1: Bei der mehrfachen Zuweisung erhält die Variable `x` den Wert `3`, die Variable `y` den Wert `5.2` und die Variable `z` den wert `hallo`. Die Anweisungen auf drei zeilen getrennt würde dasselbe, würen aber drei Programmzeilen statt einer bea
+Zu 1: Bei der mehrfachen Zuweisung erhält die Variable `x` den Wert `3`, die Variable `y` den Wert `5.2` und die Variable `z` den wert `hallo`. Die Anweisungen auf drei Zeilen verteilt würde dasselbe bewirken, aber drei Programmzeilen statt einer beanspruchen.
+
+Zu 2: Die Änderung eines Variablenwerts hat keine Auswirkungen innerhalb derselben Mehrfachzuweisung. Die Variable `a` erhält den alten (und neuen) Wert von `c`(=22), die Variable `b` den alten Wert von `a` und die Variable `c` die Summe der alten Werte von `a` und `c`. Die Änderung der Variblen wirkt sich erst in der nächsten Anweisung aus. Die folgenden Anweisugnen hätten zu ganz anderen Ergebnissen geführt, da a und b bereits neue werte erhalten hätten.
+
+Zu 3: Steht auf der linken Seite der Zuweisung nur eine Variable (im Beispiel p), während auf der rechten Siete mehrere Werte oder Ausdrücke stehen (im Beispiel 3 und 4), handelt es sich um die Erzeugung(Verpackung) eines Tupels.
+
+Zu 4: Ein Tupel kann wieder entpackt werden. Dabei sollte die Anzahl der Variablen auf der linken Seite der Zuweisung der Anzahl der Elemente des Tupels auf der rechten Seite entsprechen.
+
+Zu 5: Es werden mehrere Werte zugewisen, aber es steht nicht die gleiche Anzahl an Variablen oder nur eine einzelne Variable zur Verfügung. Es erfolgt eine Ausnahme, da die Werte weder einen Tupel noch in einer einzelnen Variablen eindeutug zugeordnet werden können.
+
+Zu 6: Falls die Anzahl der Tupelwerte nicht mit der Anzahl der Variablen übereinstimmt, können Sie einer der Variablen das Zeichen `voranstellen. In dieser gesternten (engl: starred) Variablen wird der Rest des Tupels gespeichert, der nicht einer einzelnen Variablen zugewiesen werden kann. Im Beispiel werden der erste und der letzte Wert einer einzelnen Variablen zugewiesen. Die mittleren Werte landen als Liste in der mittleren Variablen.
+
+### 4.5 Dictionarys
+
+Ein Dictionary ist mit einem Wörterbuch zu vergleichen. In einem Wörterbuch finden Sie unter einem Schlüsselbegriff die zugeordnete Information. So steht etwa in einem english-deutsch Wörterbuch unter dem Eintrag house der zugeordnete deutsche Begriff Haus.
+
+#### 4.5.1 Eigenschaften
+
+In Python stellen Dictionarys veränderliche Objekte dar und bestehen aus mehreren Paaren. Jedes Paar besteht aus einem eindeutigen schlüssel und einem zugeordneten Wert. Über den Schlüssel greifen Sie auf den Wert zu. Als Schlüssel werden meistens Strings verwendet, es können aber auch andere unveränderliche Objekte (Zahlen, Tupel) benutzt werden. Die Reihenfolge der Schlüssel bei der Ausgabe eines Dictionarys wird durch die Reihenfolge beim Einfügen bestimmt.
+
+Im folgenden Beispiel werden die Namen und Altersangaben mehrerer Personen in einem Dictionary erfasst und bearbeitet. Der Name dient als Schlüssel. Darüber kann auf die Altersangabe (also auf den Wert des Schlüssels) zugegriffen werden.
+
+```py
+# Erzeugung eines Dictionarys
+alter = {"Peter":31, "Julia":28, "Werner":35}
+print(alter)
+
+# Ersetzen eines Werts
+alter["Julia"] = 27
+print(alter)
+
+# Ein Element hinzu
+alter["Moritz"] = 22
+print(alter)
+
+# Ausgabe
+print("Julia:", alter["Julia"])
+```
+```
+{'Peter': 31, 'Julia': 28, 'Werner': 35}
+{'Peter': 31, 'Julia': 27, 'Werner': 35}
+{'Peter': 31, 'Julia': 27, 'Werner': 35, 'Moritz': 22}
+Julia: 27
+```
+
+Es wird das Dictionary `alter` mit drei Informationspaaren erzeugt und ausgegeben. Dictionarys werden mithilfe von geschweiften Klammern (`{}`) erzeugt. Die Paare werden durch Kommata voneinander getrennt, ein Paar wird in der folgenden Form notiert: `Schlüssel:Wert`.
+
+Auf ein einzelnes Element greifen Sie über den Schlüssel in eckigen Klammern zu. Dies wird hier für Zuweisung und Ausgabe genutzt.
+
+Elemente sind veränderlich. In diesem Beispiel wird die Altersangabe von `"Julia"` verändert. Es können auch Elemente hinzugefügt werden. Hier wird dem Dictionary das Paar `"Moritz":22` hinzugefügt, da bisher kein Element mit dem Schlüssel `"Moritz"` vorhanden ist.
+
+#### 4.5.2 Operatoren und Funktionen
+
+Es gibt eine Reihe von Operatoren und Funktionen zur Bearbeitung von Dictionarys. Einige werden im folgenden Programm verdeutlicht:
+
+```py
+# Erzeugung
+alter = {"Peter":31, "Julia":28, "Werner":35}
+print(alter)
+
+# Element enthalten?
+if "Julia" in alter:
+    print(alter["Julia"])
+
+# Entfernen eines Elements
+del alter["Julia"]
+
+# Element enthalten?
+if "Julia" not in alter:
+    print("Julia ist nicht enthalten")
+
+# Anzahl Elemente
+print("Anzahl:", len(alter))
+
+# Aktualisierung mit zweitem Dictionary
+ualter = {'Moritz': 18, 'Werner': 29}
+alter.update(ualter)
+print(alter)
+print(ualter)
+```
+
+```
+{'Peter': 31, 'Julia': 28, 'Werner': 35}
+28
+Julia ist nicht enthalten
+Anzahl: 2
+{'Peter': 31, 'Werner': 29, 'Moritz': 18}
+```
+
+Ein einzeles Element löschen Sie mithilfe de Schlüsselworts `del` aus der Liste. Die Existenz eines Elements prüfen Sie mithilefe des Operators `in`. Die Anzahl der Elemente ermitteln Sie mithilfe der Funktion `len()`.
+
+Sie können Ein Dictionary mithilfe der Funktion `update()` mit den Intahlten eines anderen Ditionarys aktualisieren. Daei erhalten vorhandene Elemente einen neuen Wert, neue Elemente werden angehängt. Die beiden Dictionarys werden also zusammengeführt.
+
+#### 4.5.3 Views
+
+Die Funktionen `keys()`, `items()` and `values()` erzeugen sogenannte dynamische Views eines Dictionarys. Diese Views verändern sich unmittalbar, falls sie das zugeordnete Dictionary verändert. 
+
+
+```py
+# Erzeugung
+alter = {"Peter":31, "Julia":28, "Werner":35}
+
+# Werte
+w = alter.values()
+print("Werte/Values:", w)
+print("Anzahl Werte:", len(w))
+for x in w:
+    print(x)
+if 31 in w:
+    print("31 ist enthalten")
+alter["Peter"] = 41
+if 31 not in w:
+    print("31 ist nicht enthalten")
+print()
+
+# Keys
+k = alter.keys()
+print("Keys:", k)
+print("Anzahl Keys:", len(k))
+for x in k:
+    print(x)
+if "Werner" in k:
+    print("Werner ist enthalten")
+del alter["Werner"]
+if "Werner" not in k:
+    print("Werner ist nicht enthalten")
+print()
+
+# Items
+i = alter.items()
+print("Items:", i)
+alter["Franz"] = 35
+
+print("Anzahl Items:", len(i))
+for x in i:
+    print(x)
+if ("Julia", 28) in i:
+    print("Julia, 28 ist enthalten")
+```
+```
+Werte/Values: dict_values([31, 28, 35])
+Anzahl Werte: 3
+31
+28
+35
+31 ist enthalten
+31 ist nicht enthalten
+
+Keys: dict_keys(['Peter', 'Julia', 'Werner'])
+Anzahl Keys: 3
+Peter
+Julia
+Werner
+Werner ist enthalten
+Werner ist nicht enthalten
+
+Items: dict_items([('Peter', 41), ('Julia', 28)])
+Anzahl Items: 3
+('Peter', 41)
+('Julia', 28)
+('Franz', 35)
+Julia, 28 ist enthalten
+```
+
+Mithilfe der Funktion `values()` wird eine View der Werte des Dictionarys erzeugt. Den Inhalt der View können Sie mithilfe einer `for`-Schleife und des Operators `in` ausgeben. Sie können -w iederrum mithilfe des Operators `in` - prüfen, ob ein bestimmter Wert in der View exisitert.
+
+Der Wert eines Dictionary_Elements wird verändert. Das wirkt sich sofort auf die zugehörige View aus. Diese muss also nicht neu erzeugt werden. Der ursprüngliche Wert des Dictionary-Elements wird nach der Änderung nicht mehr gefunden.
+
+Mithilfe der Funktion `keys()` wird eine View der Keys des Dictionarys erzeugt. Den Inhalt der Views können Sie mithilfe einer `for`-Schleife und des Operators `in`ausgeben. Sie können - wiederum mithilfe des Operators `in` - prüfen, ob ein bestimmter Key in der View existiert.
+
+Ein Dictionary-Element wird gelöscht. Dies wirkt sich soofrt auf die zugehörige View aus. Das ursprünglich vorhandene Dictionary-Element wird nach dem Löschen nicht mehr gefunden.
+
+Mithilfe der Funktion `items()` wird eine View der Elemente des Dictionarys erzeugt. Den Inhalt der View können Sie mithilfe einer `for`-Schleife un `in` ausgeben. Sie können - wiederrum mit `in` - prüfen, bo ein bestimmtes Element, also ein Schlüssel-Wert-Kombination, in der View existiert.
+
+#### 4.5.4 Vergleiche
+
+Dictionarys können miteinander verglichen werden. Mithilfe des Operators == stellen Sie fest, ob alle Elemente, also alle Schlüssel-Wert-Kombinationen, übereinstimmen. Allerdings können Sie nicht prüfen, ob ein Dictionary kleiner oder grlößer als ein anderes Dicionary ist.
+
+```py
+# Zwei Dictionarys
+alter1 = {"Julia":28, "Peter":30}
+alter2 = {"Peter":30, "Julia":28}
+
+# Vergleich
+
+if alter1 == alter2:
+    print("Gleich")
+
+try:
+    if alter1 < alter2:
+        print("1 < 2")
+    else:
+        print("nicht 1 < 2")
+except:
+    print("Fehler")
+```
+
+Die beiden Dictionarys werden in unterschiedlicher Reihenfolge erstellt. Mithilfe von `==` wird festgestellt, dass sie dennoch den gleichen Inhalt haben. Der Vergleich mit < oder > ist nicht möglich.
+
+### 4.6 Mengen, Sets
+
+Mengen(engl: *sets*) unterscheiden sich von Listen und Tupeln dadurch, dass jedes Element nur einmal exisitiert. Außerdem sind Mengen ungeordnet, daher ist auch die Reihenfolge bei der Ausgabe eines gesamten Sets nicht festgelegt. Einzelne Elemente knnen also nicht anhand eines Slices bestimmt werden. Allerdings können Sie mit Mengen einige interessante Operatorionen durchführen, die aus der Mengenlehre bekannt sind.
+
+### 4.6.1 Eigenschaften
+
+Zum besseren Verständnis erzeugen wir ein Set und eine Liste und vergleichen einige ihrer Eigenschaften:
+
+```py
+# Liste
+li = [8, 2, 5, 5, 5] 
+print("Liste:", li)
+
+# Set
+s1 = set([8, 2, 5, 5, 5])
+print("Set:", s1)
+print("Anzahl:", len(s1))
+
+# Elemente
+for x in s1:
+    print("Elemente:", x)
+if 5 in s1:
+    print("5 ist enthalten")
+```
+```
+Liste: [8, 2, 5, 5, 5]
+Set: {8, 2, 5}
+Anzahl: 3
+Elemente: 8
+Elemente: 2
+Elemente: 5
+5 ist enthalten
+```
+
+Eine Menge erzeugen sie mithilfe der Funktion `set()`. Als einziger Parameter wird der Funktion `set()` eine Liste oder ein anderes Objekt übergeben, das durchlafen werden kann. Der Unterschied zur Liste: In der Liste kann ein Objekt mehrmals vertreten sein, in der Menge nur einmal.
+
+Die Funktion `len()` liefert die Anzahl der Elemente der Menge. Mithilfe einer `for`-Schleife und des Operators `in` können Sie die Menge durchlaufen.
+Wiederum mit `in` prüfen Sie, ob ein bestimmtes Element in der Menge enthalten ist.
+
+#### 4.6.2 Funktionen
+
+Betrachten wir einige Funktionen, die Sie auf Mengen anweden können:
+
+* Kopieren einer Menge mit `copy()`
+* Hinzufügen von Elementen mit `add()`
+* Entfernen von Elementen mit `discard()`
+* Leeren einer Menge mit `clear()`
+
+```py
+#Set
+s1 = set([8,15, "x"])
+print("Original s1:", s1)
+
+# Kopie
+s2 = s1.copy()
+print("Kopie s2:", s2)
+
+# Element hinzu
+s1.add("abc")
+print("Element zu s1:", s1)
+print("s2:", s2)
+
+# Element entnehmen
+s1.discard("x")
+print("Element entnommen:", s1)
+try:
+    s1.discard("x") # löst keinen Fehler aus!
+except:
+    print("Fehler") 
+
+# leeren
+s1.clear()
+print("geleert:", s1)
+```
+```
+Original s1: {8, 'x', 15}
+Kopie s2: {8, 'x', 15}
+Element zu s1: {8, 'abc', 'x', 15}
+s2: {8, 'x', 15}
+Element entnommen: {8, 'abc', 15}
+geleert: set()
+```
+Die Funktion `copy()` erzeugt eine neue Menge als Kopie der alten Menge. Mithilfe der Funktion `add()` fügen Sie ein Element hinzu. Die Funktion `discard()` dient zum Löschen eines bestimmten Elements. Die Funktion `clear()` befreit die Menge von allen Elementen.
+
+#### 4.6.3 Operatoren
+
+Mit den vier Operatoren `<`, `<=`, und `>`, `>=`stellen Sie fest, ob eine Menge eine Teilmenge oder eine echte Teilmenge einer anderen Menge ist.
+
+```py
+# Sets
+s1 = set([8,2,5])
+s2 = set([2,8])
+s3 = set([2,5,8])
+
+print("s1:", s1)
+print("s2:", s2)
+print("s3:", s3)
+
+# Teilmenge, echte Teilmenge
+if s2 < s1:
+    print("s2 ist echte Teilmenge von s1")
+if s3 <= s1:
+    print("s3 ist Teilmenge von s1")
+```
+```
+s1: {8,2,5}
+s2: {8,2}
+s3: {8,2,5}
+s2 ist echte Teilmenge von s1
+s3 ist Teilmenge von s1
+```
+
+Die Menge `s2` ist eine echte Teilmenge der Menge `s1`: Alle Elemente von `s2`sind in `s1`enthalten, und `s2` hat weniger Elemente als `s1`.
+
+Die Menge `s3` ist nur eine *normale* Teilmenge der Menge `s1`: Alle Elemente von `s3` sind in `s1` enthaltne, aber `s3` hat ebensoviele Elemente wie `s1`. Die Reihenfolge der Elemente bei der Erzeugung ist unerheblich.
+
+Im nachfolgenden Programm werden mithilfe der Operatoren `|` (or), `&`, (und), `-` (minus) und `^`(hoch) einige Mengenoperationen durchgeführt.
+
+```py
+# Sets
+s1 = set([8,15,"x"])
+s2 = set([4, "x", "abc", 15])
+print("s1:", s1)
+print("s2:", s2)
+
+# Vereinigungsmenge
+
+s3 = s1 | s2
+print("Vereinigungsmenge:", s3)
+
+# Schnittmenge
+s4 = s1 & s2
+print("Schnittmenge:", s4)
+
+# Differenzmengen
+
+s5 = s1 - s2
+print("Differenzmenge s1-s2:", s5)
+
+s6 = s2 - s1
+print("Differenzmenge s2-s1:", s6)
+
+s7 = s1 ^ s2
+print("Symmetrische Differenzmenge s1^s2:", s7)
+```
+```
+s1: {8, 'x', 15}
+s2: {'x', 'abc', 4, 15}
+Vereinigungsmenge: {'x', 'abc', 4, 8, 15}
+Schnittmenge: {'x', 15}
+Differenzmenge s1-s2: {8}
+Differenzmenge s2-s1: {'abc', 4}
+Symmetrische Differenzmenge s1-s2: {4, 8, 'abc'}
+```
+
+Der Operator `|` (oder) dient zur Vereinigung zweier Mengen. Die entstehende Menge enthält alle Elemente, die in der ersten oder in der zweiten Menge enthalten sind. Auch in der neuen Menge ist jedes Element nach wie vor nur einmal enthalten.
+
+Die Elemente, die in der ersten und in der zweiten Menge enthalten sind, bliden die Schnittmenge. Dies gelingt mithilfe des Operators `&` (und).
+
+Bei einer Differenzmenge müssen Sie beachten, welche Menge von welcher Anderen Menge abgezogen wird. Mithilfe des Operators `-` (minus)  werden zwei verschiedene Differenzmengen erstellt. 
+Die Operation `s1-s2` zieht von der Menge `s1` alle Elemente ab, die auch in `s2` enthalten sind. 
+Bei der Operation `s2-s1` verhält es sich umgekerht.
+
+Bei der symmetrischen Differenzmenge werden mit dem Operator `^` (hoch) die Elemente ermittelt, die nur in einer der beiden Mengen enthalten sind.
+
+#### 4.6.4 Frozenset
+
+Ein Sonderfall eines Sets ist ein Frozenset. Im Unterschied zu einem set ist es *eingefroren*, also unveränderlich.
+
+```py
+# Set 
+s = set([8,15,"x", 8])
+print("Set:", s)
+
+# Frozenset
+fs = frozenset([8, 15, "x", 8])
+print("Frozenset:", fs)
+for x in fs:
+    print(x)
+
+try:
+    fs.discard("x")
+except:
+    print("Fehler")
+```
+```
+Set: {8,'x', 15}
+Frozenset: frozenset({8,'x', 15})
+8
+x
+15
+Fehler
+```
+Mithilfe der Funktion `frozenset()` wird ein Frozenset erzeugt. Wie bei einem Set kommt jedes Element nur einmal vor. Bei der Ausgabe wird das Frzoenset durch den Begriff `frozenset` und zusätzlichen Klamemrn besonders gekennzeichnet.
+
+Die einzelnen Elemente geben Sie mithilfe von `for` und `in` wie gewohnt aus. Der Versuch, ein Frzoenset zu verändern, führt zu einem Fehler.
+
+### 4.7 Wahrheitswerte udn Nichts
+
+Objete und Ausdrücke können wahr oder falsch sein, außerdem gibt es auch das Nichts-Objekt. Betrachten wir einige Zusammenhänge.
+
+#### 4.7.1 Wahrheitswerte True und False
+
+Besonders im Zusammenhang mit Bedingungsprüfung (`if`, `while`) wird der Wahrheitswert eines Ausdrucks benötigt.
+
+Beispiel: Falls eine Zahl größer als 10 ist, sollen bestimmte Anweisungen ausgeführt werden. Der dabei benötigte Ausdruck `x > 10` ist wahr, wenn `x` einen Zahlenwert größer als 10 hat. Er ist falsch, wenn `x` einen Zahlenwert kleiner oder gleich 10 hat.
+
+Diese Ausdrücke liefern eines der beiden Schlüsselwörter `True` oder `False`. Dies sind ie einzigen Objekte des Datentyps `bool`.
+
+Es gibt außerdem die Funktion `bool()`, die den Wahrheitswert eines Ausdrucks oder eines Objekts zurückgibt. Alle Objekte in Python besitzen einen Wahrheitswert.
+
+Folgende Objete sind wahr / `True`:
+* eine Zahl ungleich 0, also größer als 0 oder kleiner als 0
+* eine nicht leere Sequenz (String, Liste, Tupel)
+* ein nicht leeres Dictionary
+* eine nicht leere Menge
+
+Folgene Objete sind falsch / `False`:
+* Eine Zahl, die den Wert 0 hat
+* eine leere Sequenz (String `""`, Liste `[]`, Tupel`()`)
+* ein leeres Dictionary: `{}`
+* eine leere Menge: `set()`, `frozenset()``
+* die Konstante `None`(mehr dazu 4.7.2)
+
+Entlosschleifen, die nur mit einem break verlassen werden können, werden gern mit `while 1` konstruiert. Diese Bedingung ist immer wahr. Sie können natürlich auch `while True` schreiben.
+
+Gilt für eine Objektsammlung `len(x) == 0`, so ist das Objekt `x` falsch.
+
+Im folgenden Programm wird der Wahrheitswert verschiedener Objekte an Beispielen dargestellt, überprüft und ausgegeben.
+
+```py
+# True and False
+W = True
+print("Wahrheitswert:", W)
+W = False
+print("Wahrheitswert:", W)
+W = 5>3
+print("5>3:", W)
+W = 5<3
+print("5<3:", W)
+print()
+
+# Datentyp
+
+W = 5>3
+print("Typ von 5>3:", type(W))
+print()
+
+# wahre Zahl
+Z = 5 + 0.001 - 5
+print("Zahl:", Z)
+if Z:
+    print("Zahl ist", bool(Z))
+
+# nicht wahre Zahl
+Z = 5.75 - 5.75
+print("Zahl:", Z)
+if not Z:
+    print("Zahl ist", bool(Z))
+print()
+
+# String
+S = "Kurt"
+print("String:", S)
+if S:
+    print("String ist nicht leer, also", bool(S))
+
+# Liste
+L = [3,4]
+print("Liste vorher:", L)
+del L[0:2]
+print("Liste nachher:", L)
+if not L:
+    print("Liste ist leer, also", bool(L))
+print()
+
+# Tupel
+T = (5,8,2)
+print("Tupel:", T)
+if T:
+    print("Tupel ist nicht leer, also", bool(T))
+print()
+
+# Dictionary
+D = {"Julia":28, "Werner":32}
+print("Dictionary vorher:", D)
+del D["Julia"]
+del D["Werner"]
+print("Dictionary nachher:", D)
+if not D:
+    print("Dictionary ist leer, also", bool(D))
+print()
+
+# Set
+S = set([5, 7.5, "abc"])
+print("Set vorher:", S)
+S.clear()
+print("Set nachher:", S)
+if not S:
+    print("Set ist leer, also", bool(S))
+```
+```
+Wahrheitswert: True
+Wahrheitswert: False
+5>3: True
+5<3: False
+
+Typ von 5>3: <class 'bool'>
+
+Zahl: 0.001000000000000334
+Zahl ist True
+Zahl: 0.0
+Zahl ist False
+
+String: Kurt
+String ist nicht leer, also True
+Liste vorher: [3, 4]
+Liste nachher: []
+Liste ist leer, also False
+
+Tupel: (5, 8, 2)
+Tupel ist nicht leer, also True
+
+Dictionary vorher: {'Julia': 28, 'Werner': 32}
+Dictionary nachher: {}
+Dictionary ist leer, also False
+
+Set vorher: {5, 'abc', 7.5}
+Set nachher: set()
+Set ist leer, also False
+```
+Der Variablen W werden Wahrheitswerte bzw. Die Ergebnisse von Vergleichsausdrücken, also ebenfalls Wahrheitswerte, zugewiesen. Der Datentyp der Wahrheitswerte ist `bool`. Sobald das Ergebnis einer Berechnung von 0 abweicht, ergbit sich der Wahrhetiswert `True`.
+
+String, Liste, Tupel, Dictionary und set ergeben `False`,  wenn sie leer sind, und `True`, wenn sie nicht leer sind. Dies können Sie zur Prüfung der betreffenden Objekte nutzen.
+
+#### 4.7.2 Nichts, None
+
+Das Schlüsselwort `None` bezeichnet das Nichts-Objekt. `None` ist das einzige Objekt des Datentyps `NoneType`.
+
+Funktionen ohne Rückgabewert liefer `None` zurück. Dies kann ein Hinweis darauf sein,
+* dass Sie eine Funktion falsch einsetzen, bei der Sie einen Rückgabewert werwarten, oder
+* dass eine Funktion kein Ergebnis liefert, obwohl dies erwartet wird.
+
+```py
+# Funktion
+def quotient(a,b):
+    try:
+        c = a/b
+        return c
+    except:
+        print("Funktion meldet Fehler")
+
+# liefert Ergebnis
+erg = quotient(7,4)
+if erg:
+    print("Ergebnis:", erg)
+print()
+
+# liefert Fehler
+
+erg = quotient(7,0)
+if not erg:
+    print("Programm meldet Fehler")
+print("Ergebnis:", erg)
+print("Typ des Ergebnisses:", type(erg))
+print()
+
+# Konstante None
+Z = None
+print("Z:", Z)
+if Z is None:
+    print("Objekt ist das Nichts, also", bool(Z))
+```
+```
+Ergebnis: 1.75
+
+Funktion meldet Fehler
+Programm meldet Fehler
+Ergebnis: None
+Typ des Ergebnisses: <class 'NoneType'>
+
+Z: None
+Objekt ist das Nichts, also False
+```
+
+Die Funktion `quotient()` wird definiert. Sie berechnet den Quotienten aus zwei Zahlen. Sie kann nicht den Wert 0 als Ergebnis liefern.
+
+* Falls der Quotient regulär berechnet werden kann, wird das Ergebnis mithilfe von `return` zurückgeliefert. Dies ist beim ersten Aufruf der Funktion der Fall.
+* Falls ein Fehler auftritt, wird nichts zurückgeflierrt. Die Variable `erg` erhält also den Wert `None`. Dies können Sie abfragen und damit feststellen, dass die Funktion kein nutzbares Ergebnis geliefert hat.
+
+Das Nichts-Objekt hat den Wahrheitswert `False`.
+
+### 4.8 Referenz, Identität und Kopie
+
+In diesem Abschnitt erläutere ich den Zusammenhang zwischen Objekten und Referenzen. Wir untersuchen die Identität von Objekten und erzeugen Kopen von Objekten.
+
+#### 4.8.1 Referenz und Identität
+
+Der Name eines Objekts ist eigentlich eine Referenz auf ein Objekt.
+Weißen Sie diese Referenz einem anderen Namen zu, erzeugen Sie eine zweite Referenz auf dassele Objekt. Mithilfe des Identitätsoberators `is` stellen Sie fest, dass beide Referenzen auf dasselbe Objekt verweisen.
+
+Wird das Objekt über die zweite Referenz geändert, zeigt sich eine der beiden folgenden Verhaltensweisen:
+* Im Fall eines einfachen Objekts wie Zahl oder String wird ein zweites Objekt erzeugt, in dem der neue Wert gespeichert wird. Die beiden Referenzen verweisen danach auf zwei verschiedene Objekte.
+* Im Fall eines nicht einfachen Objekts wie Liste, Dictionary usw. wird das Originalobjekt geändert. Es gibt nach wie vor ein Objekt mit zwei verschienden Referenzen.
+
+Mithilfe des Operators `==` stellen Sie fest, ob zwei Objekte den gleichen Inhalt haben, ob also z.B. zwei Listen die gleichen Elemente enthalten.
+
+Im folgenden Beispiel werden nacheinander eine Zahl, ein String und eine Liste erzeugt und zweimal referenziert. Anschließend wird der zweiten Referenz jeweils ein neuer Inhalt zugewiesen. identität und Inhalt werden anhand der eiden Operatoren `is` und `==` festgestellt.
+
+```py
+# Kopie einer Zahl
+print("Zahl:")
+x = 12.5
+y = x
+print("Dasselbe Objekt:", x is y)
+y = 15.8
+print("Dasselbe Objekt:", x is y)
+print("gleicher Inhalt:", x == y)
+print()
+
+# Kopie eines Strings
+print("String:")
+x = "Robinson"
+y = x
+print("dasselbe Objekt:", x is y)
+y = "Freitag"
+print("dasselbe Objekt:", x is y)
+print("gleicher Inhalt:", x == y)
+print()
+
+# Zweite Refernz auf eine Liste
+print("Liste:")
+x = [23, "hallo", -7.5]
+y = x
+print("dasselbe Objekt:", x is y)
+y[1] = "welt"
+print("dasselbe objekt:", x is y)
+print("gleicher Inhalt:", x == y)
+```
+```
+Zahl:
+Dasselbe Objekt: True
+Dasselbe Objekt: False
+gleicher Inhalt: False
+
+String:
+dasselbe Objekt: True
+dasselbe Objekt: False
+gleicher Inhalt: False
+
+Liste:
+dasselbe Objekt: True
+dasselbe objekt: True
+gleicher Inhalt: True
+```
+Die Ausgabe zeigt, dass die Objekte zunächst jeweils identisch sind.
+
+Bei einer Zahl oder einem String wird durch die Zuweisung eines neuen Werts jeweils ein neues Objekt erzeugt. Die Inhalte sind nach der Zuweisung natürlich unterschiedlich.
+
+Die Liste(hier stellvertretend auch für andere Objekte) existiert insgesamt nur einmal, auch wenn einzelne Elemente der Liste verändert werden. Sie können über beide Referenzen auf diesselbe Liste zugreifen.
+
+#### 4.8.2 Ressourcen sparen
+Python spart gern Ressourcen. Dies kann zu einem ungewöhnlichen Verhalten führen: Wenn einem Objekt über eine Referenz ein Wert zugewiesen wird *und* auf denselben Wert bereits von einer anderen Referenz verwiesen wird, kann es geschehen, dass die beiden Referenzen anschließend auf dasselbe Objekt verweisen. Python spart also Speicherplatz.
+
+Das Schlüsselwort `del` dient zur Löschung von nicht mehr benötigten Referenzen. Ein Objekt, auf das zwei Referenzen verweisen, wird druc da Löschen der ersten Referenz nicht gelöscht.
+
+```py
+# Ein Objekt, zwei Referenzen
+x = 42
+y = 42
+print("x:", x, "y:", y, "identisch:", x is y)
+
+# Zweites Objekt
+y = 56
+print("x:", x, "y:", y, "identisch:", x is y)
+
+# Ressourcen sparen
+y = 42
+print("x:", x, "y:", y, "identisch:", x is y)
+
+# Entfernen, Schritt 1
+del y
+print("x", x)
+
+# Entfernen, Schritt 2
+del x
+try:
+    print("x:", x)
+except:
+    print("Fehler")
+```
+```
+x: 42 y: 42 identisch: True
+x: 42 y: 56 identisch: False
+x: 42 y: 42 identisch: True
+x 42
+Fehler
+```
+Zunächst erhalten die Referenzen `x` und `y` denselben Wert. Wir stellen fest: Es handelt sich um ein Objekt mit zwei Referenzen. Anschließend wird der Wert von `y` geändert. Damit gibt es zwei Refrenzen auf zwei verschiedene Objekte. Zuletzt wird der Wert von `y` auf den alten Wert zurückgesetzt. Nun gibt es wieder nur noch ein Objekt.
+
+Die Referenz `y` wird gelöscht. Das Obejkt existiert weiterhin und kann über die Referenz `x`erreicht werden. Anschließend wird die Referenz `x` gelöscht. Die Ausgabe über diese Referenz fürht zu einem Fehler, da der Name nicht mehr existiert.
+
+#### 4.8.3 Objekte kopieren
+Echte Kopien von nicht einfachen objekten können Sie durch das Erzeugen eines leeren Objekts und Anhängen oder Hinzufügen der einzelnen Elemente erzeugen. Für umfangreiche Objekte, die wiederum andere Objekte enthalten, können Sie sich auf die Funktion() `deepcopy()` aus dem Modul `copy` bedienen. Beides wird in folgendem Programm gezeigt.
+
+```py
+# Modul copy
+import copy
+
+# Kopie einer Liste, Methode 1
+x = [23, "hallo", -7.5]
+y = []
+for i in x:             # Elemente einzeln kopieren
+    y.append(i)
+print("Dasselbe Objekt:", x is y)
+print("gleicher Inhalt:", x == y)
+print()
+
+# Kopie einer Liste, Methode 2
+x = [23, ["Berlin", "Hamburg"], -7.5, 12, 67]
+y = copy.deepcopy(x)    # Funktion zur Tiefenkopie
+print("dasselbe Objekt:", x is y)
+print("gleicher Inhalt:", x == y)
+```
+```
+Dasselbe Objekt: False
+gleicher Inhalt: True
+
+dasselbe Objekt: False
+gleicher Inhalt: True
+```
+Die Ausgabe zeigt, dass in beiden Fällen jeweils ein neues Objekt erzeugt wird. Die Inhalte der beiden Objekte sind allerdings gleich.
+
+## 5 Weiterführende Programmierung
+
+In diesem Kapitel werden die Kenntnisse aus dem Programmierkurs im Zusammenhang mit den verschiedenen Objekttypen durch nützliche Praxistipps erweitert.
+
+### 5.1 Allgemeines
+Im ersten Teil des Kapitels erläutere ich einige nützliche Techniken, die keinen bestimmten Thema zuzuordnen sind.
+
+#### 5.1.1 Kombinierte Zuweisungsoperatoren
+
+Neben der einfachen Zuweisung eines Werts zu einer Variablen gibt es auch die kombinierten Zuweisungsoperatoren. Diese verbinden die normalen Operatoren für Zahlen oder Zeichenketten mit der Zuweisung eines Werts. Die betreffende Variable wird also unmittelbar um den genannten Wert verändert. Dies ist besonders bei umfangreichen Ausdrücken oder bei längeren Variabelnamen sinnvoll. Ein Beispiel:
+
+Der Ausdruck `TemperaturInCelsius += 5` ist überschaubarer als der Ausdruck `TemperaturInCelsius = TemperaturInCelsius + 5`. Beide Ausdrücke erhöhen den Wert der Variablen `TemperaturInCelsius` um 5.
+
+Es folgt ein Beispiel in dem kombinierte Zuweisungsoperatoren für Zahlen und für Zeichenketten eingsetzt werden.
+
+```py
+# Kombinierte Zuweisungsoperatoren für Zahlen
+x = 12
+print(x)
+x += 3      # erhöhen um
+print(x)
+x -= 9      # reduzieren um
+print(x)
+x **= 2     # Quadrieren
+print(x)
+x *= 3      # Multiplizieren
+print(x)
+x //= 7     # Ganzzahliges Teilen von x
+print(x)
+x /= 4      # Teilen von x
+print(x)
+x %= 2      # Dividieren, Rest berechnen
+print(x)
+
+# Kombinierte Zuweisungsoperatoren für Zeichenketten
+t = "hallo"
+print(t)
+t += "python"   # Anhängen an t
+print(t)
+t *= 3          # Verdreifachen von t
+print(t)
+```
+```
+12
+15
+6
+36
+108
+15
+3.75
+1.75
+hallo
+hallopython
+hallopythonhallopythonhallopython
+```
+Die Variable `x`erhält zunächst den Zahlenwert 12. Durch die nachfolgende Anweisung wird ihr Wert jedesmal verändert. Der wert wird als Erstes um 3 erhöht (=15), snchließend um 9 vermindert (=6), anschließend hoch 2 gerechnet (=36) und mit 3 multipliziert (=108). Es folgt eine Ganzzahldivision, dabei werden die Nachkommastellen abgeschnitten. Die verbleibende Zahl (15) wird durch 4 geteilt (= 3.75). Zuletzt wird der Rest der Divison durch 2 berechnet ( = 1.75).
+
+Die Variable t erhält den Zeichenkettenwert `"hallo"`. Anschließend wird sie verlängert und vervielfacht.
+
+Bei all diesen Operationen ist darauf zu achten, dass die betreffende Variable vorher bereits einen Wert hat, sonst trifft ein Fehler auf.
+
+#### 5.1.2 Programmzeile in mehreren Zeilen
+In Abschnitt 2.3.6 wurde erläutert, wie sie eine längere Zeichenkette bei Einsatz der Funktion `print()` über mehrere Zeilen verteilen. In diesem Abschnitt zeige ich, wie Sie lange Programmzeilen allgemein zerlegen können, u. a. mithilfe des Zeichens `\`. Ein Beispiel:
+
+```py
+print("umrechnung von Celcsius in Fahrenheit")
+
+# Trennung einer Zeichenkette
+print("Bitte geben Sie eine"
+      "Temperatur in Celsius ein:")
+TemperaturInCelsius = float(input())
+
+# Trennung eines Ausdrucks
+TemperaturInFahrenheit = TemperaturInCelsius \
+                         * 9 / 5 + 32
+
+# Trennung nach einem Komma
+print(TemperaturInCelsius, "Grad Celsius entsprechen",
+      TemperaturInFahrenheit, "Grad Fahrenheit")
+```
+Zunächst wird eine Zeichenkette in gewohnter Weise zerlegt und in zwei Zeilen notiert. Jeder Teil der Zeichenkette wird in Anführungszeichen gesetzt. Ein trennendes Leerzeichen zwischen den beiden Teilen muss von Hand eingegeben werden.
+
+Eine längere Programmzeile mit einer berechnung wird mithilfe des Zeichens `\` zerlegt. Dieses Zeichen zeigt an, dass die Programmzeile in der nächsten Zeile fortgesetzt wird.
+
+Einfacher ist die Zerlegung der Programmzeile, wenn darin Kommata auftreten, wie z.B. beim Aufruf einer Funktion mit mehreren Parametern oder bei der Zuweisung einer Liste. Hier können Sie einfach nach einem Komma trennen.
+
+#### 5.1.3 Eingabe mit Hilfestellung
+
+Die eingebaute Funktion `input()` zur Eingabe von Zeichenketten hat einen optionalen Parameter. Dabei handelt es sich ebenfalls um eine Zeichenkette mit einer möglichst hilfreichen Information für die Eingabe. Dies spart eine Zeile mit er Funktion `print()`.
+
+Im folgendenBeispiel wird zunächst die Summe aus drei eingegebenen Zahlen berechnet. Anschließend wird der Benutzer aufgefordert, den Namen der Hauptstadt eines Landes einzugeben
+
+```py
+# Berechnung einer Summe
+summe = 0
+for i in range (1,4):
+    fehler = True
+    while fehler:
+        zahl = input(str(i) + ". Zahl eingeben: ")
+        try:
+            summe += float(zahl)
+            fehler = False
+        except:
+            print("Das war keien Zahl")
+            fehler = True
+print("Summe:", summe)
+print()
+
+# Geografiespiel
+
+hauptstadt = {"Italien":"Rom", "Spanien":"Madrid", "Portugal":"Lissabon"}
+hs = hauptstadt.items()
+for land, stadt in hs:
+    eingabe = input("Bitte die Hauptstadt von " + land + " eingeben: ")
+    if eingabe == stadt:
+        print("richtig")
+    else:
+        print("falsch, richtig ist:", stadt)
+```
+
+Bei der Eingabe zur Berechnung einer Summe wird als Hilfestellung die laufendeNummer der einzugebenen Zahl ausgegeben. Diese Nummer muss in eine Zeichenkette umgewandelt und mit dem restlichen Text verketten werden. 
+Aufgrund der Ausnahmebehandlung muss eine fehlerhafte Eingabe wiederholt werden. In diesem Fall wird wieder dieselbe laufende Nummer als Hilfestellung ausgegeben.
+
+Bei der Zeichenketteneingabe wird das Land mit ausgegeben. Der Benutzer gibt die Hauptstadt ein und erhält als Rückmeldung, ob seine Eingabe richtig oder falsch ist.
+
+#### 5.1.4 Anweisung `pass`
+
+Die Anweisung `pass` bewrikt, dass nichts ausgeführt wird Wozu existiert sie überhaupt? Einige mögliche Einsatzzwecke sind:
+
+* Sie enwickeln ein Programm, in dem u.a. eine Funktion aufgerufen wird. In der ersten Entwcklungsphase soll da Hauptprogramm geschrieben werden.
+Der Funktionsaufruf soll aus Gründen der Übersichtlichkeit bereits an der richtigen Stelle platziert werden, aber noch keine Auswirkungen haben. Die Funktionsdefinition enthält in diesem Fall nur die Anweisung `pass`.
+* Das Programm enthält eine einfache oder mehrfache Verzweigung, bei der in einem bestimmten Zweig nichts ausgeführt werden soll. Dieser Zweig soll aber dennoch erscheinen, um den Programmablauf klarer zu machen.
+
+```py
+# Funktions-Dummy
+def QuadraturDesKreises():
+    pass
+
+# Funktionsaufruf
+QuadraturDesKreises()
+
+# Nur else-Zweig interessant
+
+a = -12
+b = 6
+c = 6.2
+
+if a >= 0 and b >= 0 and c >= 0:
+    pass
+else:
+    print("eine der Zahlen ist negativ")
+
+# Ein Zweig nicht interessant
+
+if a == 1:
+    print("Fall 1")
+if a == 2:
+    print("Fall 2")
+if a < 0:
+    pass
+else:
+    print("Ansonsten")
+```
+Die Funktion `QuadraturDesKreises()` dient zunächst nur als Dummy und wird in einem späteren Zeitpunkt mit INhalten gefüllt. Sie ist aber bereits im Programm eingebaut und kann aufgerufen werden.
+
+Bei der einfachen Verzweigung erfolgt im `else`-Zweig eine Ausgabe. Bei der mehrfachen Verzweigung erfolgt ur eine Ausgabe, falls der untersuchte wert größer oder gleich 0 ist.
+
+#### 5.1.5 Funktionen `eval()` und `exec()`
+
+Die Funktionen `eval()` und `exec()` dienen zum zusammensetzen von Python-Code. Mit diese Funktionen lassen sich Anweisungen dynamsich aus Zeichenketten bilden:
+
+* Die Funktion `eval()` evalueirt den zusammengesetzten Ausdruck, ermittelt also den Wert des Ausdrucks.
+* Die Funktion `exec()` führt eine zusammengesetzte Anweisung aus.
+
+```py
+import math
+
+# Zwei Funktionen
+
+def mw1(a,b):
+    c = (a+b)/2
+    return c
+
+def mw2(a,b):
+    c = math.sqrt(a*b)
+    return c
+
+# eval
+for i in 1,2:
+    t = "mw" + str(i) + "(3,4)"
+    c = eval(t)
+    print(c)
+print()
+
+# exec
+for i in 1,2:
+    t = "print(mw" + str(i) + "(3,4))"
+    exec(t)
+```
+Es werden zunächst die Funktionen `mw1()` zur Ermittelung des arithmetrsichen Mittelwerts und die FUnktion `mw2()` zur Ermittelung des geometrischen Mittelwerts zweier Zahlen definiert. Die Namen der beiden Funktionen, `mw1` und `mw2`, unterscheiden sich in der Ziffer.
+
+Für den Aufruf von `eval()`werden zwei Ausdrücke jeweils in einer Zeichenkette zusammengesetzt: "mw1(3,4)" und "mw2(3,4)". Damit können die beiden Aufrufe erfolgen: `c = mw1(3,4)`und `c = mw2(3,4)`. Der Rückgabewert wird in der Variablen `c` gespeichert, die anschließend ausgegeben wird.
+
+Für den Aufruf von `exec()` werden zwei Anweisungen jeweils in einer Zeichenkette zusammengesetzt: `"print(mw1(3,4))"`und `"print(mw2(3,4))"`. Beide Anweisungen werden ausgeführt. Der Rückgabewert wird unmittelbar ausgegeben.
+
+### 5.2 Ausgabe und Formatierung

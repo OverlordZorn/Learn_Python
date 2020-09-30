@@ -6,7 +6,7 @@ print("Mehrfache Zuweisung:", x, y, z)
 a = 12
 b = 15
 c = 22
-a, b, c, = c, a, a+b
+a, b, c, = c, a, a+bn
 print("Auswirkung:", a, b, c)
 
 # 3: Verpacken eines Tupels
