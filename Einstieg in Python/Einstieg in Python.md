@@ -3194,3 +3194,486 @@ Für den Aufruf von `eval()`werden zwei Ausdrücke jeweils in einer Zeichenkette
 Für den Aufruf von `exec()` werden zwei Anweisungen jeweils in einer Zeichenkette zusammengesetzt: `"print(mw1(3,4))"`und `"print(mw2(3,4))"`. Beide Anweisungen werden ausgeführt. Der Rückgabewert wird unmittelbar ausgegeben.
 
 ### 5.2 Ausgabe und Formatierung
+
+In diesem Abschnitt erläutere ich einige MÖglichkeiten zur Ausgabe mit hilfe der Funktion `print()`
+
+#### 5.2.1 Funktion `print()``
+
+Die Funktion `print()` haben wir bereits mehrfach eingestzt. Sie beitet noch weitere Möglichkeiten:
+
+* Der Seperator, der die ausgegebenen Objekte voneinander trennt, kann verändert werden. Er wird mit  `sep` bezeichnet. Normalerweise wird ein Leerzeichen zur Trennung ausgegeben.
+* Das Zeilenende, das normalerweise nach einer ausgabe folgt, kann verändert werden. Es wird mit `end` bezeichnet.
+
+```py
+# Berechnung
+a = 23
+b = 7.5
+c = a + b
+
+# normale Ausgabe
+print("Ergebnis:", a, "*", b, "=", c)
+
+# Ausgabe ohne Zeilenende und Leerzeichen
+print("Ergebnis:", end="")
+print(a, "+", b, "=", c, sep="")
+
+# Neue Zeile
+print()
+
+# Liste
+stadt = ["Hamburg", "Berlin", "Augsburg"]
+for x in stadt:
+    print(x)
+
+for x in stadt:
+    print("Stadt:", x, sep="=>", end="#")
+```
+```
+Ergebnis: 23 * 7.5 = 30.5
+Ergebnis:23+7.5=30.5
+
+Hamburg
+Berlin
+Augsburg
+Stadt:=>Hamburg#Stadt:=>Berlin#Stadt:=>Augsburg#
+```
+Zunächst wird die normale Ausgabe einer Berechnung mit Leerzeichen zwischen den einzelnen Elementen erzeugt.
+
+Es folgen zwei Anweisungen, jeweils mit dre Funktion `print()`. Bisher führt dies dazu, dass zwei ausgabe zeilen erzeugt werden:
+* Weise n sie allerdings dem Parameter `end` eine leere Zeichenkette zu, wird am Ende der Zeile nichts ausgegeben. Die nächste Ausgabe erfolgt anschließen in derselben Zeile.
+* Bei der nächsten Ausgabe wir dem Parameter `sep` eine leere Zeichenkette zugewiesen. Dies führt dazu, dass die Ausgaben ohne Leerzeichen direkt hintereinanderstehen.
+Es folgt die Ausgabe der Elemente einer Liste zunächst in gewohnter Form. In der zweiten version werden sowohl der Separator als auch das Zeilenende verändert.
+
+#### 5.2.2 Formatierung mit String-Literalen
+
+Es gibt in Python mehrere Möglichkeiten, Zahlen und Zeichenketten einheitlich formatiert auszugeben. Seit Python 3.6 gibt es zu diesem Zweick die formatierten String-Literale. Sie nutzen die gleichen Formate wie die eingebaute Funktion `format()`. Die Ausdrücke mit String-Literalen sind aber kürzer und besser lesbar. In Abschnitt 5.2.3 sehen Sie die Unterschiede zur Fuunktion `format()` im Einzelnen.
+
+Eine einheitliche Formatierung dient z.B. einer übersichtlichen Ausgabe in Tabellenform. Sie können u.a. Folgendes bestimmen:
+* die Mindestausgabebreite der Zahlen
+* die Anzahl der Nachkommastellen
+
+Die Anzahl der Nachkommastellen:
+
+```py
+# Zahl mit Nachkommastellen
+x = 100/7
+y = 2/7
+
+print("Zahlen:", x, y)
+print()
+
+# Format f
+print(f"Format f, Standard:    {x:f} {x:f} {y:f}")
+print(f"Format f, nach Komma:  {x:.25f}")
+print(f"Format f, gesamt:      {x:15.10f}")
+print()
+
+# Format e
+print(f"Format e, Standard:    {x:e}")
+print(f"Format e, nach Komma:  {x:.3e}")
+print(f"Format e, gesamt:      {x:12.3e}")
+print()
+
+# Format %
+print(f"Format %, Standard:    {y:%}")
+print(f"Format %, nach Komma:  {y:.3%}")
+print(f"Format %, gesamt:      {y:12.3%}")
+```
+```
+Zahlen: 14.285714285714286 0.2857142857142857
+
+Format f, Standard:    14.285714 14.285714 0.285714
+Format f, nach Komma:  14.2857142857142864755815026
+Format f, gesamt:        14.2857142857
+
+Format e, Standard:    1.428571e+01
+Format e, nach Komma:  1.429e+01
+Format e, gesamt:         1.429e+01
+
+Format %, Standard:    28.571429%
+Format %, nach Komma:  28.571%
+Format %, gesamt:           28.571%
+```
+
+Zunächst erzahlten die Variablen x und y die Werte von 100/7 bzw 2/7. Sie werden zum Vergleich unformatiert ausgegeben.
+
+Mithilfe des Buchstabens `f` vor der Zeichenkette wird festgelegt, dass ein formatiertes String_literal folgt. Die formatierten Bestandteile der Zeichenkette werden mithilfe von geschweiften Klammern gebildet. Darin stehen die Variablen oder Werte, gefolgt von einem Doppelpunkt und den Formatierungszeichen.
+
+Das Formatierungszeichen `f` steht für die Ausgabe einer Zahl mit eine rAnzahl von Nachkommastellen, standartmäßig sechs. Die Angabe `.25f` erzeugt 25 Nachkommastellen. Die Angabe `15.10f` steht für rechtsbündige Ausgabe einer Zahl auf einer Gesamtbreite von 15 Stellen, davon 10 nach dem Komma. Ein solches Format ist besonders für Tabellen geeignet.
+
+Das Formatierungszeichen `e` steht für die Ausgabe einer Zahl im Exponentialformat, standardmäßig mit sechs Nachkommastellen und Exponent. Die Angabe `12.3e` steht für die rechtsbündige Ausgabe auf einer Gesamtbreite von 12 Stellen, davon 3 nach dem Komma.
+
+Das Formatierungszeichen steht für die Ausgabe einer Zahl im Prozentformat, standardmäßig mit sechs Nachkommastellen und einem Prozentzeichen. Die Zahl wird nun für die Ausgabe mit 100 multipliziert, intern bleibt sie unverändert. Die Angabe `.3%` erzeugt drei stellen nach dem Komma. Die Angabe `12.3%` steht für die rechtsbündige Ausgabe auf einer Gesamtbreite von 12 Stellen, davon 3 nach dem Komma.
+
+Im nachfolgenden Programm sehen Sie die Ausgabe von ganzen Zahlen und Zeichenketten mithilfe von formatierten String-Literalen:
+
+```py
+# Formatierung von Zeichenketten
+print(f"{'dez':>4}{'dual':>9}{'oct':>4}{'hex':>4}")
+
+# Formatierung ganzer Zahlen
+for z in range(59,69):
+    print(f"{z:4d}{z:9b}{z:4o}{z:4x}")
+print()
+
+# Tabelle mit verschiedenen Objekten
+artname = {23:"Apfel", 8:"Banane", 42:"Pfirsich"}
+anzahl = {23:1, 8:3, 42:5}
+epreis= {23:2.95, 8:1.45, 42:3.03}
+
+print(f"{'Nr':>4}{'Name':>12}{'Anz':>4}{'Einzel':>13}{'Summe':>13}")
+for x in 23, 8, 42:
+    print(f"{x:04d}{artname[x]:>12}{anzahl[x]:4d}{epreis[x]:8.2f} Euro{anzahl[x]*epreis[x]:8.2f} Euro")
+```
+```
+ dez     dual oct hex
+  59   111011  73  3b
+  60   111100  74  3c
+  61   111101  75  3d
+  62   111110  76  3e
+  63   111111  77  3f
+  64  1000000 100  40
+  65  1000001 101  41
+  66  1000010 102  42
+  67  1000011 103  43
+  68  1000100 104  44
+
+  Nr        Name Anz       Einzel        Summe
+0023       Apfel   1    2.95 Euro    2.95 Euro
+0008      Banane   3    1.45 Euro    4.35 Euro
+0042    Pfirsich   5    3.03 Euro   15.15 Euro
+```
+
+Sie können die Formatierung nicht nur für Variablen, sondern auf für Werte nutzen. Standardmäßig werden Zahlen rechtsbündig ausgegeben und Zeichenketten linksbündig. Zeichenketten werden in geschweiften Klammern innerhalb von einfachen Anführungsstrichen notiert.
+
+Das Formatierungszeichen `>` steht für eine rechtsbündige Ausgabe, die nachfolgende Zahl für die Gesamtbreite der Ausgabe. Das Zeichen `<` steht analog für linksbündig.
+
+Es folgt eine einheitliche formatierte Zahlentabelle. Die Zahlen von 59 bis 68 werden nacheinander ausgegeben als:
+* Dezimalzahl - Formatierungsziechen `d`
+* Dualzahl - Formatierungszeichen `b`
+* Oktalzahl - Formatierungszeichen `o`
+* Hexadezimalzahl - Formatierungszeichen `x`
+
+Sie können die Formatierung auch für berechnete Ausdrücke nutzen. Beispiele dafür sehen sie in der Artikeltabelle, die auf den drei Dictionarys für den Artikelnamen, die Anzahl und den Einzelpreis basiert. Die Elemente der Dictionarys werden, zusammen it dem ermittelten Gesamtpreis, einheitlich ausgegeben.
+
+Steht vor der Angabe der Gesamtbreite eine `0`, wird die Zahl mit führerenden Nullen aufgefüllt.(`{x:04d} => 000x`) Dies ist bei der ersten Spalte der Fall. Bei der Aufteilung eines einzelnen String-Literals eines einzelnen String-Literals auf mehrere String_literale müssen Sie das führende `f` vor jeder Zeichenkette notieren. 
+
+#### 5.2.3 Formatierung mit `format()`
+
+Die Formatierung in den beiden Programmen aus Abschnitt 5.2.2 wird in den beiden nachfolgenden Programmen mithilfe der eingebauten Funktion `format()` erzeugt. Die Ausgaben sind gleich. Es werden nur die Unterschiede erläutert.
+
+Zunächst Ausschnitte aus dem ersten Programm:
+```py
+...
+print("Format f, Standard:    {0:f} {0:f} {1:f}".format(x,y))
+print("Format f, nach Komma:  {0:.25f}".format(x))
+print("Format f, gesamt:      {0:15.10f}".format(x))
+...
+print("Format e, Standard:    {0:e}".format(x))
+print("Format e, nach Komma:  {0:.3e}".format(x))
+print("Format e, gesamt:      {0:12.3e}".format(x))
+...
+print("Format %, Standard:    {0:%}".format(y))
+print("Format %, nach Komma:  {0:.3%}".format(y))
+print("Format %, gesamt:      {0:12.3%}".format(y))
+```
+
+Die Zeichenkette dient als Objekt, auf dass die Funktion `format()` angewendet wird. Vor dem Doppelpunkt innerhalb der geschweiften Klammern stehen Nummern. Diese Nummern stehen für die Parameter der Funktion `format()`. Sie werden, beginnend mit 0, nummeriert.
+
+Im ersten Beispiel wird zweimal die Variable `x` für die Nummer 0 und einmal die Variable `y` für die Nummer 1 eingesetzt. In den restlichen Beispielen wird nur de Wert einer Variablen formatiert, daher steht vor dem Doppelpunkt jeweils eine 0.
+
+Es folgt das zweite Programm:
+
+```py
+# Formatierung von Zeichenketten
+print("{0:>4}{1:>9}{2:>4}{3:>4}".format("dez", "dual", "okt", "hex"))
+
+# Formatierung ganzer Zahlen
+for z in range(59,69):
+    print("{0:4d}{0:9b}{0:4o}{0:4x}".format(z))
+print()
+
+# Tabelle mit verschiedenen Objekten
+fm = "{0:04d}{1:>12}{2:4d}{3:8.2f} Euro{4:8.2f} Euro"
+artname = {23:"Apfel", 8:"Banane", 42:"Pfirsich"}
+anzahl = {23:1, 8:3, 42:5}
+epreis= {23:2.95, 8:1.45, 42:3.03}
+
+print("{0:>4}{1:>12}{2:>4}{3:>13}{4:>13}".format("Nr", "Name", "Anz", "Einzel", "Summe"))
+for x in 23, 8, 42:
+    print(fm.format(x, artname[x], anzahl[x], epreis[x], anzahl[x] * epreis[x]))
+```
+
+In der Überschrift der ersten Tabelle werden die vier Texte, denen die Parameternummern 0,1,2,3 zugeordnet sind, rechtsbündig formatiert. In der ersten Tabelle selbst wrid die Variable `z` (0), viermal genutzt.
+
+In der Variablen `fm` wird die Zeichenkette inklusive der Nummern der Parameter gespeichert. Auf diese Weise könnte sie mehrfach verwendet werden. In der Überschrift der zweiten Tabelle werden die fünf Texte, denen die Parameternummern 0 bis 4 zugeordnet sind, rechtsbündig formatiert. In der zweiten Tabelle selbst werden die Werte für die formatierte Zeichenkette in der Variablen `fm` gespeichert.
+
+#### 5.2.4 Formatierung wie in C
+
+Die Formatierung in den beidne Programmen aus Abschnitt 5.2.2 wird in den beiden nachfolgenden Programmen mithilfe einer Formatierung erzeugt, die Sie möglicherweise aus dr Programmiersprache C kennen. Sie wurde aus Python 2 übernommen und ist in vielen Programmen noch anzutreffen. Allerdings ist sie veraltet und wird zukünftig nicht mehr unterstützt. Die Ausgaben sind gleich. Es werden nur die Unterschiede erläutert.
+Zunächst Auschnitte aus dem ersten Programm:
+
+```py
+print("Format f, Standard:     %f %f %f" % (x, x, y))
+print("Format f, nach Komma:   %.25f" % (x))
+print("Format f, gesamt:       %15.10f" %(x))
+...
+print("Format e, Standard:     %e" % (x))
+print("Format e, nach Komma:   %.3e" % (x))
+print("Format e, gesamt:       %12.3e"% (x))
+...
+print("Format %%, Standard:    %f%%" % (y*100))
+print("Format %%, nach Komma:  %.3f%%" % (y*100))
+print("Format %%, gesamt:      %12.3f%%" % (y*100))
+```
+
+Ein Audruck setzt sich aus einer Zeichenkette, dem Prozentzeichen und einer Reihe von Variablen oder Werten innerhalb von runden Klammern zusammen. Diese Variablen oder Werte werden der Reihe nach für die Formatierungszeichen, die sich innerhalb der Zeichenkette befinden, eingesetzt. Die Anzahl der Formatierungszeichen muss immer der Anzahl der Variablen oder Werte entsprechen.
+
+Ein Formatierungszeichen beginnt immer mit dem Prozentzeichen. Die Formatierungszeichen `%f` und `%e` haben dieselbe Bedeutung wie bei den String-Literalen aus Abschnitt 5.2.2. Dasselbe gilt für die Angaben zur Anzahl der Nachkommastellen und zur Gesamtbreite. Ein Prozentzeichen wird durch zwei aufeinanderfolgende Prozentzeichen ausgegeben. Die Multiplikation des Werts mit der Zahl 100 muss *von Hand*  vorgenommen werden.
+
+Es folgt das zweite Programm:
+
+```py
+# Formatierung von Zeichenketten
+print("%4s%4s%4s" % ("dez", "okt", "hex"))
+
+# Formatierung ganzer Zahlen
+for z in range(59,69):
+    print("%4d%4o%4x" % (z,z,z))
+print()
+
+# Tabelle mit verschienen Objekten
+artname = {23:"Apfel", 8:"Banane", 42:"Pfirsich"}
+anzahl = {23:1, 8:3, 42:5}
+epreis = {23:2.95, 8:1.45, 42:3.05}
+
+print("%4s%12s%4s%13s%13s" % ("Nr", "Name", "Anz", "E-Preis", "Summe"))
+for x in 23, 8, 42:
+    print("%4d%12s%4d%13d%13d" % (x, artname[x], anzahl[x], epreis[x], epreis[x]*anzahl[x]))
+```
+
+Das Formatierungszeichen `%s`wird für Zeichenketten genutzt. Die Angabe `%-12s` würde zu einer linksbündigen Ausgabe führen. Für Dualzahlen gibt es kein Format, daher sind sie nicht im Programm enthalten. Die Formatierungszeichen `%d`, `%o` und `%x` haben dieselbe Bedeutung wie bei den String-Literalen aus Abschnitt 5.2.2.
+
+### 5.3 Conditional Expression
+Eine *Conditional Expression* (bedingter Ausdruck) kann als Schreibabkürzung für eine einfache Verzweigung dienen. Sie müssen selbst entscheiden, welche Version für Sie besser lesbar ist. Ein Programm mit zwei Beispielen:
+
+```py
+x = -12
+y = 15
+
+# Ausdruch zur Zuweisung
+
+maximum = x if x>y else y
+print(maximum)
+
+# Ausdruck zur Ausgabe
+print("positiv" if x>0 else "negativ oder 0")
+```
+Das Programm erzeugt die Ausgabe:
+```
+15
+negativ oder 0
+```
+
+Die erste Anweisugn mit dem bedingten Ausdruck liest sich wie folgt:
+Die Variable `maximum` enthält den Wert von `x`, falls `x > y`; andernfalls erhält die Variable `maximum` den wert von `y`.
+
+Die zweite Anweisung mit dem bedingten Ausdruck liest sich so: Gib die Zeichenkette `positiv` aus, falls `x` größer als 0 ist, ansonten gib `negativ oder 0` aus.
+
+### 5.4 Iterierbare Objekte
+
+Ein Objekt, das aus einer Abfolge von Objekten besteht, die z.B. in einer `for`-Schleife durchlafuen werden kann, wird allgemein *iterierbares Objekt* genannt oder kurz *iterable*. `Listen`, `Zeichenketten`, `Tupel`, `Dictionary`, und andere Objekte sind iterierbar. Iteratoren ermöglichen einen schnellen Durchlauf durch iterierbare Objekte.
+
+Es gibt eine Reihe von Funktionen, die mit iterierbaren Objekten arbeiten. Sie können dem Entwickler viel Arbeit abnehmen. Als Beispiele erläutere ich im Folgenden die Funktionen `zip()`, `map()` und `filter()`.
+
+Python ist eine sehr vielseitige Programmiersprache. Sie nutzt auch Prinzipien der funktionalen Programmierung, und zwar beim Einatz der nachfolgenden Funktionen bzw. Technik. 
+* der Funktion `map()` siehe 5.4.2
+* der Funktion `filter()` siehe 5.4.3
+* Der *List Comprehension* siehe 5.5
+* der *Lambda-Funktion* 5.7.8
+
+#### 5.4.1 Funktion `zip()`
+
+Di Funktion `zip()` verbindet Elemente aus verschiendenen iterierbaren Objekten. Sie liefert wiederum einen Iterator, der aus den verbundenen Objekten besteht. Ein Beispiel:
+
+```py
+# Mehrere iterierbare objekte
+plz = [49808, 78224, 55411]
+stadt = ["Lingen", "Singen", "Bingen"]
+bundesland = ["NS", "BW", "RP"]
+
+# Verbinden
+kombi = zip(plz, stadt, bundesland)
+
+# Ausgabe
+for element in kombi:
+    print(element)
+
+```
+```
+(49808, 'Lingen', 'NS')
+(78224, 'Singen', 'BW')
+(55411, 'Bingen', 'RP')
+```
+Zunächst werdne verschiedene iterierbare Objekte Erzeugt - in diesem Fall drei Listen, welche die Postleitzahl, die Namen und die zugehörigen Bundesländer dreier Städte enthalten.
+
+Die Funktion `zip()` erhält als Parameter die drei iterierbaren Objekte. In der Funktion werden sie miteinander verbunden. Es wird das Objekt `kombi` zurückgeliefert. Die Elemente dieses Objekts sind (thematisch zusammengehörige) Tupel. Sie werden mithilfe einer `for`-Schleife ausgegeben.
+
+#### 5.4.2 Funktion `map()`
+
+Mithilfer der Funktion `map()` können Sie eine Funktion mehrfach aufrufen, jedesmal mit einem anderen Parameter. Die Funktion liefert einen Iterator, der aus den Funktionsergebnissen besteht.
+
+```py
+# Funktion mit einem Parameter
+
+def quad(x):
+    erg = x * x
+    return erg
+
+# Funktion mit mehr als einem Parameter
+def summe(a,b,c):
+    erg = a + b + c
+    return erg
+
+# Funktion mit einem Parameter mehrmals aurufen
+
+z = map(quad, [4, 2.5, -1.5])
+
+# Jedes Ergebnis ausgeben
+print("Quadrat:")
+for element in z:
+    print(element)
+print()
+
+# Funktion mit mehr als einem Parameter mehrmals aufrufen
+z = map(summe, [3, 1.2, 2], [4.8, 2], [5,0.1,9])
+
+# Jedes Ergebnis ausgeben
+print("Summe:")
+for element in z:
+    print(element)
+```
+```
+Quadrat:
+16
+6.25
+2.25
+
+Summe:
+12.8
+3.3000000000000003
+```
+Zunächst werden zwei FUnktionen definiert:
+* Die Funktion `quad()` hat einen Parameter und liefert das Quadrat dieses Werts zurück.
+* Die Funktion `summe()` hat drei Parameter und liefert die Summe dieser drei Werte zurück.
+
+Die Funktion `map()` wird zunächst mit Zwei Parametern aufgerufen:
+* Der erste Parameter ist der Name der Funktion, die für die verschiedenen Werte aufgerufen wird.
+* Der zweite Parameter ist ein iterierbares Objekt, in dem die Werte stehen, für die die Funktion aufgerufen wird.
+* Es wird das Objekt `z` zurückgeliefert. Die Elemente des Objekts `z`sind die FUnktionsergebnisse, also die Rückgabewerte der Funktion für die verschiedenen Aufrufe.
+* Diese ERgebnisse werden mithilfe einer `for`-Schleife ausgegeben.
+
+Die Funktion `map()` wird dann mit mehr als zwei Parametern aufgerufen:
+* Der erste Parameter ist nach wie vor der Name der FUnktion, die für die verschiedenen Werte aufgerufen wird.
+* Der zweite und alle folgenden Parameter sind iterierbare Objekte, in denen die Werte stehen, für die die Funktion aufgerufen wird.
+* Für die Bildung der ersten Summe wird aus jedem iterierbaren Objekt das erste Element (hier: 3, 4.8 und 5) verwendet. Für die Bildung der zweiten Summe wird aus jedem iterierbaren Objekt das zweite EElement (hier 1.2, 2 und 0.1) verwendet usw.
+* Das kürzeste iterierbare Objekt (hier (`[4.8, 2]`)) bestimmt die Anzahl der Aufrufe. Die Funktion wird also niemals mit zu wenigen Parametern aufgerufen.
+Es wird das Objekt `z` zurückgeliefert. Die Elemente des Objekts `z` sind die Funktionsergebnisse, also die RÜckgabewerte der Funktion für die verschiedenen Aufrufe.
+* Diese Ergebnisse werden mithilfe einer `for`-Schleife ausgegeben.
+
+#### 5.4.3 Funktion `filter()`
+
+Die Funktion `filter()` untersucht Elemente eines iterierbaren Objekts mithilfe einer Funktion. Sie liefert diejenigen Elemente, für die die Funktion den Wahrheitswert `True` zurückleifert. Ein Beispiel:
+
+```py
+# Funktion, die True oder False liefert
+def test(a):
+    if a>3:
+        return True
+    else:
+        return False
+
+# Funktion mehrmals aufrufen
+z = filter(test, [5,6,-2,0,12,3,-5])
+
+# Ausgabe der werte, die True ergeben
+for element in z:
+    print("True:", element)
+```
+Der erste Parameter der Funktion `fliter()` ist der Name der Funktion, die für einen untersuchten Wert `True` oder `False` liefert. Der zweite Parameter ist das iterierbare Objekt, in diesem Fall eine Liste. Es wird ein iterierbares Objekt zurückgeliefert: die Liste `z`. Darun stehen nur noch die Elemente, für die die Funktion `True` ergibt.
+
+### 5.5 List Comprehension
+Mithilfe von *List Comprehension*  erzeugen Sie auf einfache Art und Weise eine Liste aus einer anderen Liste.
+
+Dabei können Sie die Elemente der ersten Liste filtern und verändern.
+
+In insgesamt drei Beispielen wird die herkömmliche Technik der Technik der List Comprehension gegenübergestellt:
+
+```py
+# Zwei Beispiellisten
+xliste = [3,6,8,9,15]
+print(xliste)
+
+yliste = [2, 13, 4, 8, 4]
+print(yliste)
+print()
+
+# beispiel 1: Version ohne List Comprehension
+aliste = []
+for item in xliste:
+    aliste.append(item+1)
+print(aliste)
+
+# Beispiel 1: Version mit List Comprehension
+aliste = [item + 1 for item in xliste]
+print(aliste)
+print()
+
+# Beispiel 2: Version ohne List Comprehension
+bliste = []
+for item in xliste:
+    if item > 7:
+        bliste.append(item + 1)
+print(bliste)
+
+# Beispiel 2: Version mit List Comprehension
+bliste = [item + 1 for item in xliste if item > 7]
+print(bliste)
+print()
+
+# Beispiel 3: Version ohne List Comprehension
+
+cliste = []
+for i in range(len(xliste)):
+    if xliste[i] < 10 and yliste[i] < 10:
+        cliste.append(xliste[i] * 10 + yliste[i])
+print(cliste)
+
+# Beispiel 3: Version mit List Comprehension
+
+cliste = [xliste[i]*10 + yliste[i]
+          for i in range(len(xliste))
+              if xliste[i] < 10 and yliste[i] < 10]
+print(cliste)
+```
+
+Zunächst werden zwei Beispiellsiten gebildet. Für die Nutzung innerhalb des dritten Beispiels ist es wichtig, dass sie gleich groß sind.
+
+In Beispiel 1 wird zunächst ohne List Comprehension gearbeitet. Es wird eine leere Liste erstellt. Anschließend wird innerhalb einer `for`-Schleife, die über jedes Element iteriert, die Ergebnislsite mithilfe der Funktion `append()` gefüllt.
+
+Das Gleiche erreichen Sie auch mit einem einigen Schritt. der Ausdruck `aliste = [item+1 for item in xliste]` bedeutet: Liefere den Wert von `item+1` für jedes einzelne Element in `xliste`, dabei sit `item` der Name eines einzelnen Elements.
+
+In Beispiel 2 sehen Sie, dass sie eine Liste auch filtern können. Es werden nun die Elmeente übernommen, deren Wert größer als 7 ist. Der Ausdruck `bliste = [item+1 for item in xliste if item > 7]` bedeutet: Liefer den Wert von `item+1` für jedes einzelne Element in `xliste`, aber nur, wenn der Wert des einzlenen Elements größer als 7 ist.
+
+Beispiel 3 zeigt, dass Sie natürlich auch eine `for`-Schleife mit `range` verwenden können. Die einzelnen Listenelemente werden über einen Index angesprochen. Im Beispiel wird eine Liste aus zwei anderen, gleich langen Liste gebildet. Dabei wird eine Filterung vorgenommen.
+
+
+### 5.6 Fehler und Ausnahmen
+
+Dieser Abschnitt bietet weitergehende Erläuterungen und Programmiertechniken im Zusammenhang mit Fehler und Ausnahmen.
+
+#### 5.6.1 Allgemeines
+
+Während Sie ein Programm entwickeln und testen, treten häufig Fehler auf. Das ist normal und auch wichtig für den Lernprozess. Es gibt drei Arten von Fehlern: Syntaxfehler, Laufzeitfehler und logsiche Fehler:
+* Syntaxfehler bemerken Sie spätestens beim Start eines Programms.
+* Laufzeitfehler, also Fehler zur Laufzeit des Programms, die einen Programmabsturz zur Folge haben, können Sie mit einem 
