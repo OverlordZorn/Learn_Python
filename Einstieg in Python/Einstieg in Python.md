@@ -3676,4 +3676,167 @@ Dieser Abschnitt bietet weitergehende Erläuterungen und Programmiertechniken im
 
 Während Sie ein Programm entwickeln und testen, treten häufig Fehler auf. Das ist normal und auch wichtig für den Lernprozess. Es gibt drei Arten von Fehlern: Syntaxfehler, Laufzeitfehler und logsiche Fehler:
 * Syntaxfehler bemerken Sie spätestens beim Start eines Programms.
-* Laufzeitfehler, also Fehler zur Laufzeit des Programms, die einen Programmabsturz zur Folge haben, können Sie mit einem 
+* Laufzeitfehler, also Fehler zur Laufzeit des Programms, die einen Programmabsturz zur Folge haben, können Sie mit einem `try-except` Block behandeln.
+* Logische Fehler treten auf, wenn dasProgramm richtig arbeitet, aber nicht die erwarteteten Ergebnisse liefert.  Hier hat der Entwickler den Ablauf nicht richtig durchdacht. Diese Fehler sind erfahrungsgemäßg am schwersten zu finden. Dabei bietet das Debugging eine gute Hilfestellung.
+
+#### 5.6.2 Syntaxfehler
+Syntaxfehler treten zur Entwicklungszeit des Programms auf und haben ihre Ursache in falch oder unvollständig gechriebenem Programmcode. Spätestens beim Start eines Programms macht Python auf Syntaxfehler aufmerksam. Der Programmierer erhält eine MEldung und einen Hinweis auf die Fehlerstelle. Da Programm wird nicht weiter ausgeführt. Ein Beispiel für einen fehlerhaften Code:
+
+```py
+x 12
+
+if x > 10
+    print(x)
+```
+Nach dem Programmstart erscheint die Fehlermeldung `invalid syntax`. Im Code wird die 12 markiert, da an dieser Stelle das Gleichheitszeichen erwartet wird. Das Prgoramm läuft nicth weiter.
+
+Nach der Verbesserung des Programms wird es erneut gestartet. Es erscheint eine weitere Fehlermeldung: Der bereich nach dem `x>10` wird markiert, da an dieser Stelle der Doppelpunkt erwaretet wird.
+
+Nach erneuter Verbesserung des Programms wird es wieder gestartet. Es erscheint noch einmal die gleiche FEhlermeldung. Die Zeile mit `print(x` wird markiert, da als Nächstes die schließende KLammer und nicht da Ende der Datei (EOF - End of File) erwartet wird.
+
+Erst nachdem auch der letzt Fehlerbeseitigt ist, läuft das Programm fehlerfrei bis zum Ende.
+
+#### 5.6.3 Laufzeitfehler
+
+Ein `try-except` Block dient zum Abfangen von Laufzeitfehlern, wie bereits in Abschnitt 3.6 >Fehler und Ausnahmen< angesprochen. Laufzeitfehler treten auf, wenn da Programm versucht, eine unzulässige Operation durchzuführen bspw. eine Division durch 0 oder das Öffnen einer nicht vorhandenen Datei. Natürlich wäre es besser, Laufzeitfehler von Anfang an zu unterbinden. Dies ist allerdings unmöglich, da es Vorgänge gibt, auf die der Entwickler keinen Einfluss hat, etwa die fehlerhafte Eingabe eines Benutzers oder eine nicht ovrhandene Datei mit Eingabedaten. Weitere Möglichkeiten zum Abfangen von Laufzeitfehlern werden in Abschnitt 5.6.6 >Unterscheidung von Ausnahmen< erläutert.
+
+#### 5.6.4 Logsiche Fehler und Debugging
+
+Logische Fehler treten auf, wenn eine Anweindung zwar ohne syntaxfehler übersetzt und ohne Laufzeitfehler ausgeführt wird, aber nicht das geplante Ergebnis liefert. Ursache hierfür ist ein fehlerhafter Aufbau der Programmlogik.
+
+Die Ursache logischer Fehler zu finden ist oft schwierig und erfordert intensives Testen und Analysieren der Abläufe und Ergebnisse. Die Entwicklungsumgebung IDLE stellt zu diesem Zweck einen einfachen Debugger zur Verfügung.
+
+##### Einzelschrittverfahren
+
+Sie können ein Programm im Einzelschrittverfahren ablaufen lassen. Bei jedem dieser Einzelschritte können Sie sich die aktuellen Inhalte von Variablen anschauen. Als Beispiel dient ein einfaches Programm mit einer Schleife und einer Funktion:
+
+```py
+def summe(a,b):
+    c = a + b
+    return c
+
+for i in range(5):
+    erg = summe(10,i)
+    print(erg)
+```
+
+Dieses Programms chreibt ancheinander die Zahlen von 10 bis 14 auf den Bildschirm. Öffnen Sie die Python Shell und von dort aus das Programmfenste rmit dem obigen Programm.
+
+Sie starten den Debugger, indem Sie in der `Python Shell` im Menü `Debug` den Menüpunkt `Debugger` aufrufen. Es erscheint das Dialogfenster `Debug Control` und in der `Python Shell` die Meldung `[DEBUG ON]`.
+
+Starten Sie nun as Programm wie gewohnt im Programmfenster über den Menüpfad `Run - Run Module` oder die Taste `F5`. Im Dialogfehld `Debug Control` wird auf die erste Zeile des Programms hingewiesen.
+
+Jetzt können Sie auch die Schaltflächen im Dialogfeld `Debug Control` betätigen. Mit der Schaltfläche `Step` gehen Sie schrittweise dur das Programm. Mit dem nächsten Schritt gelangen Sie direkt hinter die Funktionsdefinition zur ersten ausgeführten Prorammzeile. Die Funktion wird erst beim Aufruf durchlaufen.
+
+Durch wiederholtes Drücken der Schaltfläche `Step` können Sie nun die Schleife mehrmals durchlaufen. Dabei wird jedes Mal auch die FUnktion `summe()` durchlaufen. Im unteren Bereich des Dialogfelds `Debug Control` sehen Sie die jeweils gültigen Variablen und ihre sich ständig verändernden Werte. Befinden Sie sich im Hauptprogramm ind er Schleife, sehen Sie die Werte von `i` und `erg`.
+
+Wenn Sie sich in der Funktion `summe()` beindne, sehen Sie die Werte von `a` und `b` und `c`.
+
+In dr Python Shell werden parallel dazu die ersten Ergebnisse ausgegeben.
+
+Nach dem Durchlauf der letzten Programmzeile wird noch der Hinweis `[DEBUG ON]` in der Python shell ausgegeben. IDLE befindet sich nach wie vor im Debug-Modus, aber die Schaltflächen können Sie erst nach einem erneuten Programmstart wieder betätigen.
+
+##### Weitere Möglichkeiten
+Um das Programm in etwas größeren Schritten zu durchlaufen, klicken Sie die Schaltfläche `Over`. Die Funktionen werden in diesem Fall nicht in Einzelschritten, sondern als Ganzen durchlaufen. Der Debugger sprint also über die Funktionen hinweg.
+
+Sie können auch zwischen den beiden Möglichkeiten (Schaltfläche `Step` und schaltfläche`Over`) felxibel hin und her wechseln -  je nachdem, welchen Programmteil Sie sich ganz genau ansehen möchten.
+
+Wenn Sie sich gerade in Einzelschritten durch eine Funktion bewegen, führt die Bestätigung der Schaltfläche `Out` dazu, dass der Rest der Funktion übersprungen und mit dem ersten Schritt anch dem Funktionsaufruf fortgefahren wird.
+
+Die Schaltfläche `Go` lässt das PRogramm, das Sie gerade debuggen, in einem Schritt bis zum Ende laufen. Die Schaltfläche `Quit` bricht den Lauf des Programms sofort ab, ohne es zu Ende laufen zu lassen. In beiden FÄllen ist er Debug-Modus noch eingeschaltet.
+
+Der Debug Modus lässt sich an derselben Stelle ausschalten, an der Sie ihn eingechaltet haben: In der `Python Shell` im Menü `Debug - Debugger`. In der Schell erscheint anschließend die Meldung `[DEBUG OFF]`.
+
+Auf weniger elegante Weise können Sie den Debugger beenden, indem Sie das Dialogfeld `Debug Control` einfach schließen.
+
+Andere Entwicklungsumgebungen für Python beiten weiter Möglichkeiten. Das setzen von `Breakpoints` (Haltepunkte) ist sehr nützlich. Diese Haltepunkte werden auf bestimmte Programmzielen gesetzt. Das Programm läuft dann in einem Zug bis zu einer solchen Programmzeile, und Sie können die aktuellen Werte überprüfen. Anschlißend durchlaufen Sie entweder im Einzelchrittverahren einen Programmbereich, in dem Sie Fehler vermuten, oder gehen direkt zum nächsen vorher gesetzten Haltepunkt.
+
+#### 5.6.5 Fehler erzeugen
+
+`Wieso sollte man Fehler erzeugen?`, werden Sie sich angesichts dieser Überschrift fragen. Hierfür gibt es, besonders im Zusammenhang mit der Eingabe von Daten durch einen Anwender, durchaus sinnvolle Gründe.
+
+Im folgenden Beispiel wird der Anwender dazu aufgefordert, eine Zahl einzugeben, deren Kehrwert anschlißend berechnet wird. Diese Zahl soll allerdings positiv sein. Diese Einschränkung kann mithilfe der Anweisung `raise` bearbeitet werden:
+
+```py
+# Wiederholte Eingabe
+fehler = True
+while fehler:
+    try:
+        zahl = float(input("Eine positive Zahl: "))
+        if zahl < 0:
+            raise
+        kw = 1.0 / zahl
+        fehler = False
+    except:
+        print("Fehler")
+
+# Ausgabe
+print("Der Kehrwert von", zahl, "ist", kw)
+```
+Ist die eingegebene Zahl kleiner als 0, wird die Anweisung `raise` ausgeführt. Dadurch wird eine Ausnahme erzeugt, so als ob der Anwender einen der anderen möglichen Fehler gemacht hätte. Das Programm verzweigt unmittelbar zur Anweisung `except`und führt die dort angegebene Anweisung aus.
+
+In diesem Fall handelt es sich zwar nur um einen logsichen Eingabefeheler, aber er wird genauso behandelt wie ein Fehler im Programm. Der Anwender wird somwie veranlasst, nur positive Zahlen einzugeben. Das folgene Listing zeigt eine mögliche Eingabe, zunächst dreimal mit Fehler, anschließend richtig:
+```
+Eine positive Zahl: 0
+Fehler
+Eine Postiive Zahl: abc
+Fehler
+Eine positive Zahl: -6
+Fehler
+eine positive Zahl: 6
+Der Kehrwert von 6.0 ist 0.166666666666
+```
+Der Benutzer macht verschiedene Fehler:
+* Er gibt die Zahl 0 ein. Dies führt bei der Berechnung des Kehrwerts zu einem Laufzeitfehler, einem ZeroDivisionError.
+* Er gibt einen Text ein. Dies führt beim Aufruf dre Funktion `float()` zu einem Laufzeitfehler, einem `ValueError`.
+* Er gibt einen negative Zahl ein. Dies führt wegen der vorgenommenen Einschränkung zu einem Laufzeitfehler.
+
+Mithilfe der Anweisung `try`, `raise` und `except` lassen sich also auch nicht sinnvolle Eingaben des Anwenders abfangen und behandeln. Die vorgeführt Methode hat den Nachteil, dass alle Fehler gleichbehandelt werden und die Information für den Anwender im Fehlerfall noch nicht sehr genau sind. Dies wird im nächsten Abschnitt verbessert.
+
+#### 5.6.6 Untescheidung von Ausnahmen
+Im folgenden Programm werden unteschiedliche Arten von Fehlern spezifisch abgefangen. Damit erfährt der Benutzer mehr über den Fehler, und es wird eine komfortablere Programmbedienung ermöglicht. Wiederum wird der Kehrwert einer eingegebenen Zahl ermittelt:
+
+```py
+# Wiederholte Eingabe
+fehler = True
+while fehler:
+    try:
+        zahl = float(input("Eine positive Zahl: "))
+        if zahl == 0:
+            raise RuntimeError("Zahl gleich 0")
+        if zahl < 0:
+            raise RuntimeError("Zahl zu klein")
+        kw = 1.0 / zahl
+        fehler = False
+    except ValueError:
+        print("Fehler: keine Zahl")
+    except ZeroDivisionError:
+        print("Fehler: Zahl 0 eingegeben")
+    except RuntimeError as e:
+        print("Fehler:", e)
+
+# Ausgabe
+print("Der Kehrwert von", zahl, "ist", kw)
+```
+
+Das Programm enthält zu einem Versuch (Anweisung `try`) mehrere spezifische Abfangmöglichkeiten (Anweisung `except`). Nachfolgend wird eine mögliche EIngabe gezeigt - zunächst dreimal mit Fehler, anschließend richtig:
+```
+Eine positive Zahl: 0
+Fehler: Zahl gleich 0
+Eine positive Zahl: abc
+Fehler: keine Zahl
+Eine positive Zahl: -6
+Fehler: Zahl zu klein
+Eine positive Zahl: 6
+Der Kehrwert von 6.0 ist 0.1666666666666666666
+```
+
+Der Benutzer macht veschiedene Fehler:
+* Er gibt die Zahl 0 ein. Dies führt wegen der vorgenommenen Einschränkung zu einem Laufzeitfehler. Dieser wird als allgemeiner `RuntimeError` abgefangen mit der Meldung `Fehler: Zahl gleich 0`.
+* Würde die Eingabe von 0 nicht auf diese Weise abgefangen, käme es später bei der Berechnung des Kehrwerts zu einem Laufzeitfehler, einem `ZeroDivisionError`. Dieser würde abgefangen mit der Meldung `Fehler: Zahl 0 eingegeben`. Zu Demonstationszwecken wird der Fehler zweimal abgefangen.
+* Der Benutzer gibt einen Text ein. Dies führt beim Aufruf der Funktion `float()` zu einem Laufzeitfehler, einem `ValueError`. Dieser wird abgefangen mit der Meldung `Fehler: keine Zahl`.
+* Er gibt eine engative Zahl ein. Dies führt wegen der zweiten Einschränkung wiederrum zu einem Laufzeitfehler. Dieser wird auch als allgemeiner `RuntimeError` abgefangen mit der Meldung `Fehler: Zahl zu klein`.
+* Beim Erzeugen des Fehlers mit der Anweisung `raise` werden ein Fehler (`RuntimeError`) und eine Meldung übergeben.
+* Beim Abfangen dieses Fehlers mit der Anweisugn except wird ie Meldung mithilfe von `as` an die Variable `e` übergeben.
+
+### 5.7 Funktionen
