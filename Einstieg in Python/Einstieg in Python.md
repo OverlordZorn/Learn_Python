@@ -3840,3 +3840,196 @@ Der Benutzer macht veschiedene Fehler:
 * Beim Abfangen dieses Fehlers mit der Anweisugn except wird ie Meldung mithilfe von `as` an die Variable `e` übergeben.
 
 ### 5.7 Funktionen
+
+Python bietet zum Thema `Funktionen` noch einige sehr nützliche Erweiterungen, die in diesem Abschnitt erläutert werden.
+
+#### 5.7.1 Variable ANzahl von Parametern
+
+Bisher wird darauf geachtet, dass Reihenfolge und Anzahl der Funktionsparamter bei Definition und Aufruf miteinander übereinstimmen. Sie können aber auch Funktionen mit einer variablen Anzahl von Parametern definieren.
+
+Bei der Definition einersolchen Funktion müssen Sie vor dem letzten (gegebenenfalls einzigen) Parameter einen `*` (Stern)  notieren. Dieser Parameter enthält ein Tupel mit den bis dahin nicht zugeordneten Werten der Parameterkette.
+
+Im folgenden Beispiel wird eine Funktion definiert, die in der Lage ist, die Summe aller Parameter zu berechnen und auszugeben. Dies gilt unabhängig von der Anzahl der zu summierenden Werte.
+```py
+# Funktion
+def summe(*summanden):
+    print(len(summanden), "Zahlen")
+    print(summanden)
+    erg = 0
+    for s in summanden:
+        erg += s
+    print("Summe:", erg)
+
+# Aufrufe
+
+summe(3, 4)
+summe(3,8,12,-5)
+```
+Die (nunmehr flexiblere) Funktion wird mit zwei oder mit vier Werten aufgerufen, die zu summieren sind. ZU Demonstationszwecken weden Größe und Inhalt des Tupels ausgegeben. Die `for`-Schleife dient zur Summierung der Werte des Tupels. Die Summe wird ausgegeben.
+
+#### 5.7.2 Benannte Parameter
+Die definierte Reihenfolge der Parameter muss beim Aufruf nicht 
+
+eingehalten werden, falls Parametermit ihrem Namen übergeben werden (benannte Parameter).
+
+Im nachfolgenden Beispiel sind einige Variaten zum Aufruf der Funktion `volumen()` dargestellt. Diese Funktion berechnet das VOlumen eines Quaders und gibt es aus. Zudem wird die übergebene Farbe ausgegeben.
+
+```py
+# Funktion
+def volumen(breite, laenge, tiefe, farbe):
+    print("Werte:", breite, laenge, tiefe, farbe)
+    erg = breite * laenge * tiefe
+    print("Volumen:", erg, "Farbe:", farbe)
+
+# Aufrufe
+volumen(4, 6, 2, "rot")
+volumen(laenge=2, farbe="gelb", tiefe=7, breite=3)
+volumen(5, tiefe=2, laenge=8, farbe="blau")
+
+# Fehler
+# volumen(3, tiefe=4, laenge=5, "schwarz")
+```
+```
+Werte: 4 6 2 rot
+Volumen: 48 Farbe: rot
+Werte: 3 2 7 gelb
+Volumen: 42 Farbe: gelb
+Werte: 5 8 2 blau
+Volumen: 80 Farbe: blau
+```
+Der erste Aufruf findet in der bekannten Form, ohne Benennung von Parametern, statt. Die Werte werden den Parametern in der übergebenen Reihenfolge zugeordnet.
+
+Beim zweiten Aufruf werden alle vier Paramter mti Namen übergeben. Die Reihenfolge beim Aufruf ist nicht wichtig, da die Parameter eindeutug zugeordnet werden.
+
+Beim dritten Aufruf wird der erste Parameter über seine Stellung in der Parameterreihe zugeordnet, die anderen Parameter weren über ihre Namen zugeordnet. Es sind also auch Mischformen möglich.
+
+Sobald allerdings das erste bennante Parameter beim Aufruf erscheint, müssen alle folgenden Paramter auch benannt sein. Daer würde beim vierten Aufruf ein Fehler bereits in der Syntax erkannt, obwohl die Zuordnung eigentlich eindeutig wäre.
+
+#### 5.7.3 Parameter mit Vorgabewerten
+Durch Vorgabewerte wird ebenfalls eine variable Parameterzahl ermöglicht. Zusätzlich können Sie benannte Parameter einsetzen. Dabei ist es wichtig, dass die nicht benannten Parameter vor den benannten Paramtern stehen.
+
+Die Funktion zur Volumenberehcnung des Quaders wird in dieser Hinsicht geändert. Es müssen nur noch zwei Paramter angegeben werden. Die anderen beiden Parameter sind optional, es werden gegebenfalls die Vorgabewerte verwendet.
+
+```py
+# Funktion
+def volumen(breite, laenge, tiefe=1, farbe="schwarz"):
+    print("Werte:", breite, laenge, tiefe, farbe)
+    erg = breite * tiefe * laenge
+    print("Volumen:", erg, "Farbe:", farbe)
+
+# Aufrufe
+volumen(4,6,2,"rot")
+volumen(2,12,7)
+volumen(5,8)
+volumen(4,7, farbe="rot")
+```
+```
+Werte: 4 6 2 rot
+Volumen: 48 Farbe: rot
+Werte: 2 12 7 schwarz
+Volumen: 168 Farbe: schwarz
+Werte: 5 8 1 schwarz
+Volumen: 40 Farbe: schwarz
+Werte: 4 7 1 rot
+Volumen: 28 Farbe: rot
+```
+
+Bei der unktionsdefinition besitzen die beiden Paramter `tiefe` und `farbe`jeweils einen Vorgabewert. Sie sind optional und müssen am Ende der Parameterreihe stehen. Es folgen die vier Aufrufe:
+* Beim ersten Aufruf werden alle vier Parameter gesendet.
+* Beim zweiten Aufruf wird nur einer der beiden optionalen Parameter(tiefe) gesendet. Der zweite optionale Parameter erhält deshalb den Vorgabewert.
+* Beim dritten Aufruf wird keiner der opntionale Paramter gesendet. Daher erhalten beide den jeweiligen Vorgabewert.
+Beim vierten Auruf wird nun der letzte optionale Parameter gesendet. Da dieser enzelne Parameter nicht mehr über die Reihenfolge zugeordnet werden kann, muss erbenannt werden.
+
+#### 5.7.4 Mehrere Rückgabewerte
+
+Im Unterschied zu vielen anderen Programmiersprachen können Funktionen in Python mehr als einen Rückgabewert liefern. Es kann z.B. ein Tupel oder eine Liste zurückgeliefert werden.
+
+Im oflgenden Beispiel werden in der Funktion `geom()` die Fläche und der Umfang eines Rechtecks berechnet und als Tupel zurückgegeben.
+```py
+import math
+
+# Funktion, die zwei Werte berehnet
+def kreis(radius):
+    flaeche = math.pi * radius * radius
+    umfang = 2 * math.pi * radius
+    return flaeche, umfang
+
+# 1. Aufruf
+
+f, u = kreis(3)
+print("Fläche:", f)
+print("Umfang:", u)
+
+# 2. Aufruf
+
+x = kreis(3)
+print("Fläche:", x[0])
+print("Umfang:", x[1])
+
+# Fehler
+# a, b, c = kreis(3)
+```
+
+Die Anweisung `return` liefert ein Tupel mit den beiden Ergebnissen der Funktion. An der Aufrufstelle muss ein Tupel passender Größe zum Empfang bereit stehen. Die verschiedenen Aufrufe:
+* Im ersten Fall wird da Tupel zwei einzelnen Variablen zugeordnet.
+* Im zweiten Fall wird da Tupel einer variablen zugeordnet, die damit zum Tupel wird.
+* Der letzt Aufruf würde zu einem Laufzeitfehler führen, da die Größe des zurückgelieferten Tupels nicht passt.
+
+#### 5.7.5 Übergabe von Kopeien und Referenzen
+
+Werden Parameter, die an eine Funktion übergeben werden, innerhalb der Funktion verändert, wirkt sich dies im aufrufenden Programmteil unterschiedlich aus:
+* Bei der Übergabe eines einfachen Objekts (Zahl oder Zeichenkette) wird eine Kopie des Objekts angelegt. Eine Veränderung der Kopie hat keine Auswirkungen auf da Original.
+* Bei der Übergabe eines Objekts vom Typ Liste, Dictionary oderSet wird mit einer Referenz auf das Originalobjekt gearbeitet. Eine Veränderung über die Refernz verändret auch da Original.
+
+Zur Verdeutlichung dieses Zusammenhangs werden im folgenden Beispiel insgesamt fünf Parameter an eine Funktion übergeben: eine Zahl, eine Zeichenkette, eine Liste, ein Dictionary und ein Set. Die Objekte weren jeweils dreimal ausgegeben:
+* vor dem Aufruf der Funktion
+* nach einer Veränderung innerhalb der Funktion
+* nach der Rückkehr aus der Funktion
+
+```py
+# Funktion
+def chg(v, zk, li, di, st):
+    v = 8
+    zk = "ciao"
+    li[0] = 7
+    di["x"] = 7
+    st.discard(3)
+
+    # lokale Ausgabe
+    print("In Funktion:")
+    print(v, zk)
+    print(li,di,st)
+
+# Startwerte
+hv = 3
+hli = [3,"abc"]
+hzk = "hallo"
+hdi = {"x":3, "y":"abc"}
+hst = set([3, "abc"])
+
+# Ausgabe vorher
+print("vorher:")
+print(hv, hzk)
+print(hli, hdi, hst)
+
+# Aufruf der Funktion
+chg(hv, hzk, hli, hdi, hst)
+
+# Ausgabe nachher
+print("nachher:")
+print(hv, hzk)
+print(hli, hdi, hst)
+```
+```
+vorher:
+3 hallo
+[3, 'abc'] {'x': 3, 'y': 'abc'} {'abc', 3}
+In Funktion:
+8 ciao
+[7, 'abc'] {'x': 7, 'y': 'abc'} {'abc'}
+nachher:
+3 hallo
+[7, 'abc'] {'x': 7, 'y': 'abc'} {'abc'}
+```
+
+Es zeigt sich, dass nur bei liste, Dictionary und Set  eine dauerhafte Veränderung durch die Funktion erfolgte. Dies ist je nach Problemstellung ein erwünschter oder ein unerwünschter Effekt.
