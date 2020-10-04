@@ -4204,18 +4204,285 @@ Als Entwickler können Sie eine Reihe von eingebauten Funktionen ohne Einbindung
 |frozenset()|Liefert ein unveränderliches Set|Abschnitt 4.6.4|
 |hex()|Liefert eine hexadezimale Zahl|Abschnitt 4.1.1|
 |input()|Wartet auf eine Eingabe des Benutzers.|Abschnitt 3.2.2|
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
-|()||Abschnitt |
+|int()|Liefert eineganze Zahl|Abschnitt 3.2.3 |
+|len()|Liefert die Anzahl der Elemente|Abschnitt 4.2.3 |
+|map()|Liefert Funktionsergebnisse zu einer Reihe von Aufrufen|Abschnitt 5.4.2 |
+|max()|Liefert da größte Element|Abschnitt 5.8.1|
+|min()|Liefert das kleinste Element|Abschnitt 5.8.1|
+|oct()|Liefert eine oktale Zahl|Abschnitt 4.1.1 |
+|open()|Öffnet eine Datei zum Lesen oder Schreiben|Abschnitt 8.2 |
+|ord()|Liefert die Unicode-Zahl zu einem Zeichen|Abschnitt 5.8.2 |
+|print()|Erzeugt eine Ausgabe|Abschnitt 5.2.1 |
+|range()|Liefert ein iterierbares Objekt über einen Bereich|Abschnitt 3.4.5 |
+|repr()|Liefert Informationen über ein Objekt| Abschnitt 6.4 |
+|reversed()|Liefert ein iterierbares Objekt in umgekehrter Reihenfolge|Abschnitt 5.8.3 |
+|round()|Liefert eine gerundete Zahl|Abschnitt 4.1.5 |
+|set()|Liefert ein Set|Abschnitt 4.6 |
+|sorted()|Liefert eine sortierte Liste|Abschnitt 5.8.3|
+|str()|Liefert eine Zeihenkette|Abschnitt 4.2.6|
+|sum()|Lieert eine Summe der Elemente| Abschnitt 5.8.1|
+|type()| Liefert den Typ eines Objekts | Abschnitt 4.1.3|
+|zip()| Verbindet Elemente aus iterierbaren Objekten | Abschnitt 5.4.1 |
 
+#### 5.8.1 Funktionen `max()`, min()`, `sum()`
+
+Falls die Funktionen `max()` und `min()` mit einem Parameter aufgerufen werden, sollte es sich um ein iterierbares Objekt handeln. 
+Die Funktionen liefern anschließend den größten bzw. den kleinsten Wert aus dem iterierbaren Objekt zurück. Werden die Funktionen dagegen mit mehreren Parametern aufgerufen, liefern sie den Wert des größten bzw. des kleinsten Parameters zurück.
+
+Die Funktion `sum()` liefert die Summe der Elemente eines iterierbaren Objekts. Ein Beispiel zu den drei Funktionen:
+
+```py
+t = 3, 2, -7
+print("Tupel:", t)
+print("Max. Wert:", max(t))
+print("Min. Wert:", min(t))
+print("Summe:", sum(t))
+
+print("Max. Wert:", max(11, -5, 14, 1, 2))
+print("Min. Wert:", min(11, -5, 14, 1, 2))
+```
+
+Der größte und der kleinste Wert des Tupels `t` werden ausgegeben. Im Anschluss wird die Summe der Werte des Tupels ausgegeben.
+
+Beim zweiten Aufruf der Funktionen max() und min()  ist mehr als ein Parameter angegeben.
+
+#### 5.6.2 Funktion `chr()` und `ord()`
+
+Die Funktion `chr()` lieert das zugehörige Zeichen zu einer Unicode-Zahl.
+Umgekehrt erhalten Sie mithilfe der Funktion `ord()` die Unicode-Zahl zu einem Zeichen.
+```py
+# Ziffern
+for i in range(48,58):
+    print(chr(i), end="")
+print()
+
+# große Buchstaben
+for i in range(65, 91):
+    print(chr(i), end="")
+print()
+
+# kleine Buchstaben
+for i in range(97,123):
+    print(chr(i), end="")
+print()
+
+# Codenummern
+for z in "Robinson":
+    print(ord(z), end="")
+print()
+
+# Verschoben
+for z in "Robinson":
+    print(chr(ord(z)+1), end="")
+print()
+```
+
+Die Unicode-Zahlen von 48 bis 57 verweisen auf die Ziffern 0 bis 9. Mithilfe der Unicode-Zahlen von 65 bis 90 bzw. von 97 bis 122 erhalten Sie die großen und die kleinen Buchstaben.
+
+Eine Zeichenkette ist eine iterierbares Objekt, daher können die einzelnen Elemente (sprich Zeichen) in einer for-Schleife durhclaufen werden. Es wird jeweils die zugehörige Unicode-Zahl ausgegeben.
+
+Im letzten Teil des Programms wird jedes Zeichen einer Zeichenkette in das codemäßig folgende Zeichen umgewandelt. Die Zeichenkette wird `verschlüsselt`. Dazu werden beide genannten Funktionen eingestzt.
+
+#### 5.8.3 Funktionen `reversed()` und `sorted()`
+
+Die Funktionen `reversed()` liefert die Elemente eines iterierbaren objekts in umgekerhter Reihenfolge. MIthilfeder Funktion `sorted()` wird eine sortierte Litse der Elemente eines iterierbaren objekts erstellt und geliefert. Es folgt ein Beispiel, in dem beide FUnktionen jeweilse auf eine Zeichenktte, eineTupel und ein Dictionary angewendet werden:
+
+```py
+# Zeichenkette
+z = "Robinson"
+print(z)
+r = reversed(z)
+for x in r:
+    print(x, end=" ")
+print()
+
+s = sorted(z)
+print(s)
+print()
+
+# Tupel
+t = 4, 12, 6, -2
+print(t)
+r = reversed(t)
+for x in r:
+    print(x, end=" ")
+print()
+s = sorted(t)
+print(s)
+print()
+
+# Dictionary
+d = {"Peter":31, "Julia":28, "Werner":35}
+print(d)
+r = reversed(d)
+for x in r:
+    print(x, end=" ")
+print()
+s = sorted(d)
+print(s)
+```
+Die Funktion `reversed()` liefert einen Iterator, der die Elemente in umgekehrte Reihenfolge enthält. Sie können z. B. mithilfe einer `for`-Schleife ausgegeben werden.
+
+Die Funktion `sorted()` erstellt eine Liste, die die Elemente einer Sequenz in sortierter Reihenfolge enthält. Bei Zahlen ist die Sortierung aufsteigend nach Wert, bei Zeichen aufsteigend nach der Codenummer.
+
+### 5.9 Statistikfunktionen
+
+Die Statistik dient dazu, große Mengen von Zahlenwerten zu analysieren und bestimmte repräsentative Informationen über diese Zahelnwerte zu ermitteln. DIese Mengen können z.B. aus Umfragen oder aus anderen Strichproben stammen. Python bietet dazu seit der Version 3.4 einige hilfreiche Funktionen innerhalb des Moduls `statistics`. Mit Python 3.6 und Python 3.8 sind noch einige Funktionen hinzugekommen.
+
+Ein Beispielprogramm:
+
+```py
+import statistics
+
+# Mittelwerte einer Liste
+
+probe1 = [5,2,4,17]
+print("Aritmetischer Mittelwert:", statistics.mean(probe1))
+print("Geometrischer Mittelwert:", statistics.geometric_mean(probe1))
+print("Harmonischer  Mittelwert:", statistics.harmonic_mean(probe1))
+print()
+
+# Median
+print("Median:", statistics.median(probe1))
+probe2 = [5,2,4,17,3]
+print("Median:", statistics.median(probe2))
+print()
+
+# Unterer Median
+print("Unterer Median:", statistics.median_low(probe1))
+print("Unterer Median:", statistics.median_low(probe2))
+print()
+# Oberer Median
+
+print("Oberer Median:", statistics.median_high(probe1))
+print("Oberer Median:", statistics.median_high(probe2))
+print()
+
+# Modus
+probe3 = [3,5,5,12,17,17]
+print("Modus:", statistics.mode(probe3))
+print("Multimodus:", statistics.multimode(probe3))
+print()
+
+# Tupel, Werte eines Dictionary
+probe4 = 5,2,4,17
+print("aus Tupel", statistics.mean(probe4))
+probe5 = {"D":5, "NL":2, "CH":4, "F":17}
+print("aus Dictionary:", statistics.mean(probe5.values()))
+```
+```
+Aritmetischer Mittelwert: 7
+Geometrischer Mittelwert: 5.1065457621381
+Harmonischer  Mittelwert: 3.9650145772594754
+
+Median: 4.5
+Median: 4
+
+Unterer Median: 4
+Unterer Median: 4
+
+Oberer Median: 5
+Oberer Median: 4
+
+Modus: 5
+Multimodus: [5, 17]
+
+aus Tupel 7
+aus Dictionary: 7
+```
+Die werte der Zahlenmengekönnen ganzzahlig sein oder auch Nachkommastellen haben. Sie können aus einer Liste (wie hier), aber auch aus einem Tupel oder einem Dictionary stammen, siehe unten. Sie müssen nicht in sortierter Reihenfolge vorliegen.
+
+Die Funktion `mean()` liefert den aritmetrischen Mittelwert, also die Summe der Werte, geteilt durch ihre Anzahl. Im vorliegenden Beispiel entspricht das:
+`(5+2+4+17)/4`.
+
+Seit Python 3.8 gibt es die Funktion `geometric_mean()`. Sie leifert den geometrischen Mittelwert. Er entspricht der n-ten Wurzel des Produkts von n werten. Im vorliegenden Beispiel entspricht das der vierten Wurzel aus (5 * 2 * 4 * 17).
+
+Seit Python 3.6 gibt es die Funktion `harmonic_mean()`. Sie liefert den harmonischen Mittelwert. Er entspricht der Anzahl der Werte, geteilt durch die Summe der Kehrwerte der Werte. Im vorliegenden Beispiel entspricht das 4/(1/5 + 1/2 + 1/4 + 1/17).
+
+Einige Anwendungsbeispiele für die verschiedenen Mittelwerte finden Sie über https://de.wikipedia.org/wiki/Mittelwert.
+
+Die Funktion `median()` lieert den Median. Dieser wird auch Zentralwert genannt, da er im Zentromd er Zahlenmenge steht. Es gbit genauso viele Werte, die größer sind als der Median, wie werte, die kleienr sind als der median. Bei einer ungeraden Menge von Werten handelt es sich beim Median um da Element in der Mitte der Zahlenmenge. Bei einer geraden Menge von Werten handelt es sich um den aritmetischen MIttelwert der beiden Elemente in der Mitte der Zahlenmenge.
+
+Die Funktion `median_low()` und `median_high()` liefern den unteren bzw oberen Median. Dabei handelt es sich in jedem Fall um Elmeente aus der Zahlenemenge. Bei einer ungeraden Menge von Werten ist es ds Element in der Mitte der Zahlenmenge. Bei einer geraden Menge von Werten handelt es sich um die beiden Elemente in der Mitte der Zahlenmenge.
+
+Die Funktion `mode()` liefert denjenigen Wert, der in der Zahlenmenge am häufigsten vorkommt. Besitzen mehrere Werte die größte Häufigkeit, wird derjenige Wert genannt, der als erster vorkommt. Seit Python 3.8 gibt es die FUnktion `multimode()`. Sie liefert eine Liste mit allen Werten, die die größte Häufigkeit besitzen.
+
+Die untersuchte Zahlenmenge kann auch aus einem Tupel oder, mithilfe der Methode `values()`, aus der Werte-View eines Dictionary stammen.
+
+### 5.10 Eigene Module
+
+Bisher werden die Funktion und das eigentliche Hauptprogramm in der gleichen Datei definiert. Bei spezifischen Funktionen, die auf ein bestimmtes Programm zugesnitten sind, ist dies auch sinnvoll.
+
+Allerdings werden Sie bald feststellen, dass einige nützliche Funktionen immer wieder und von verschiedenen Programmen aus benötigt werden. Diese Funktionen sollten Sie in eigenen Modulen speichern. Die Erstellung und Nutzung von Modulen ist in Python sehr einfach und wird in diesem Abschnitt erläutert.
+
+#### 5.10.1 Eigene Module erzeugen
+
+Zur Erzeugung eines Moduls speichern Sie die gewünschte Funktion einfach in einer eigenen Datei. Der Name der Datei ist zugleich der Name des Moduls. Die Funktion erstellen Sie wie gewohnt:
+
+```py
+def quadrat(x):
+    erg = x * x
+    return erg
+```
+
+Anschließend können Sie die Funktion in jedem Programm nutzen. Voraussetzung dafür ist ihr Import aus dem betreffenden Modul. Es gibt verschiende Importmöglichkeiten, die ich im Folgenden Beschreibe.
+
+#### 5.10.2 Standard-Import eines Moduls
+Sie importieren das Modul we gewohnt.
+
+```py
+import modul_neu
+z = modul_neu.quadrat(3)
+```
+Alle Funktionen des Moduls `modul_neu`, also der Datei modul_neu.py, werden mit der Anweisung `import` zugänglich gemacht. Die Funktion `quadrat()` wird wie folgt aufgerufen:
+
+```py
+Modulname.Funktionsname
+```
+
+#### 5.10.3 Import eines Moduls mit Umbenennung
+
+Falls das Modul einen langen, unhandlichen Namen hat, können Sie es mithilfe von `as` in Ihrem Programm umbennen.
+
+```py
+import modul_neu as mn
+z = mn.quadrat(3)
+print(z)
+```
+
+Sie können auf das Modul `modul_neu` innerhalb dieses Programmes mithilfe von `mn` zugreifen.
+
+#### 5.10.4 Import von Funktionen
+Sie importieren nur die Funktionen mit der Aneisung `from`.
+```py
+from modul_neu import quadrat
+z = quadrat(3)
+print(z)
+```
+
+Die Funktion `quadrat()` wird Mithilfe der Anweisung `from` aus dem Modul `modul_neu` importiert. Sie können sie anschließend ohne den Modulnamen aufrufen, so als ob sie in der gleichen Datei definiert wäre.
+
+Sie können auch alle Funktionen aus dem Modul `modul_neu` auf einmal importieren. Die Anweisung lautet dann:
+```py
+from modul_neu import *
+```
+
+Der Import mithilfe der Anweisung `from` wird nur der Vollständigkeit halber ewähnt. Diese Möglichkeit wird nicht mehr empfohlen und darf auch nicht in Funktionen, sondern nur auf Modulebene genutzt werden. Sie erweist sich außerdem als ungünstig, falls Sie mehrere Funktionen mit gleichem Namen aus unterschiedlchen Modulen importieren möchten.
+
+*Hinweis*
+In den Beispielen wird davon ausgegangen, dass sich die Datei des zu importierenden Moduls im selben Verzeichnis befindet.
+
+### 5.11 Parameter der Kommandozeile
+Ein Pyhon-Programm kann bekanntlich von der Kommandozeile des Betriebssystems aus aufgerufen werden. In Abschnitt 2.3.2 "Ausführen unter Windows"/2.3.3 "Ausführen unter Linux/macos" wird beschrieben, wie Sie zur Kommandozeile/Terminals gelangen.
+
+Der Aufruf ähnelt dem Aufruf einer Funktion mit Parametern. Die einzelnen Parameter werden durch Leerzeichen voneinander getrennt. Sie stehen innerhalb des Programms in der Liste `argv` aus dem Modul `sys` zur Verfügung. Die Anzahl der Parameter könnten Sie mithilfe der eingebauten Funktion `len()` (Länge der Lsite) ermitteln.
+
+#### 5.11.1 Übergabe von Zeichenketten
+
+Dem folgenden Programm wird genau ein Wort als Parameter übergeben. Anschließend werden die Elemente de Liste `sys.argv` ausgegeben:
+
+```py
+import sys
+print("Programmname: ", sys.argv[0])
+print("Erster Parameter:", sys.argv[1])
+```
