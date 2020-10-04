@@ -3793,7 +3793,7 @@ Der Benutzer macht verschiedene Fehler:
 
 Mithilfe der Anweisung `try`, `raise` und `except` lassen sich also auch nicht sinnvolle Eingaben des Anwenders abfangen und behandeln. Die vorgeführt Methode hat den Nachteil, dass alle Fehler gleichbehandelt werden und die Information für den Anwender im Fehlerfall noch nicht sehr genau sind. Dies wird im nächsten Abschnitt verbessert.
 
-#### 5.6.6 Untescheidung von Ausnahmen
+#### 5.6.6 Unterscheidung von Ausnahmen
 Im folgenden Programm werden unteschiedliche Arten von Fehlern spezifisch abgefangen. Damit erfährt der Benutzer mehr über den Fehler, und es wird eine komfortablere Programmbedienung ermöglicht. Wiederum wird der Kehrwert einer eingegebenen Zahl ermittelt:
 
 ```py
@@ -3843,7 +3843,7 @@ Der Benutzer macht veschiedene Fehler:
 
 Python bietet zum Thema `Funktionen` noch einige sehr nützliche Erweiterungen, die in diesem Abschnitt erläutert werden.
 
-#### 5.7.1 Variable ANzahl von Parametern
+#### 5.7.1 Variable Anzahl von Parametern
 
 Bisher wird darauf geachtet, dass Reihenfolge und Anzahl der Funktionsparamter bei Definition und Aufruf miteinander übereinstimmen. Sie können aber auch Funktionen mit einer variablen Anzahl von Parametern definieren.
 
@@ -4486,3 +4486,139 @@ import sys
 print("Programmname: ", sys.argv[0])
 print("Erster Parameter:", sys.argv[1])
 ```
+
+Wird das Programm von der Kommandozeile aus wie folgt aufgerufen
+
+```
+python kommando_text.py hallo
+```
+lautet die Ausgabe:
+```
+Programmname: kommando_text.py
+ErstesParameter: hallo
+```
+
+Das erste Element der Liste ist der Name des Programms. Die weitern Elemente sind die einzelnen Parameter.
+
+#### 5.11.2 Übergabe von Zahlen
+
+Im folgenden Programm werden zwei Zahlen addiert, die in dem Programm als Kommandozeilenparameter übergeben wreden. Dazu müssen die Parameter mithilfe der Funktion `float()` in Zahlen umgewandelt und eventuell auftretende Ausnahmen abgefangen werden.
+
+```py
+import sys
+
+try:
+    x = float(sys.argv[1])
+    y = float(sys.argv[2])
+    z = x + y
+    print("Ergebnis:", z)
+except:
+    print("Parameterfehler")
+```
+
+Wird das Programm vom Betriebssystem aus wie folgt aufgerufen...
+```
+python kommando_zahl.py 3 6.2
+```
+... lautet die Ausgabe:
+```
+Ergebnis: 9.2
+```
+
+#### 5.11.3 Beliebige Anzahl von Parametern
+Im folgenden Programm wird eine beliebige Menge von Zahlen adiert, die als Kommandozeilenparamter übergeben werden.
+
+```py
+import sys
+summe = 0
+
+try:
+    for i in sys.argv[1:]:
+        summe += float(i)
+    print("Ergebnis:", summe)
+except:
+    print("Parameterfehler")
+```
+```
+python kommando_variabel.py 3 10 6.2 5 1 23 5 123
+```
+```
+('Ergebnis:', 176.2)
+```
+Bei `sys.argv` handelt es sich um eine Liste. Das erste Element (der Name des Programms) darf nicht in die Rechnung einfließen, daher die `Slice-Operation`.  Innerhalb der `for`-Schleife werden die einzelnen Parameter umgewandelt und zur Summe addiert.
+
+### 5.12 Programm `Bruchtraining`
+
+Diesen Abschnitt können Sie bei Bedarf überspringen. Als einziges neues Element wird die Funktion `choice()` aus dem Modul `random` eingeführt, die ein zufällig ausgewhältes Element aus einer Sequenz liefert. Das Programm pruchtraining.py beinhaltet ein Trainingsprogramm zur Bruchrechnung mit drei Schwierigkeitsgraden.
+
+Es dient IHnen als Beispiel für das Zusammenspiel vieler bereits bekannter Elemente, wie z.B. mehrfache Verzweigungen, Schleifen, Ausnahmebehandlung, Tupel und Funktionen mit mehren Rückgabewerten. Sowohl der Zähler als auch der Nenner der vorkommenden Brüche können positiv oder negativ sein.
+
+#### 5.12.1 Der Ablauf des Programms
+
+Zur Verdeutlichung wird zunächst der Ablauf des Programms mithilfe von einigen Beispieleingaben erläutert:
+
+```
+Ihre Wahl: 1=Leicht, 2=Mittel, 3=Schwer, 0=Ende
+1
+Ganze Zahl berechnen: 9/-1
+Ergebnis: -9
+Ihre Wahl: 1=Leicht, 2=Mittel, 3=Schwer, 0=Ende
+2
+Bruch kürzen: -30/-70
+Ergebnis: 3/7
+Ihre Wahl: 1=Leicht, 2=Mittel, 3=Schwer, 0=Ende
+3
+Ergebnis-Bruch Berechnen: -21 / 14 / -15 / 25
+Ergebnis: 5 / 2
+Ihre Wahl: 1=Leicht, 2=Mittel, 3=Schwer, 0=Ende
+0
+```
+
+Nach dem Start des Programms erscheint ein Menü für den Benutzer, mit dem eine leichte Aufgabe (Eingabe:1), eine mittelschwere Aufgabe oder eine schwere Aufgabe ausgewählt werden kann. Nach dem Bearbeiten einer Aufgabe erscheint wiederum das Menü. Hier kann der Benutzer entweder eine weitere Aufgabe auswhälen oder das Programm beenden.
+
+Nach der Auswahl einer leichten Aufgabe wird ein Bruch angezeigt, der eine ganze Zahl ergibt. Der Bruchstrich wird durch einen Divisonsstrich zwischen Zähler und Nenner dargestellt. Der Benutzer rechnet, im KOpf oder auf dem Papier, die ganze Zahl aus, die das ERgebnis der Aufgabe darstellt. Nach dem Bestätigen der Taste `Enter` erscheint das richtige ERgebnis, mit dem der Benuetzer sein eigenes Ergebnis vergleicht. Stellt der Beneutzer fest, dass er zB. 20 leichte Aufgaben richtig lösen konnte, kann  er als Nächstes eine mittelschwere Aufgabe auswhälen.
+
+Nach der Auswahl einer mittelschweren Aufgabe wird ein Bruch angezeigt, den der Benuetzer kürzen soll, und zwar auf den kleistmöglichen Bruch. Der Benuetzer rechnet, im KOpf oder auf dem papier, den gekürzten Bruch aus. Nach dem Betätigen der Taste Enter erscheint wiederum das richtige Ergebnis, mit dem der Benuetzer sein eigenes Ergebnis vergleicht. Stellt der Benuetzer fest, dass er zB. 20 mittelschwere Aufgaben richtig lösen konnte, kann er als nächstes eine schwere Aufgabe auswählen.
+
+
+Nach der Auswahl einer schweren Aufgabe werden zwei Brücke angezeigt, die der Benuetzer entweder miteinander addieren, subtrahieren, dividieren oder multiplizieren soll. Das Ergebnis soll er anschließend kürzen. Der Beneutzer  rechnet auch hier, im Kopf oder auf dem Papier, den gekürzten Bruch aus. Nach dem Betätigen der Taste Enter erscheint auch hier das richtige ERgebnis, mit dem der Benuetzer sein eigenes Ergebnis vergleicht.
+
+#### 5.12.2 Hauptprogramm
+
+Das Programm wird in einzelnen Teilen erläutert. Zunächst folgt das Hauptprogramm, das am Ende der Datei steht:
+
+```py
+while 1:
+    #Eingabemenü
+    fehler = 1
+    while fehler == 1:
+        print()
+        print("Ihre wahl: 1=Leicht, 2=Mittel, 3=Schwer, 0=Ende")
+        try:
+            wahl = int(input())
+            fehler = 0
+            if wahl < 0 or wahl > 3:
+                fehler = 1
+                print("Bitte nur 0, 1, 2 oder 3 eingeben")
+        except:
+            print("Bitte nur 0,1,2 oder 3 eingeben")
+
+    if wahl == 0:
+        break
+    elif wahl == 1:
+        leicht()
+    elif wahl == 2:
+        mittel()
+    else:
+        schwer()
+```
+Das Menü für den Benutzer und seine Eingabe sind in einer äußeren Endlosschleife eingebettet, die nur mit der Eingabe von 0 verlassen werden kann.
+
+Die Anzeige des Menüs ist in einer inneren Schleife eingebettet. Nimmt der Benutzer eine Eingabe vor, die nicht in eine ganze Zahl umgewandelt werden kann, erscheint dank einer Ausnahmebehandlung eine Fehlermeldung, und es wird wiederum das Menü angezeigt. Gibt der Benutzer eine Zahl ein, die keinem Wert im Menü entspricht, wird mithilfe der Variable `fehler` dafür gesorgt, dass eine Fehlermeldung erscheint, und es wird wiederum das Menü angezeigt.
+
+Gibt der Benutzer eine hültige Zahl ein, wird eine der drei Funktionen `leicht()`, `mittel()`, `schwer()` aufgerufen oder es wird die äußere Endlosschleife verlassen.
+
+#### 5.12.3 Eine leichte Aufgabe
+
+Es folgt die Funktion `leicht()` zur Erstellung einer leichten Aufgabe. Das gesamte Programm benötigt zudem einen initialisierten Zufallsgenerator.
+
