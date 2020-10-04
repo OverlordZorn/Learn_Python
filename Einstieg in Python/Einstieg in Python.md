@@ -3975,7 +3975,7 @@ Die Anweisung `return` liefert ein Tupel mit den beiden Ergebnissen der Funktion
 * Im zweiten Fall wird da Tupel einer variablen zugeordnet, die damit zum Tupel wird.
 * Der letzt Aufruf würde zu einem Laufzeitfehler führen, da die Größe des zurückgelieferten Tupels nicht passt.
 
-#### 5.7.5 Übergabe von Kopeien und Referenzen
+#### 5.7.5 Übergabe von Kopieren und Referenzen
 
 Werden Parameter, die an eine Funktion übergeben werden, innerhalb der Funktion verändert, wirkt sich dies im aufrufenden Programmteil unterschiedlich aus:
 * Bei der Übergabe eines einfachen Objekts (Zahl oder Zeichenkette) wird eine Kopie des Objekts angelegt. Eine Veränderung der Kopie hat keine Auswirkungen auf da Original.
@@ -4032,4 +4032,190 @@ nachher:
 [7, 'abc'] {'x': 7, 'y': 'abc'} {'abc'}
 ```
 
-Es zeigt sich, dass nur bei liste, Dictionary und Set  eine dauerhafte Veränderung durch die Funktion erfolgte. Dies ist je nach Problemstellung ein erwünschter oder ein unerwünschter Effekt.
+Es zeigt sich, dass nur bei Liste, Dictionary und Set eine dauerhafte Veränderung durch die Funktion erfolgte. Dies ist je nach Problemstellung ein erwünschter oder ein unerwünschter Effekt.
+
+Im nachfolgenden Programm wird auch die Veränderung von einfachen Objekten durch eine Funktion dauerhaft geamcht. Dabei wird die Tatsache ausgenutzt, dass Python-Funktionen mehr als einen Rückgabewert ahben können. Eine Funktion dient zum Sortieren von zwei Variablen. Sie werden als Tupel zurückgeliefert:
+
+```py
+#Sortierfunktion
+def sortieren(eins, zwei):
+    if eins < zwei:
+        return zwei, eins
+    else:
+        return eins, zwei
+
+# Beispiel 1
+x = 24
+y = 29
+
+x,y = sortieren(x,y)
+print("x =", x, "y =", y)
+
+# Beispiel 2
+
+x = 124
+y = 29
+x,y = sortieren(x,y)
+print("x =", x, "y =", y)
+```
+```
+x = 29 y = 24
+x = 124 y = 29
+```
+
+An die Funktion werden zwei Variablen übergeben. Es wird geprüft, ob die zweite Variable größer als die erste Variable ist:
+* Trifft das zu, werden beide Variablen in umgekerhter Reihenfolge an die aufrufende Stelle zurückgelieert.
+* Falls nicht, stehen die beiden Variablen bereits in der gewünschten Reihenfolge und werden unverändert an die aufrufende Stelle zurückgeliefert.
+
+An der Ausgabe erkennen Sie, dass `x` nacher in jedem Fall die größere Zahl enthält, also gegebenfalls verändert wurde.
+
+#### 5.7.6 Lokal, global
+
+Die Definition einer Funktion in Python erzeugt einen `lokalen` Namensraum. IN diesem lokalen Namensraum stehen alle Namen der Variablen, denen innerhalb der Funktion ein Wert zugewiesen wird, und die Namen der Variablen aus der Parameterliste.
+
+Wird bei der Ausführung der Funktion auf eine Variable zugegriffen, so wird diese Variable zunächst im lokalen Namensraum gesucht. Wird der Name der Variablen dort nicht gefunden, wird in dem bisher bekannten globalen Namensraum gesucht, d.h. in den bisher bearbeiteten Programmzeilen außerhalb der Funktion. Wird die Variable auch dort nicht gefunden, tritt ein Fehler auf. Ein erstes Beispiel:
+
+```py
+# Testfunktion
+def func():
+    try: 
+        print(x)
+    except:
+        print("Fehler")
+
+# Hauptprogram
+func()
+x = 42
+func()
+```
+```
+Fehler
+42
+```
+Der erste Aufruf von `func()` führt zu einem Fehler, da in der Funktion der Wert der Variablen `x` ausgegeben werden soll. Sie ist nicht im lokalen Namensrauf vorhanden, aber auch nicht in den bisher bearbeiteten Programmzeilen außerhalb der Funktion.
+
+Der zweite Aufruf von `func()` führt nicht zu einem Fehler, denn die Variable `x` hat vorher außerhalb der Funktion einen Wert erhalten und ist somit im globalen Namensraum bekannt.
+
+Das Schlüsselwort `global` dient dazu, eine Variable direkt dem globalen Namensraum zuzuordnen. Das ist im nachfolgenden Beispiel notwendig:
+
+```py
+# Erste Funktion
+def eingabe():
+    global x
+    x = input("Zahl: ")
+    x = float(x)
+
+# Zweite Funktion
+def ausgabe():
+    print(x*2)
+
+# Hauptprogramm
+eingabe()
+ausgabe()
+```
+In der Funktion `eingabe()` wird ein Wert für die Variable x eingelesen und in eine Zahl umgewandelt. Sie wird mithilfe des Schlüsselworts `global` direkt dem globalen Namensraum zugeordnet. Ansonsten wäre sie nur im lokalen Namensraum bekannt und würde daher in der Funktion `ausgabe()` weder im lokalen noch im globalen Namensraum gefunden werden. Die Zuordnung muss vor der Nutzung der Variablen erfolgen.
+
+Testen Sie das Verhalten, indem Sie die Zeile mit dem Schlüsselwort `global` einmal kurzfirstig als Kommentar setzten.
+
+#### 5.7.7 Rekursive Funktionen
+Bestimmte Abläufe lassen sich am besten rekursiv programmieren. Eine rekursive Funktion ruft sich immer wieder selbst auf. Damit dies nicht zu einer endlosen Menge an Funktionsaufrufen führt, muss es eine Bedingung geben, die der Rekursion ein Ende setzt. Zudem wird ein erster Aufruf benötigt, der die Rekursion einleitet.
+
+Das rinzip der Rekursion lässt sich bereits anhand des folgenden einfachen Programms verdeutlichen. Sie finden darin die rekursive Funktion `halbieren()`, die bei jedem Aufruf den ihr übergebenen Wert halbiert. Anschließend ruft sie sich selbst wieder auf, und zwar mit dem halbierten wert. Die Rekursion endet, wenn der Wert, der ständig halbiert wird, eine bestimmte Grenze unterschreitet. Der erste Aufruf der rekursiven Funktion erfolgt mit einem Startwert aus dem Hauptproram heraus.
+```py
+# Definition der Funktion
+def halbieren(wert, i=0):
+    i+= 1
+    print(f"{i:3.0f}{wert:10.3f}")
+    wert = wert / 2
+    if wert >= 0.05:
+        halbieren(wert, i)
+    else:
+        print(f"{i+1:3.0f}{wert:10.3f} - ENDE")
+
+# Hauptprogramm
+halbieren(10*10^10)
+```
+Der rekursive Aufruf erfolgt gemäßg der Bedingung `wert > 0.005`. OHne diese Bedingung würde die Rekursion endlos weiterlaufen.
+
+#### 5.7.8 Lambda-Funktion
+Die Lambda-Funktion bietet die Möglichkeit, eine Funktionsdefinition zu verkürzen. Sie können einer Lambda-Funktion Parameter übergeben. Sie liefert ihr Ergebnis als Ausdruck zurück, der in der gleichen Zeile stehen muss. Darin dürfen keine Mehrfachanweisungen, Ausgaben oder Schleifen vorkommen. Ein Beispielprogramm sieht wie folgt aus:
+```py
+#Funktions Definition
+mal = lambda x,y: x*y
+plus = lambda x,y: x+y
+
+# Funktionsaufrufe
+print(mal(5,3))
+print(plus(4,7))
+```
+Die Lambda-Funktion `mal` hat zwei Paramter (x und y) . Das Ergebnis der Funktion ist die Multiplikation dieser beiden Paramter.
+
+Die Lambda-Funktion 'plus' ist nach demselben Muster aufgebaut: `Ergebnis = lambda Parameterliste: Ausdruck.`
+
+Eine Lambda-Funktion ermöglicht Ihnen zudem, eine Funktion mit Parametern an einer stelle zu übergen, an der eigentlich nur der Name einer Funktion übergeben werden darf. Dazu mehr im Abschnitt 11.3.2 - Ein einfacher Tschenrechner.
+
+#### 5.7.9 Funktonsname als Parameter
+
+Sie können einer FUnktion nicht nur Werte übergen, sondern auch den Namen einer anderen Funktion. Dadurch wird die erstgenannte Funktion flexibler. Ein Beispiel:
+
+```py
+# Funktion zu Berechnung einzelner Werte
+def quadrat(x):
+    return x * x
+
+# Funktion zur Berechnung einzelner Werte
+def hochdrei(x):
+    return x * x * x
+
+# Funktion zur Ausgabe von Funktionswerten
+def ausgabe(unten, oben, schritt, f):
+    for x in range(unten, oben, schritt):
+        print(x, f(x))
+    print()
+
+# Aufruf, Funktionsname ist Parameter
+ausgabe(2, 11, 2, quadrat)
+ausgabe(1,6,1, hochdrei)
+```
+
+Zunächst werden die beiden herkömmlichen Funktionen `quadrat()` und `hochdrei()` definiert. Diese liefern jeweils als Ergebnis einen einzelnen Funktionswert zurück.
+
+Die Funktion `ausgabe()` dien zur Ausgabe einer zweispaltigen Tabelle, die aus mehreren werten und den zugehörigen Funktionswerten besteht. Sie erwartet insgesamt vier Parameter. Die ersten drei Parameter dienen zur Steuerung der `for`-Schleife.
+
+Der vierte Parameter gibtden Namen der Funktion an, die zur Berechnung des Werts verwendet wird, der in der zweiten Spalte der Tabelle erscheint.
+
+Der Name der Funktion an, die zur Berechnung des Werts verwendet wird, der in der Zweiten Spalte der Tabelle erscheint. Der Name der Funktion wird ohne KLammern angegeben. IM ersten Fall handelt es sich um die FUnktion `quadrat()`, im zweiten Fall um die FUnktion `hochdrei()`.
+
+### 5.8 Eingebaute Funktionen
+
+Als Entwickler können Sie eine Reihe von eingebauten Funktionen ohne Einbindung eines Moduls verwenden. Die folgende Tabelle gibt eine üübersicht über die eingebauten Funktionen, die in diesem Buch behandelt werden.
+
+|Name|Beschreibung|Beispiel in Abschnitt|
+|--|--|--|
+|abs()|Liefertt den Betrag einer Zahl| Abschnitt 4.1.9|
+|bin()|Liefert eine binäre bzw. duale Zahl|Abschnitt 4.1.1|
+|bytes()|Liefert ein Objekt des Datentyps `bytes`|Abschnitt 4.2.7 |
+|chr()|Liefert ein Zeichen zu einer Unicode-Zahl|Abschnitt 5.8.2 |
+|eval()|Liefert einen ausgeführten Python-Ausdruck|Abschnitt 5.1.5|
+|exec()|Führt eine Anweisung aus|Abschnitt 5.1.5|
+|filter()|Liefert die Elemente eines iterierbaren Objekts, für die eine FUnktion `true` ergibt|Abschnitt 5.4.3|
+|float()|Liefert eine Zahlmit Nachkommestellen|Abschnitt 3.2.3|
+|format()|Formatiert Zahlen und Zeichenketten|Abschnitt 5.2.2|
+|frozenset()|Liefert ein unveränderliches Set|Abschnitt 4.6.4|
+|hex()|Liefert eine hexadezimale Zahl|Abschnitt 4.1.1|
+|input()|Wartet auf eine Eingabe des Benutzers.|Abschnitt 3.2.2|
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+|()||Abschnitt |
+
