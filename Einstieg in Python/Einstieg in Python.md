@@ -4620,5 +4620,564 @@ Gibt der Benutzer eine hültige Zahl ein, wird eine der drei Funktionen `leicht(
 
 #### 5.12.3 Eine leichte Aufgabe
 
-Es folgt die Funktion `leicht()` zur Erstellung einer leichten Aufgabe. Das gesamte Programm benötigt zudem einen initialisierten Zufallsgenerator.
+Es folgt die Funktion `leicht()` zur Erstellung einer leichten Aufgabe. Das gesamte Programm benötigt zudem einen initialisierten Zufallsgenerator:
 
+```py
+import random
+random.seed()
+...
+
+def leicht():
+    ergw = random.randint(-10,10)
+    an = 0
+    while an == 0:
+        an = random.randint(-10,10)
+    az = ergw * an
+    print("Ganze Zahl berechnen:", az, "/", an)
+    input()
+    print("Ergebnis:", ergw)
+```
+
+Der Zufallsgenerator liefert ganze Zahlen für as Ergebnis (ergw) und den Nenner des Bruchs (an). Der Zähler des Bruchs (az) wird dann mithilfe einer Multiplikation ermittelt. Ein Beispiel: Das zufällig ermittelte Ergebnis 3 und der zufällige ermittelte Nenner 5 erben den Zähler 15. Für den Benutzer wird also die Aufgabe 15 / 5 ermittelt und ausgegeben. Er soll das Ergebnis 3 berechnen.
+
+Bei dem eingestellten Bereich von -10 bis 10 kann der Zufallsgenerator auch den Wert 0 liefern. Mithilfe einer `while`-Schleife wird dafür gesorgt, dass der Wert für den Nenner nicht 0 ist, weil eine Division durch 0 mathematisch nicht erlaubt ist.
+
+#### 5.12.4 Eine mittelschwere Aufgabe
+
+Es folgt die Funktion `mittel()` zur Erstellung einer mittelschweren Aufgabe. Sie benötigt die beiden Tupel `prim` und `prob` und die Hilfsfunktionen `produkt()`, `kuerzen()` und `ergebnis()`:
+
+```py
+prim = 2,3,5,7
+
+prob = 2,2,2,2,3,3,3,5,5,7
+
+def produkt(anzahl):
+    wert = 1
+    for i in range(anzahl):
+        wert *= random.choice(prob)
+    if random.randint(0,1) == 0:
+        return wert
+    else:
+        return -wert
+
+def kuerzen(ergz, ergn):
+    for p in prim:
+        while ergz%p == 0 and ergn%p == 0:
+            ergz /= p
+            ergn /= p
+    if ergn < 0:
+        ergz = -ergz
+        ergn = -ergn
+    return int(ergz), int(ergn)
+
+def ergebnis(ergz, ergn):
+    ergz, ergn = kuerzen(ergz, ergn)
+    if ergn == 1:
+        print("Ergebnis:", ergz)
+    else:
+        print("Ergebnis:", ergz, "/", ergn)
+
+def mittel():
+    ergz = produkt(3)
+    ergn = produkt(3)
+    print("Bruch kürzen:", ergz, "/", ergn)
+    input()
+    ergebnis(ergz, ergn)
+```
+
+Die Variablen `ergz` und `ergn` beinhalten den Zähler und den Nenner des gekürzten Bruchs: MIt diesem Bruch vergleicht der Benuetzer das ERgebnis seiner eigenen Berechnung.
+
+Das Tupel `prim` beinhaltet als Elemente die vier kleinsten Priemzahlen. Primzahlen können nur duch sich selbst und durch 1 geteilt werden. Sie werden zum Kürzen des Bruchs benötigt, mehr dazu später.
+
+Das Tupel `prob` beinhaltet zehn Elemente. Dabei handelt es sich ebenfalls um die vier kleinsten Primzahlen, allerdings mit unterschiedlicher Häfugkeit: Die 2 kommt zB. vier mal vor, die 7 nur einmal.
+
+Der Zähler un der Nenner eines Bruchs werden jeweils mithilfe der Funktion `produkt()` erzeugt. Sie liefert einen wert der mithilfe des Zufallsgenerators erzeugt wird. Die `for` schleife wir dreimal durchlaufen. Bei jedem Durchlauf liefert die Funktion ` choice()` aus dem Modul `random`einen der Werte aus der Tupel `prob`. Dabei handelt es sich um einen der Werte 2,3,5,7, aber auch mit unterschiedlicher Wahrscheinlichkeit (probability). Auf diese Weise wird dafür gesorgt, dass die Aufgaben eher kleinere als größere Zahlen beinhalten.
+
+Die drei Werte werden miteinander multipliziert. Anschließend wird, wiederum mithilfe des Zufallsgenerators das vorzeichen des ermittelten Produkts gesetzt. Liefert der Zufallsgenerator eine 0, bleibt da Produkt positiv. Liefert er eine 1, wird das Produkt mit -1 multipliziert.
+
+Zur Anzeige des Ergebnisses wird die Funktion `ergebnis()` aufgerufen, die wiederum zunächst die FUnktion `kuerzen()` aufruft. Darin werden Zähler und Nenner nacheinander durch die Elemente des Tupels `prim` dividiert. Dabei werden sie jeweils so lange durch eine der Primzahlen dvidiert, wie der Rest der Divison 0 ist, die Division also eineganze Zahl ergibt. Da Zähler und Nenner nur PRodukte aus den vierZahlen des Tupels `prim` sind, ergibt sich am Ende der gekürzte Wert.
+
+Ist das Ergebnis ein negativer Bruch, soll das Vorzeichen im Zähler stehen. Sind sowohl Zähler als auch Nenner negativ, soll der Bruch in den entsprechenden positiven Bruch umgewandelt werden. Ist also de Nenner negativ, werden Zälher undNenner mit -1 multipliziert. Zwei Beispiele: Aus 4/-3 wird -4/3, aus -4 / -3 wird 4/3.
+
+Nach Rückkehr in die Funktion èrgebnis()` wird dafür gesorgt, dass das Ergebnis al ganze Zahl und nicht als Bruch angezeigt wird, falls der Nenner den Wert 1 besitzt.
+
+#### 5.12.5 Eine Schwere AUfgabe
+
+Es folgt die FUnktion `schwer()` zum Erstellung einer schweren Aufgabe. Sie benötigt zusätzlich das Tupel `ops`:
+
+```py
+ops = '+', '-', '*', '/'
+
+def schwer():
+    az = produkt(2)
+    an = produkt(2)
+    bz = produkt(2)
+    bn = produkt(2)
+    op = random.choice(ops)
+    print("Ergebnis-bruch berechnen: ", az, "/", an," ", op," ", bz, "/", bn, sep="")
+
+    if op == '+':
+        ergz = az * bn + an * bz
+        ergn = an * bn
+    elif op == '-':
+        ergz = az * bn - an * bz
+        ergn = an * bn
+    elif op == '*':
+        argz = an * bz
+        argn = an * bn
+    else:
+        ergz = az * bn
+        ergn = an * bz
+
+input()
+ergebnis(ergz, ergn)
+```
+
+Das Tupel `ops` beinhaltet als Elemente vier einzelne Zeichen, nämlich die OPeratoren für die vier verschiedenen Berechnungen.
+
+Der Zähler und Nenner der beiden Brücke, nennen wir sie A und B, werden mithilfe der bereits beschriebenen Funktion  `produkt()` erzeugt. Die rbruch A hat den Zähler `az` und den Nenner `an`, der Bruch B den Zähler `bz` und den Nenner `bn`. Die vier Werte sind jeweils das Produkt aus zwei zufälligen Zahlen. Der Poerator für die Aufgabe wird ebenfalls per Zufallsgenerator erzeugt. Anshließend wird die Aufgabe in der Form  `A Operator B` angezeigt.
+
+Mithilfe einer mehrfachen Verzweigung wird das Ergebnis in Abhängigkeit des Operators gemäß den Regeln der Bruchrechnung ermittelt. Auch hier beinhalten die Variablen `ergz`und `ergn` den Zhäler und den Nenner des Ergebnisses.
+
+Die Funktion `ergebnis()` und `kuerzen()` erfüllen dieselben Aufgaben wie im vorherigen Abschnitt.
+
+
+
+## 6 Objektorientierte Programmierung
+
+Dieses Kapitel bietet Ihnen eine Einführung in die objektorientierte Programmierung (OOP). Es erläutert die Möglichkeiten zur Erzeugung einer Kkassenhierarchie, mit der Sie große Softwareprojekte anhand von **Klassen**, **Objekten**, **Eigenschaften**, **Methoden** und des **Prinzips der Vererbung** bearbeiten können.
+
+### 6.1 Was ist OOP?
+
+Die *objektorientierte Programmierung* bietet zusätzliche Möglichkeiten zum verbesserten Aufbau und zur vereinfachten Wartung und Erweiterung von Programmen. Diese Vorteile erschließen sich besonders in großen Programmierprojekten.
+
+Bei der objektorientierten Programmierung werden **Klassen** erzeugt, in denen die Eigenschaften von Objekten sowie die Funktionen festgeletzt werden, die auf diese Objekte angewendet werden können (sogenannte *Methoden*). 
+Sie können verschiedene **Objekte** dieser Klassen erzeugen, den Eigenschaften unterschiedliche Werte zuweisen und die Methoden auf die Objekte anwenden. Die Definitionen aus der Klasse und die zugewiesenen Werte begleiten die Objekte über ihren gesamten *Lebensweg* während der Dauer des Programms.
+
+Ein Beispiel: Es wird die Klasse `Fahrzeug` erschaffen, in der die Eigenschaften und die Methoden von Fahrzeugen bestimmt werden. Ein Fahrzeug hat u.a. die Eigenschaften `Bezeichnung`, `Geschwindigkeit` und `Fahrtrichtung`. Außerdem kann man ein Fahrzeug `beschleunigen` und `lenken`. INnerhalb des Programms können viele unterschiedliche Fahrzeuge erschaffen und eingesetzt werden.
+
+Klassen können ihre Eigensahften und Methoden außerdem vererben. Eine solche KLasse fungiert als `Basisklasse`, ihre Erben nennt man `abgeleitete Klassen`. Damit kann die Definition von ähnlichen Objekten, die über eine Reihe von gemeinsamen Eigenscahften und Methoden verfügen, vereinfacht werden.
+
+Ein Beispiel: Es werden die Klassen `PKW` und `LKW` geschaffen. Beide KLassen sind von der Basisklasse `Fahrzeug` abgeleitet und erben alle Eigenscahften und Methoden dieser KLasse. Zusätzlich verfügen sie über eigene Eigesncahften und Methoden, die bei der jeweiligen Klasse besonders wichtig sind. Ein `PKW` hat etwa eine bestimmte Anzahl von `Insassen`, und man kann `einsteigen` und `aussteigen`. Ein `LKW` hat eine `Ladung`, man kann ihn `beladen` und `entladen`.
+
+### 6.2 Klassen, Objekte und eigene Methoden
+
+Als Beispiel wird die KLasse `Fahrzeug` deiniert. Zunächst verfügt ein Objekt dieser KLasse nur über die Eigenschaft `Geschwindigkeit` und die MEthoden `beschleudigen()` und `ausgabe()`. Die Methode `ausgabe()` informiert den Anwender über den aktuellen Zustand des jeweiligen Fahrzeug-Objekts.
+
+Die Definition der Klasse sieht wie folgt aus:
+```py
+# Definition der KLasse Fahrzeug
+
+class Fahrzeug:
+    geschwindigkeit = 0                 # Eigenschaft
+    def beschleunigen(self, wert):      # Methode
+        self.geschwindigkeit += wert
+    def ausgabe(self):                  # Methode
+        print("Geschwindigkeit:", self.geschwindigkeit)
+```
+
+Die Definiton der Klasse wird eingeleitet vom Schlüsselwort `class`, gefolgt vom Namen der KLasse und einem Doppelpunkt. Eingerückt folgt die eigentliche Definiton. Die Eigenschaft `geschwindigkeit` wird definiert und au den Wert `0` gesetzt.
+Die Methoden sind Funktionen der Klasse, sie werden also mithilfe des Schlüsselworts `def` definiert. Methoden haben mindestens einen Parameter, nämlich das Objekt selbst. Häufig wird dieser Parameter `self` genannt - sie können aber auch einen anderen Namen wählen.
+
+Die Methode `beschleunigen()` hat insgesamt zwei Paramter: Der erste Parameter ist das Objekt selbst. Der zweite Parameter ist der Wert für die Änderung der Geschwindigkeit. Innerhalb der Methode wird dieser Wert genutzt, um die Eigenschaft des Objekts zu ändern. Die Methode `ausgabe()`hat nur einen Paramter: das Objekt selbst. Sie dient zur Ausgabe er Geschwindigkeit des Objekts.
+
+Bisher enthielt das Programm nur eine Klassendefinition, es führte noch nichts aus. Da Hauptprogramm hat folgendes Aussehen:
+
+```py
+# Objekte der Klasse Fahrzeug erzeugen
+
+opel = Fahrzeug()
+volvo = Fahrzeug()
+
+# Objektmehtoden
+volvo.ausgabe()
+volvo.beschleunigen(20)
+volvo.ausgabe()
+
+# Objekt betrachten
+opel.ausgabe()
+```
+
+Im Hauptprogramm werden zunächst zwei Objekte der Klasse  `Fahrzeug` erzeugt, hier mit den Namen `opel` und `volvo`. Diesen Vorgang nennt man auch: Instanzen einer Klasse erzeugen.
+
+Beim anschließenden Aufruf der Methoden ist zu beachten, dass das Objekt selbst nicht mehr als Parameter angegeben wird. Eine Methode bekommt also beim Aufruf immer einen Paramter weniger übermittelt, als in der Definition angegeben ist. Dies leigt daran, dass die Methode *für* ein bestimmtes Objekt aufgerufen wird. Innerhalb der Methode ist daher bekannt, um welches Objekt es sich handelt.
+
+Die Geschwindigkeit des Objekts `volvo` wird ausgegeben, einmal vor und einmal nach der Beschleunigung. Die Geschwindekeit es Objekts `opel` wird nu einmal ausgegeben. Zu Beginn, also nach ihrer Erzeugung, haben dieObjekte laut der KLassendefinition die Geschwindigkeit 0.
+
+**Hinweis**
+Die in diesem Kapitel dargestellten Programme sind ein Kompromiss, denn die Vorteile der objektorientierten Programmierung (OOP) kommen erst bei gröeßren Programmierprojekten zum Tragen. Bei einem kleinen Projekt ist die Frage berechtigt, warum für dieses einfache Ergebnis ein verhältnismäßig komplexes Programm geschrieben werden sollte. Anhand dier hier vorgestellten Programme können Sie sich aber die Prinzipien der OOP reschließen, ohne den Überblick zu verlieren.
+
+### 6.3 Konstruktor und Destruktor
+
+Es gbit zwei besondere Methoden, die im Zusammenhang mit einer Klasse definiert werden können:
+
+* Die Konstruktormethode wird genutzt, um einem Objekt zum Beginn seiner *Lebensdauer* Anfangswerte zuzuweisen. Dabei können Sie mit Vorgabewerten(5.7.3) und benannten Parametern(5.7.2) arbeiten. Auf diese WEise können objekte ihre Anfangswerte auf unterschiedliche Art und WEise erhalten.
+* Die Destruktor wird genutzt, um am Ende der *Lebensdauer* eines Objekts Aktionen auszulößen, zB. eine offene Datei zu schließen.
+
+Die Klasse `Fahrzeug` wird wie folgt verändert: Ein Fahrzeug erhält neben der Eigenschaft `geschwindigeit` die Eigenschaft `bezeichnung`. Die KLasse erhält eine Konstruktormethode, um Anfangswerte für `geschwindigkeit` und `bezeichnung` festzulegen.
+
+Das Programm sieht in seiner veränderten Form wie folg aus:
+
+```py
+# Definition der Klasse Fahrzeug
+
+class Fahrzeug:
+    # Konstruktormethode
+    def __init__(self, bez="(leer)", ge=0):
+        self.bezeichnung = bez
+        self.geschwindigkeit = ge
+    # Destruktormethode
+    def __del__(self):
+        print("Objekt", self.bezeichnung, "entfernt")
+
+    # Methoden
+
+    def beschleunigen(self, wert):
+        self.geschwindigkeit += wert
+        self.ausgabe()
+
+    def ausgabe(self):
+        print(self.bezeichnung, self.geschwindigkeit, "km/h")
+
+
+# Objekte der Klasse Fahrzeug erzeugen
+opel = Fahrzeug("Opel Admiral", 40)
+volvo = Fahrzeug("Volvo Amazon", 45)
+ford = Fahrzeug("Ford Mondeo")
+mercedes = Fahrzeug(ge=60)
+# Objekte betrachten
+opel.ausgabe()
+volvo.ausgabe()
+ford.ausgabe()
+mercedes.ausgabe()
+# Objektmethode
+volvo.beschleunigen(20)
+# Destruktor aufrufen
+del opel
+del volvo
+
+# Aufruf nicht mehr gestattet
+# opel.ausgabe()
+```
+
+Der festgelegte Name `__init__()` (mit doppeltem Unterstrich davor und danach) bezeichnet die Konstrutkromethode. Es werden zwei Parameter übergeben. Diese beiden Parameter werden genutzt, um die beiden Eigenschaften mit anfangswerten zu versorgen. Bei den Objekten `opel` und `volvo` werden Werte für beide Eigenschaften übergeben.
+
+Beim Objekt `ford` wird nur ein Wert für die erste Eigenschaft übergeben. Die zweite Eigenschaft erhält den Vorgabewert. Beim Objekt `mercedes` wird nur ein Wert für die zweite Eigenschaft übergeben, mithilfe eines beanannten Parameters. In diesem Fall erhält die erste Eienshaft den Vorgabewert.
+
+Der festgelegte Name `__del__()` bezeichnet die Destruktormethode. Sie wird mithilfe des Schlüsselwrots `del` aufgerufen. Anschließend existiert das Objekt nicht mehr.
+
+Die Methode `ausgabe()` dient zur Ausgabe beider Eigenschaften. Sie wird in diesem Programm sowohla us dem Hauptprogramm als auch aus einer Objektmethode heraus aufgerufen. Innerhalb der Klassendefinition muss, wie bei der Zuweisung eines Eigenschaftswerts, das Objekt mit `self` angegeben werden.
+
+Es werden zwei Objekte erzeugt. Dabei werden die Anfangswerte an den Konstruktor übergeben, hier die Werte `Opel Admiral` und `40` für das Objekt `volvo`.
+
+Die Eigenscahften der Objekte werden verändert und ausgegeben.
+
+**Hinweis**
+Konstruktoren werden häufig eingesett. Sie ermöglichen eine gezieltere Erzeugung von Objekten. Destruktoren kommen seltener zum Einsatz.
+
+Sollten Sie bereits mit anderen Programmiersprachen gearbeitet haben, ist dieser Hinweis interessant: Methoden können, wie auch Funktionen, in Python nicht überladen werden. Falls sie eine Methode mehrfach definieren, gegebenenfalls mit unterschiedlichen Parametern, so gilt nur die jeweils letzte Definition. Methoden können allerdings in abgeleiteten Klassen überschrieben werden, siehe Abschnitt 6.7 Vererbung.
+
+### 6.4 Besondere Methoden
+
+Die Methoden `__init__()` und `__del__()` gehören zu einer Reihe von besonderen Methodne, die für die eingebauten Objekttypen bereits vordefiniert sind. Sie können siefür eigene Objekttypen,a lso Klassen, selbst definieren. Im folgenden Beispiel sehen Sie zwei dieser Methoden:
+
+```py
+# Definition der KLasse Fahrzeug
+class Fahrzeug:
+    def __init__(self, bez, ge):    # Konstruktormethode
+        self.bezeichnung = bez
+        self.geschwindigkeit = ge
+    def __str__(self):              # Ausgabemethode
+        return self.bezeichnung + " " + str(self.geschwindigkeit) + "km/h"
+    def __repr__(self):             # Info-Methode
+        return "Objekt: " + self.bezeichnung + " der Klasse Fahrzeug"
+    
+
+# Objekte der Klasse Fahrzeug erzeugen
+opel = Fahrzeug("Opel Admiral", 40)
+volvo = Fahrzeug("Volvo Amazon", 45)
+
+# Objekte ausgeben
+print(opel)
+print(volvo)
+
+# Informationen zu Objekt
+print(repr(opel))
+print(repr(volvo))
+```
+
+Bei der Ausgabe einesObjekts mithilfe der Funktion `print()` wird die besondere Methode `__str__()` aufgerufen, falls sie definiert ist. Diese liefert standartmäßig eine Zeichenkette zur Ausgabe der Eigenschaften. Ist die Methode für die betreffende Klasse nicht definiert, ergibt sich keine sinnvoll nutzbare Ausgabe.
+
+Sie können mithilfe der eingebauten Funktion `repr()` Informationen zu einem Objekt abrufen. Das Aussehen dieser Informationen können Sie selbst bestimmen, falls Sie innerhalb der Klassendefinition die besondere Methode `__repr__()` definieren.
+
+### 6.5 Operatormethoden
+
+Ähnlich wie die besonderen Methoden sind die Operatormethoden für die eingebauten Objekttypen bereits vordefiniert. Sie können auch die Operatormethoden für Ihre eigenen Objekttypen, also Klassen, selbst definieren. Nachfolgend werden insgesamt drei dieser Methoden zum Vergleich zweier Objekte und zur Subtraktion zweier Objekte genutzt:
+
+```py
+# Definition der Klasse Fahrzeug
+class Fahrzeug:
+    def __init__(self, bez="(leer)", ge=0):     # Konstruktor Methode
+        self.bezeichnung = bez
+        self.geschwindigkeit = ge
+        
+    def __gt__(self, other):                    # 1. Vergleichsmethode
+        return self.geschwindigkeit > other.geschwindigkeit
+
+    def __eq__(self, other):                    # 2. Vergleichsmethode
+        return self.geschwindigkeit == other.geschwindigkeit
+
+    def __sub__(self, other):                   # Rechenmethode
+        return self.geschwindigkeit - other.geschwindigkeit
+
+# Objekte der Klasse Fahrzeug erzeugen
+opel = Fahrzeug("Opel Admiral", 60)
+volvo = Fahrzeug("Volvo Amazon", 45)
+
+# Objekte vergleichen
+if opel > volvo:
+    print("Opel ist schneller")
+elif opel == volvo:
+    print("Beide sind gleich schnell")
+else:
+    print("Volvo ist schneller")
+
+# Objekte sutrahieren
+differenz = opel - volvo
+print("Geschindigkeitsdifferenz:", differenz, "km/h")
+```
+
+Die methoden `__gt__()`und `__eq__()` werden beim Objektvergleich durch die Benutztung der Vergleichsoperatoren `>` und `==` aufgerufen.
+* Die Methode `__gt__()`liefert `True`, falls da Objekt `self` größer als das Objekt `other` ist. Für diese Klasse wird defineirt: Größer bedeutet hörere Gechwindigkeit.
+* Die Methode `__eq__()` liefer True, falls die beiden Objekte gleich groß sind, hier also: gleich schnell.
+
+Die Methode `__sub__()` wird beim Einsatz des Operators `-` (minus) aufgerufen. Sie liefert die Differenz zweier Objekte zurück, hier bezieht sich das sinnvollerweise auf die Differenz der Geschwindigkeiten der beiden Objekte. Der Aufruf der Methode lautet: `differenz = opel - volvo`.
+
+Neben den Vergleichsoperatoren `>` greather then und `==` equal können Sie weitere nutzen:
+* `>=` führt zu `__ge__()` - greater or equal
+* `<` führt zu `__lt__()` - lower than
+* `<=` führt zu `__le__()` - lower or equal
+* `!=` führt zu `__ne__()` - not equal
+
+Neben dem Rechenoperator `-` können Sie weitere nutzen, u.a.:
+* `+` führt zu `__add__()`
+* `*`  führt zu `__mul__()`
+* `/` führt zu `__truediv__()`
+* `//` führt zu `__floordiv__()` 
+* `%` führt zu `__mod__()`
+* `**` führt zu `__pow__()`
+
+### 6.6 Referenz, Identität und Kopie
+
+Wie Sie bereits in Abschnit 4.8, Referenz, Dientität und Kopie, erfahren haben, ist derr Name eines Objekts lediglich eine Referenz auf das Objekt. Bei Objekten von benutzerdefinierten Klassen erzeugt die Zuweisung dieser Refernz an einen anderen Namen lediglich eine zweite Referenz auf da selbe Objekt.
+
+**Echte Kopien** von Objekten benutzerdefinierter Klassen können Sie durch Erzeugung eines neuen Objekts erstellen, dem Sie z.B. innerhalb des Konstruktors, die Werte eines anderen Objekts der gleichen Klasse zuweisen.
+
+Für die Kopie von umfangreichen Objekten können Sie sich ebenfalls der Funktion `deepcopy()` aus dem Modul `copy` bedienen, siehe auch Abschnitt 4.8.3, Objekte Kopieren. Im nachfolgenden Programm sehen Sie Beispiele für die genannten Vorgänge. Es werden nacheinander erzeugt:
+* Ein objekt
+* Ein zweites Objekt als Kopie des ersten objekts mithilfe von Wert-zuweisung
+* Ein dritten Objekt als Kopie des ersten Objekts mit `deepcopy()`
+* eine zusätzliche Refernz auf das erste Objekt
+
+```py
+# Modul copy
+import copy
+
+# Definition der Klasse Fahrzeug
+class Fahrzeug:
+    def __init__(self, bez, ge):
+        self.bezeichnung = bez
+        self.geschwindigkeit = ge
+    def beschleunigen(self, wert):
+        self.geschwindigkeit += wert
+    def __str__(self):
+        return self.bezeichnung + " " + str(self.geschwindigkeit) + " km/h"
+
+# Objekt der KLasse Fahrzeug erzeugen
+opel = Fahrzeug("Opel Admiral", 40)
+
+# Kopie eines Objektes erzeugen
+zweit_opel = Fahrzeug(opel.bezeichnung, opel.geschwindigkeit)
+zweit_opel.beschleunigen(30)
+
+# Tiefe Kopie
+dritt_opel = copy.deepcopy(opel)
+dritt_opel.beschleunigen(35)
+
+# Zweite Referenz auf objekt erzeugen
+viert_opel = opel
+viert_opel.beschleunigen(20)
+
+# Kontrollausgaben
+print("Original:", opel)
+print("1. Kopie:", zweit_opel)
+print("2. Kopie:", dritt_opel)
+print("2. Refferenz:", viert_opel)
+print()
+
+# Identisch
+print("2:", opel is zweit_opel)
+print("3:", opel is dritt_opel)
+print("4:", opel is viert_opel)
+```
+```
+Original: Opel Admiral 60 km/h
+1. Kopie: Opel Admiral 70 km/h
+2. Kopie: Opel Admiral 75 km/h
+2. Refferenz: Opel Admiral 60 km/h
+
+2: False
+3: False
+4: True
+```
+Das Objekt `opel` ist das Original. Das Objekt `zweit_opel` ist eine KOpie. Es handelt sich um ein eigenes Objekt, das mithilfe des Konstruktors und der Daten des Originalobjekts erzeugt wird. Das Objekt `dritt_opel` ist ebenfalls eine Kopie. Dieses Objekt wird mithilfe der Funktion `copy.deepcopy()` erzeugt.
+
+Bei `viert_opel` handelt es sich um eine zusätzliche Referenz auf das Originalobjekt `opel`. Die Änderung einer Eigenschaft über diese Referenz ändert Das originalobjekt, wie die Ausgabe zeigt.
+
+Die Vergleiche auf Identität mithilfe des Operators `is` zeien, dass nur die Objekte `opel` und `viert_opel` identisch sind.
+
+### 6.7 Vererbung
+
+Eine Klasse kann ihre Eigenscahften und Methoden an eine andere Klasse vererben. Dieser Mechanismus wird häufig angewendet. Sie erzeugen dadurch eine Hierarchie von Klassen, die die Darstellung von Objekten ermöglicht, die teilweise übereinstimmende, teilweise unterschiedliche Merkmale aufweisen.
+
+Im folgenden Beispiel wird eine Klasse `PKW` definiert, mit deren Hilfe die Eigenschaften und Methoden von PKW's dargestellt werden. Bei der Erzeugung bedient man sich der bereits existierenden Klasse `Fahrzeug`.
+
+Von der Klasse `PKW` aus gesehen ist die Klasse `Fahrzeug` eine Basisklasse. Von der Klasse `Fahrzeug` aus gesehen ist die Klasse `PKW` eine abgeleitete Klasse. Zunächst die Definition der Basisklasse `Fahrzeug`. Sie enthält drei methoden und zwei Eigenschaften:
+
+```py
+# Definition der Klasse Fahrzeug
+class Fahrzeug:
+    def __init__(self, bez="(leer)", ge=0):
+        self.bezeichnung = bez
+        self.geschwindigkeit = ge
+    def beschleunigen(wert):
+        self.geschwindigkeit += wert
+    def __str__(self):
+        return self.bezeichnung + " " + str(self.geschwindigkeit) + " km/h"
+```
+
+Es folgt die Definition der abgeleiteten Klasse `PKW`. Sie erbt von der KLasse `Fahrzeug` und enthält fünf Methoden und frei Eigenschaften:
+* die eigene Konstruktor Methode `__init__()` und die eigene Ausgabemethode `__str__()`, die jeweils die gleichnamige Methode der basisklasse überschreiben
+* die eigenen Methoden `einsteigen()` und `aussteigen()``
+* die von der Klasse `Fahrzeug` geerbte Methode `beschleunigen()`
+* die eigene Eigenschaft `insassen`
+* die von der KLasse Fahrzeug geerbten Eigenschaften `bezeichnung` und `geschwindigkeit`
+
+```py
+# Definition der Klasse PKW
+class PKW(Fahrzeug):
+    def __init__(self, bez, ge, ins=0):
+        Fahrzeug.__init__(self, bez, ge)
+        self.insassen = ins
+    def __str__(self):
+        return Fahrzeug.__str__(self) + " " + str(self.insassen) + " Insassen"
+    def einsteigen(self, anzahl):
+        self.insassen += anzahl
+    def aussteigen(self, anzahl):
+        self.insassen -= anzahl
+```
+
+Wenn eine Klasse von einer anderen Klasse abgeleitet wird, so wird der Name der Basisklasse in Klammern hinter dem Namen der abgeleiteten Klasse angegeben.
+
+Eine Methode einer Basisklasse kann in einer abgeleiteten Klasse über schrieben werden. Zum Aufruf einer Methode der Basisklasse müssen Sie den Namen dieser Klasse angeben.
+
+Es folgt das Hauptprogramm, in dem ein Objekt der Klasse `PKW` erzeugt, verändert und ausgegeben wird:
+
+```py
+# Objekt der abgeleiteten Klasse PKW erzeugen
+fiat = PKW("Fiat Marea", 50, 0)
+
+# Eigene Methode anwenden
+fiat.einsteigen(3)
+fiat.aussteigen(1)
+
+# Geerbte Methode anwenden
+fiat.beschleunigen(10)
+
+# Überschriebene methode anwenden
+print(fiat)
+```
+```
+Fiat Marea 60 km/h 2 Insassen
+```
+
+Es wird das Objekt `fiat` erzeugt, dabei wird der Konstruktor aufgerufen. Er wird unmittelbar in der zugehörigen Klasse `PKW` gefunden. Dieser Konstruktor ruft wiederum den Konstruktor der Basisklasse auf, der in der Lage ist, die Erzeugung von Objekten der Basisklasse durchzuführen. Diese abgestufte Vorgehensweise ist nicht zwingend vorgeschrieben, aber empfehlenswert. Anschließend wird die verbleibene Eigenschaft der abgeleiteten Klasse initialisiert.
+
+Es werden die Methodne `einsteigen()` und `aussteigen()` aufgerufen. Diese wird nicht unmittelbar ind er Klasse PKW gefunden, daher wird ind er Basisklasse weitergesucht. Dort wird sie gefunden und dient zur Veränderung der Eigenscahft `geschwindigkeit`.
+
+Es wir die Ausgabemethode `__str__()` aufgerufen. Diese wird unmittelbar in der Klasse PKW gefunden. Sie ruft wiederum die gleichnamige Methode der Basisklasse auf. Das Ergebnis dieses Aufrufs wird mit den restlichen daten aus der KLasse PKW zusammengesetzt und zurückgeliefert. Dies führt zur Ausgabe aller Daten des objekts `fiat`.
+
+Eigenscahften und Methoden werden zunächst in der Klasse des Objekts gesucht. Falls sie dort nicht vorhanden sind, wird die Suche in der zugehörigen Basisklasse fortgesetzt.
+
+### 6.8 Mehrfachvererbung
+
+Eine abgeleitete Klasse kann wiederum Basisklasse für eine weitere Klasse sein. Dadurch ergib sich eine Vererbung über mehrere Ebenen. Eine Klasse kann außerdem von zwei Basisklassen gleichzeitig abgeleitet sein (Mehrfachvererbung), sie erbt in diesem Fall alle Eigenschaften und Methoden beider Basisklassen.
+
+Im folgenden Beispiel werden die beiden Klassen `PKW` und `LKW` von der Klasse `Fahrzeug`abgeleitet. Außerdem wird die Klasse `Lieferwagen` erzeugt, die sowohl von der Klasse `PKW` als auch von der Klasse `LKW` erbt. Die Definitionen der Klassen `Fahrzeug` und `PKW`sind bereits aus Abschnitt 6.7 *Vererbung* bekannt.
+
+Die abgeleitete Klasse `LKW` ähnelt im Aufbau der Klasse `PKW`, erbt von der Klasse `Fahrzeug` und enthält fünf Methoden und drei Eigenschaften:
+* die eigenen Konstruktormethode `__init__()` und die eigene Ausgabemethode `__str__()`, die jeweils die gleichnamige Methode der Basisklasse überschreiben
+* die eigene Methoden `beladen()` und `entladen()`
+* Die von der Klasse `Fahrzeug` geerbte Methode `beschleunigen()`
+* die eigene Eigenschaft `ladung()`
+* die von der Klasse Fahrzeug geerbten Eigenschaften `bezeichnung` und `geschwindigkeit`
+
+```py
+# Definition der Klasse LKW
+class LKW(Fahrzeug):
+    def __init__(self, bez="(leer)", ge=0, la=0):
+        Fahrzeug.__init__(self, bez, ge)
+        self.ladung = la
+    def __str__(self):
+        return Fahrzeug.__str__(self) + " " + str(self.ladung) + " Tonnen Ladung"
+    def beladen(self, wert):
+        self.ladung += wert
+    def entladen(self, wert):
+        self.ladung -= wert
+```
+
+Die Klasse `Lieferwagen` erbt von zwei Klassen, die eine gemeinsame Basisklasse haben. Sie enthält sieben Methoden und vier Eigenschaften:
+* die eigene Konstruktor Methode `__init__()` und die eigene Ausgabemethode `__str__()`, die jeweils die geerbten Methoden überschreiben
+* die von der Klasse `Fahrzeug` geerbte Methode `beschleunigen()`
+* die von der Klasse `PKW` geerbte Eigenschaft `insassen`
+* die von der Klasse `LKW` geerbte Eigenschaft `ladung`
+* die von der KLasse `Fahrzeug` geerbte Eigenschaft `bezeichnung` und `geschwindigkeit`
+
+```py
+# Definition der Klasse Lieferwagen
+class Lieferwagen(PKW, LKW):
+    def __init__(self, bez="(leer)", ge=0, la=0, ins=0):
+        PKW.__init__(self, bez, ge, ins)
+        LKW.__init__(self, bez, ge, la)
+    def __str__(self):
+        return PKW.__str__(self) + "\n" + LKW.__str__(self)
+```
+
+Im Hauptprogramm wir ein Objekt der Klasse `Lieferwagen` erzeugt, verändert und ausgegeben:
+
+```py
+# Objekt der abgeleiteten Klasse Leiferwagen erzeugen
+toyota = Lieferwagen("Toyota Allround")
+toyota.einsteigen(2)
+toyota.beladen(3.5)
+toyota.beschleunigen(30)
+print(toyota)
+```
+```
+Toyota Allround 30 km/h 2 Insassen
+Toyota Allround 30 km/h 3.5 Tonnen Ladung
+``` 
+Es wird das Objekt `toyota` erzeugt, dabei wird der Konstruktor aufgerufen. Dieser wird unmittelbar in der zugehörigen Klasse `Lieferwagen` gefunden. Der Konstruktor ruft wiederum die beiden Konstruktoren der Basisklassen `PKW` und `LKW` auf. Diese rufen jeweils zum einen den Konstruktor der Basisklasse `Fahrzeug`auf und initialisieren zum anderen eine spezifishe Eigenschaft der Klasse (`insassen` oder `ladung`).
+
+Die Methoden `einsteigen()`, `beladen()`und `beschleunigen()`werden aufgerufen. Sie werden in verschiedenen Basisklassen gefunden und verändern die Eigenschaften `insassen`, `ladung` und`geschwindigkeit`.
+
+Die eigene Ausgabemethode `__str__()` wird aufgerufen. Sie ruft die gleichnamigen Methoden der Basisklassen auf.
+
+**Hinweis**
+Nur wenige objektorientierte Programmiersprachen bieten das Konzept der Mehrfachvererbung an, da es den Entwurf von Klassenbibliotheken komplex und unübersichtlich machen kann.
+
+### 6.9 Datenklassen
+
+Seit Python 3.7 haben Sie die Möglichkeit, zusammengehörige Werte auf einfache Weise mithilfe von Datenklassen gemeinsam zu speichern. Dabei handelt es sich um vereinfachte Klassen. Einige der besonderen Methoden sind für diese Klassen bereits vordefiniert, wie z.B. die Konstruktormethode `__init__()`, die Ausgabemehtode `__repr__()`und die Vergleichsmethode `__eq__()`. Im nachfolgenden Beispiel wird eine Datenklasse für zwei dimensionale Vektoren definiert und genutzt:
+
+```py
