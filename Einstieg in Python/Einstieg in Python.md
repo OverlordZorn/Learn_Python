@@ -116,7 +116,7 @@
       - [5.1.4 Anweisung `pass`](#514-anweisung-pass)
       - [5.1.5 Funktionen `eval()` und `exec()`](#515-funktionen-eval-und-exec)
     - [5.2 Ausgabe und Formatierung](#52-ausgabe-und-formatierung)
-      - [5.2.1 Funktion `print()``](#521-funktion-print)
+      - [5.2.1 Funktion `print()`](#521-funktion-print)
       - [5.2.2 Formatierung mit String-Literalen](#522-formatierung-mit-string-literalen)
       - [5.2.3 Formatierung mit `format()`](#523-formatierung-mit-format)
       - [5.2.4 Formatierung wie in C](#524-formatierung-wie-in-c)
@@ -177,6 +177,13 @@
     - [6.9 Datenklassen](#69-datenklassen)
     - [6.10 Enumerationen](#610-enumerationen)
     - [6.11 Spiel, objektorientierte Version](#611-spiel-objektorientierte-version)
+  - [7 Verschiedene Module](#7-verschiedene-module)
+    - [7.1 Datum und Zeit](#71-datum-und-zeit)
+      - [7.1.1 Ausgabe der Zeit mit `localtime()`](#711-ausgabe-der-zeit-mit-localtime)
+      - [7.1.2 Ausgabe der Zeit mit `strftime()`](#712-ausgabe-der-zeit-mit-strftime)
+      - [7.1.3 Zeitangabe erzeugen](#713-zeitangabe-erzeugen)
+      - [7.1.4 Mit Zeitangaben rechnen](#714-mit-zeitangaben-rechnen)
+      - [7.1.5 Programm anhalten](#715-programm-anhalten)
 
 
 ## 1 Einführung
@@ -3287,7 +3294,7 @@ Für den Aufruf von `exec()` werden zwei Anweisungen jeweils in einer Zeichenket
 
 In diesem Abschnitt erläutere ich einige MÖglichkeiten zur Ausgabe mit hilfe der Funktion `print()`
 
-#### 5.2.1 Funktion `print()``
+#### 5.2.1 Funktion `print()`
 
 Die Funktion `print()` haben wir bereits mehrfach eingestzt. Sie beitet noch weitere Möglichkeiten:
 
@@ -3989,7 +3996,7 @@ Volumen: 80 Farbe: blau
 ```
 Der erste Aufruf findet in der bekannten Form, ohne Benennung von Parametern, statt. Die Werte werden den Parametern in der übergebenen Reihenfolge zugeordnet.
 
-Beim zweiten Aufruf werden alle vier Paramter mti Namen übergeben. Die Reihenfolge beim Aufruf ist nicht wichtig, da die Parameter eindeutug zugeordnet werden.
+Beim zweiten Aufruf werden alle vier Paramter mit Namen übergeben. Die Reihenfolge beim Aufruf ist nicht wichtig, da die Parameter eindeutug zugeordnet werden.
 
 Beim dritten Aufruf wird der erste Parameter über seine Stellung in der Parameterreihe zugeordnet, die anderen Parameter weren über ihre Namen zugeordnet. Es sind also auch Mischformen möglich.
 
@@ -5450,3 +5457,266 @@ Jedes Objekt der Klasse `Aufgabe` erhält bei der Erzeugung seine eigene Nummer.
 In der Ausgabemethode wird die Aufgabe zusammengesetzt und veröffentlicht. Das richtige Ergebnis der Aufgabe ist eine eigensachft der Klasse `Aufgabe`.
 
 In der Methode `beantworten()` wird die Eingabe des Benutzers gespeicert und mit dem richtigen Ergebnis der Aufgabe verglichen. Eine falsche oder ungültige Eingabe erzeugt eine Ausnahmen, dies führt zur Rückgabe einer 0. Eine richtige Eingabe führt zur Rückgabe einer 1.
+
+
+## 7 Verschiedene Module
+
+In diesem Kapitel erläutere ich Programmiertechniken zur Aurbeit mit Datums' und Zeitangaben, Collections, die Technik des Multithreadings sowie reguläre Ausdrücke.
+
+### 7.1 Datum und Zeit
+
+Das Modul `time` enthält Funktionen zur Verarbeitung und Formattierung von Datums- und Zeitangaben.
+
+dqmitkönnten wir z.B. das Kopfrechenspiel aus dem Programmierkurs um Datums- und Zeitangaben erweitern. Wir könnten eine Zeitmessung einbauen, die feststellt, wie lange ein Benutzer zur Lösung einer oder aller Aufgaben benötzigt hat. Falls die Bestleistung erzielt wird, z. B. eine hohe Anzahl an gelösten Aufgaben im ersten Versuch oder die Lösung der Aufgaben innerhalb besonders kurzer Zeit, könnten wir das mit Datum und Uhrzeit festhalten.
+
+Auf vielen Betriebssystemen gilt der 1. januar 1970 00:00 Uhr als Nullpunkt für die Verarbeitung von Datums und Zeitangaben. Die Zeit wird in Sekunden ab diesem Zeitpunkt gerechnet.
+
+#### 7.1.1 Ausgabe der Zeit mit `localtime()`
+
+Das nachfolgende Beispielprogramm verdeutlicht die Ermittelung und die formatierte Ausgabe der aktuellen Zeit. Es nutzt die Funktione `time()`, `time_ns()` und `localtime()`aus dem Modul `time`:
+
+```py
+# Modul time
+import time
+
+
+# Zeit in Sekunden
+print("Zeit in Sekunden:", time.time())
+
+# Zeit in Nanosekunden
+print("Zeit in Nanosekunden:", time.time_ns())
+
+# Aktuelle, lokale Zeit als Tupel
+
+lt = time.localtime()
+print("Lokale Zeit als Tupel:", lt)
+
+
+# Entpacken des Tupels, Datum und Uhrzeit
+
+jahr, monat, tag = lt[:3]
+stunde, minute, sekunde = lt[3:6]
+print(f"  Datum: {tag:02d}.{monat:02d}.{jahr:4d}")
+print(f"Uhrzeit: {stunde:02d}:{minute:02d}:{sekunde:02d}")
+
+# Wochentag
+
+wtage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+wtagnr = lt[6]
+print(wtage[wtagnr])
+
+# Tag des Jahres
+
+tag_des_jahres = lt[7]
+print(f"Tag {tag_des_jahres:d} des Jahres")
+
+# sommerzeit
+dst = lt[8]
+if dst == 1:
+    print("Die Sommerzeit sit aktiv")
+elif dst == 0:
+    print("Die Sommerzeit ist nicht aktiv")
+else:
+    print("Keine Sommerzeitinformation vorhanden")
+```
+```
+Zeit in Sekunden: 1602451689.223836
+Zeit in Nanosekunden: 1602451689223906000
+Lokale Zeit als Tupel: time.struct_time(tm_year=2020, tm_mon=10, tm_mday=11, tm_hour=23, tm_min=28, tm_sec=9, tm_wday=6, tm_yday=285, tm_isdst=1)
+  Datum: 11.10.2020
+Uhrzeit: 23:28:09
+Sonntag
+Tag 285 des Jahres
+Die Sommerzeit sit aktiv
+```
+Die Funktion `time()` liefert die katuelle Zeit in Sekunden seit dem 1. Januar 1970.
+
+Seit Python 3.7 gibt es einige Funktionen, die Zeitwerte mit einer Genauigkeit in Nanosekunden (1 Nanosekunde = 10^-9 Sekunden) liefern, darunter die Funktion `time_ns()`
+
+Die Funktion `localtime()` ohne Parameter liefert die katuelle Zeit als ein Tupel, das aus einer Reihe von Einzelinformationen besteht. Diese können anschließend ausgewertet werden:
+* Die ersten drei Elemente (0 bis 2) liefern Jahr, Monat und Tag. Monat und Tag sind im Beispiel jeweils mit zwei Ziffern und führender Null formatiert.
+* Die nächsten drei Elemente (3,4,5) liefern Stunde, Minute und Sekunde. Alle drei Angaben sind im Beispiel jeweils mit zwei Ziffern und führender Null formatiert.
+* Das nächste Element (6) stellt den Wochentag von 0 bis 6 bereit. Montag entspricht dabei der 0, Sonntag der 6.
+* Die laufende Nummer des Tages innerhalb eines Jahres wird von Element 7 geliefert.
+* Informationen über en status der Sommerzeit liefert das letzt Element (8).
+
+#### 7.1.2 Ausgabe der Zeit mit `strftime()`
+
+Die Funktion `strftime()` dient ebenfalls der Formatierung. Sie lieert allerdings genauere Informationen als die Funktion `localtime()`.
+
+Sie benötigt zwei Parameter:
+1. einen Formatierungsstring für die gewünschte Ausgabe
+2. 2. Ein Zeittupel, wie es z.B. die Funktion `localtime()` liefert
+
+Im Beispiel werden die folgenden Inormationen geliefert:
+* Jahresangabe nur mit zwei Ziffern
+* Tag des Jahres
+* Nummer es Wochentags, nach verschiedenen Systemen
+* Nummer der Kalenderwoche, nach verschiedenen Systemen
+* Angabe der Zeitzone
+  
+Die Nummer des Wochentags und der Kalenderwoche kann seit Python 3.6 auch gemäßg ISO 8601 angegeben werden. Dabei handelt es sich um einen aktuellen internationalen Standard für Datums- und Zeitwerte.
+
+Ein Beispielprogramm:
+
+```py
+import time
+lt = time.localtime()
+
+print(time.strftime("Tag.Monat.Jahr: %d.%m.%Y", lt))
+print(time.strftime("Stunde:Minute:Sekunde: %H:%M:%S", lt))
+print(time.strftime("Tag des jahres: %j", lt))
+print()
+
+print("Wochentag:")
+print(time.strftime("Nr. (Sonntag = 0): %w", lt))
+print(time.strftime("Nach ISO 8601: %u", lt))
+print()
+
+print("Kalenderwoche:")
+print(time.strftime("Beginn Sonntag: %U", lt))
+print(time.strftime("Beginn Montag: %W", lt))
+print(time.strftime("Nach ISO 8601: %V", lt))
+
+print(time.strftime("Zeitzone: %Z", lt))
+```
+```
+Tag.Monat.Jahr: 12.10.2020
+Stunde:Minute:Sekunde: 00:11:55
+Tag des jahres: 286
+
+Wochentag:
+Nr. (Sonntag = 0): 1
+Nach ISO 8601: 1
+
+Kalenderwoche:
+Beginn Sonntag: 41
+Beginn Montag: 41
+Nach ISO 8601: 42
+Zeitzone: CEST
+```
+
+**Unterschiede in Ubuntu Linux und macOS**
+Für die Zeitzone wird CEST Central European Summer Time ausgegeben.
+Bei Windows: Mitteleuropäische Sommerzeit
+
+
+#### 7.1.3 Zeitangabe erzeugen
+
+Zur Erzeugung einer beliebigen Zeitangabe wird die Funktion `mktime()` genutzt. Sie benötigt als Parameter ein Tupel mit allen neun Angaben, wie sie auch von der Funktion `localtime()` geliefert werden.
+
+Die Angaben für Wochentag, Tag des Jahres und SOmmerzeit kennen Sie natürlich nur in den wenigsten Fällen. Falls hier einfach jeweils eine `0` gesetzt wird, werden die richtigen Werte automatisch ermittelt, wie das folgende Beispiel zeigt:
+
+```py
+# Modul time
+import time
+
+# Zeitangaben erzeugen
+
+dztupel = 2019, 12, 15, 13, 29,59,0,0,0
+
+print(time.strftime("%d.%m.%y %H:%M:%S", dztupel))
+damals = time.mktime(dztupel)
+
+# Ausgabe
+lt = time.localtime(damals)
+
+# Wochentag
+wtage = ["Montag", "Dienstag", "Mittwoch", "Donenrstag", "Freitag", "Samstag", "Sonntag"]
+wtagnr = lt[6]
+print("Das ist ein", wtage[wtagnr])
+
+
+# Tag des Jahres
+tag_des_jahres = lt[7]
+print(f"Der {tag_des_jahres:d}. Tag des Jahres")
+```
+
+```
+15.12.19 13:29:59
+Das ist ein Sonntag
+Der 349. Tag des Jahres
+```
+Die Zeitangabe 15. Dezember 2019 wird gespeichert. Dazu werden die ersten sechs Elemente des Tupels mit den gegebenen Werten besetzt. Die drei restlichen Angaben weren jeweils mi `0` besetzt.
+
+Wird die Funktion `localtime()` mit einer Zeitangabe als Parameter aufgerufen, liefert sie ein Tupel mit den einzelnen Informationen zu dieser Zeitangabe.
+
+#### 7.1.4 Mit Zeitangaben rechnen
+
+Zur Berechnung eines Zeitraums, also der Differenz zwischen zwei Zeitangaben, müssen beide Zeitangaben einzeln erzeugt werden. Anschließend können Sie die Differenz aus den beiden Zeitangaben in Sekunden berechnen. Aus dieser Differenz lässt sich auch die Differenz in Minuten, Stunden und Tagen ermitteln.
+
+Im nun folgenden Programm wird die Differenz zwischen dem 15. Dezember 2019 23:55:00 und dem 16. Dezember 2019 00:05:15 Uhr berechnet.
+
+```py
+# Modul time
+import time
+# Zwei Zeitangaben erstellen
+dztupel1 = 2019, 12, 15, 23, 55, 00 ,0,0,0
+damals1 = time.mktime(dztupel1)
+print("Zeit 1:", time.strftime("%d,%m,%Y %H:%M:%S", dztupel1))
+
+dztupel2 = 2019, 12, 16, 00, 5, 15 ,0,0,0
+damals2 = time.mktime(dztupel2)
+print("Zeit 2:", time.strftime("%d,%m,%Y %H:%M:%S", dztupel2))
+
+# Diferenz berechnen
+print("Differenz:")
+
+diff_sek = damals2 - damals1
+print(diff_sek, "Sekunden")
+diff_min =diff_sek/60
+print(diff_min, "Minuten")
+diff_std = diff_min/60
+print(diff_std, "Stunden")
+diff_tag=diff_std/24
+print(diff_tag, "Tage")
+```
+```
+Zeit 1: 15,12,2019 23:55:00
+Zeit 2: 16,12,2019 00:05:15
+Differenz:
+615.0 Sekunden
+10.25 Minuten
+0.17083333333333334 Stunden
+0.007118055555555555 Tage
+```
+
+In den Variablen `diff_sek` wird die Differenz zwischen den beiden Zeitangaben `damals1` und `damals2` in Sekunden berechnet. Zur Ermittlung der Minuten wird der Wert für die Sekunden durch 60 geteilt. Zur Ermittlung der Stunden wird der Wert für die Sekunden durch 60 geteilt. Zur Ermittlung der Stunden wird der Wert für die Minuten wiederum durch 60 geteilt. Zur ermittlung der Tage wird zuletzt der Wert für die Stunden durch 24 geteilt.
+
+**Alter Berechnen**
+Zur Berechnung des Alters einer Person wird eine anderer weg beschritten.
+Dies wird im folgenden Programm gezeigt.
+
+```py
+# Modul time
+import time
+
+# Geburtstag
+dztupel = 1979, 5, 7, 0, 0, 0, 0, 0, 0
+print("Geburt:", time.strftime("%d.%m.%Y", dztupel))
+geburt = time.mktime(dztupel)
+ltgeburt = time.localtime(geburt)
+
+# Aktuell
+ltheute = time.localtime()
+print("Heute:", time.strftime("%d.%m.%Y"))
+
+# Alter berechnen
+alter = ltheute[0] - ltgeburt[0]
+if ltheute[1] < ltgeburt[1] or ltheute[1] == ltgeburt[2] and ltheute[2] < ltgeburt[2]:
+    alter -= 1
+print("Alter:", alter)
+```
+```
+Geburt: 07.05.1979
+Heute: 12.10.2020
+Alter: 41
+```
+Die Zeitangabe für den Geburtstag, z. B. für den 7. Mai 1979, wird mithilfe der Funktion mktime() erzeugt. Die aktuelle Zeitangabe wird mit der Funktion `localtime()` ohne Parameter erzeugt.
+
+Das Alter wird zunächst aus der Differenz der Jahresangaben errechnet. Falls die Person in diesem Jahr noch nicht Geburtstag hatte, weil der Geburtsmonat noch nicht erreicht ist *oder*  innerhalb des Geburtsmonats der Geburtstag noch nicht erreicht ist, wird das Alter um 1 reduziert.
+
+#### 7.1.5 Programm anhalten
+Die Funktion `sleep()` aus dem Modul `time` ermöglicht das Anhalten eines Programms für einen bestimmten Zeitraum.
+
+Im folgenden Beispielprogramm wird innerhalb einer Schleife
