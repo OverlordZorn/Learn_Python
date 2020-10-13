@@ -191,6 +191,13 @@
       - [7.2.2 Klasse LifoQueue](#722-klasse-lifoqueue)
       - [7.2.3 Klasse PriorityQueue](#723-klasse-priorityqueue)
       - [7.2.4 Klasse deque](#724-klasse-deque)
+    - [7.3 Multithreading](#73-multithreading)
+      - [7.3.1 Wozu dient Multithreading?](#731-wozu-dient-multithreading)
+      - [7.3.2 Erzeugung eines Threads](#732-erzeugung-eines-threads)
+      - [7.3.3 Identifizierung eines Threads](#733-identifizierung-eines-threads)
+      - [7.3.4 Gemeinsame Daten und Objekte](#734-gemeinsame-daten-und-objekte)
+      - [7.3.5 Threads und Exceptions](#735-threads-und-exceptions)
+    - [7.4 Reguläre Ausdrücke](#74-reguläre-ausdrücke)
 
 
 ## 1 Einführung
@@ -6063,4 +6070,303 @@ Mit 2 multipliziert: deque([8, 18, 28, 8, 18, 28])
 Zweide deque addiert: deque([8, 18, 28, 8, 18, 28, 9, 19, 29])
 Nach Leerung: deque([])
 ```
-Die Funktion `deque()` 
+Die Funktion `deque()` liefert ein neues Objekt desDatentyps `deque`. Als Parameter wird ein iterierbares Objekt benötigt, also z.B. eine Zeichenkette oder eine Liste. Eine Kopie können Sie (seit 3.5) mit der Methode `copy()` erstellen.
+
+Auf die einzlenen Elemente können Sie mithilfe einer `for`-Schleife zugreifen. Auch der Zugriff über einen Index ist möglich. Die Elemente sind von links aus mit 0, 1, 2, ... nummeriert, von rechts aus mit -1, -2, -3, ... Falls Sie einen ungültigen Indes angeben, wird eine Ausnahme erzeugt.
+
+Seit Python 3.5 können Sie mithilfe des OPerators `*` eine `Double-Ended Queue` vervielfachen und mithilfe des Operators `+` andere `Double Ended Queues` addieren. Die Methode `clear()` löscht alle ELemente.
+
+Es folgt ein weiteres Beispiel, in dem eine Double-Ended Queue auf verschiedene Arten verädert wird:
+
+```py
+import collections
+
+d = collections.deque([8,18,28])
+print("Neu erzeugt:", d)
+
+# Einzelne Elemente angefügt
+d.appendleft(5)
+d.append(25)
+print("Einzelne Elemente angefügt:", d)
+
+# Einzelnes Element eingefügt
+d.insert(2,11)
+print("Einzelnes Element eingefügt:", d)
+
+# Um mehrere Elemente erweitert
+d.extendleft([7,9])
+d.extend([17,19])
+print("Um mehrere Elemente erweitert:", d) 
+
+# Element suchen
+try:
+    print("Position des Werts 5", d.index(5))
+except:
+    print("Wert 5 ist nicht vorhanden")
+
+# Einzelne Elemente entfernen
+for i in range(5):
+    li = d.popleft()
+    print("Entferntes Element, links:", li)
+re = d.pop()
+print("Entferntes Element, rechts:", re)
+print("Nach Entfernung:", d)
+
+# Deque intern rotieren lassen
+d.rotate()
+print("Nach Rotation um +1:", d)
+d.rotate(-1)
+print("Nach Rotation um -1:", d)
+```
+
+```
+Neu erzeugt: deque([8, 18, 28])
+Einzelne Elemente angefügt: deque([5, 8, 18, 28, 25])
+Einzelnes Element eingefügt: deque([5, 8, 11, 18, 28, 25])
+Um mehrere Elemente erweitert: deque([9, 7, 5, 8, 11, 18, 28, 25, 17, 19])
+Position des Werts 5 2
+Entferntes Element, links: 9
+Entferntes Element, links: 7
+Entferntes Element, links: 5
+Entferntes Element, links: 8
+Entferntes Element, links: 11
+Entferntes Element, rechts: 19
+Nach Entfernung: deque([18, 28, 25, 17])
+Nach Rotation um +1: deque([17, 18, 28, 25])
+Nach Rotation um -1: deque([18, 28, 25, 17])
+```
+
+Mithilfe der methoden `appendleft()` und `append()` fügen Sie einzelne Elemente am linken oder rechten Ende hinzu.
+
+Die Methode `insert()` kann seit Python 3.5 zum Einfügen eines Elements an der genannten Position genutzt werden. Falls es die Position nicht gibt, wird das Element am rechten Ende angefügt.
+
+Die Methoden `extendleft()` und `extend()` dienen zum Erweitern um mehrere Elemente am linken bzw. rechten Ende. Die Elemente werden nacheinander in der gegebenen Reihenfolge angefügt. Daher ändert sich die Reihenfolge für die angefügten Elemente bei der Methode `extendleft()`.
+
+Die Methoden `popleft()` und `pop()` entfernen ein Element am linken Ende oder am rechten Ende. Das entfernte Element wird jeweils als Rückgabewert  geliefert.
+
+Mithilfe der Methode `rotate()` lassen Sie die Elemente zirkular rotieren. Geben Sie keinen Parameter an, wird um ein Element nach rechts rotiert. Geben Sie negative Werte an, wird nach links rotiert. Ein Element, das bei der Rotation über den Rand geschoben wird, wird am anderen Ende wieder angefügt.
+
+### 7.3 Multithreading
+
+Der Begriff *Multithreading* bezeichnet die Eigenschaft eines Programms, mehrere Teile, die sogenannte *Threads*, parallel bearbeiten zu lassen. Die Programmiersprache Python bietet die entsprechenden Routinen.
+
+#### 7.3.1 Wozu dient Multithreading?
+
+Es gibt eine Reihe von Problemstellungen, bei denen sich Multithreading als nützlich erweist, z.B. bei Simulationen von realen Prozessen, bei denen eine Aktion eine weitere Aktion anstößt, danach aber selbst auch weiterläuft. Die angestoßene Aktion kann wiederum eine dritte Aktion anstoßen usw. Alle Aktionen greifen auf dieselben Daten zu u nd verändern sie gegebenenfalls. Sie enden zu verschiedenen Zeitpunkten und mit unterschiedlichen Ergebnissen.
+
+Es kann sich auch um GUI-Anwendungen handeln, bei denen rechenintensive Programmteile im Hintergrund laufen (*ausgelagert werden*) oder parallel die Ergebnisse von Messwertauswertungen oder anderen Echtzeitprozessen dargestellt werden.
+
+#### 7.3.2 Erzeugung eines Threads
+
+Das Modul *threading* bietet eine einfache Möglichkeit zum Multithreading.
+
+Im nachfolgenden Programm wird ein neuer paralleler Thread aus dem Hauptprogramm gestartet. Anschließend muss es 10 Sekunden warten und wird danach beendet. Beginn und Ende werden angezeigt. Im parallelen Thread läuft während der Wartezeit die Funktion `show()`, in der insgesamt fünfmal die aktuelle Zeit angezeigt wird. Nach jeder Anzeige wird der Thread for 1,5 Sekunden angehalten. Beginn und Ende des Threads werden ebenfalls angezeigt.
+
+```py
+# Module
+import time, threading
+# Thread-Funktion
+def show():
+    print("Start Thread")
+    for i in range(5):
+        print(i, time.time())
+        time.sleep(1.5)
+    print("Ende Thread")
+
+# Hauptprogramm
+
+print("Start Hauptprogramm")
+t = threading.Thread(target=show)
+t.start()
+time.sleep(10)
+print("Ende Hauptprogramm")
+```
+```
+Start Hauptprogramm
+Start Thread
+0 1602627353.4196773
+1 1602627354.9304807
+2 1602627356.4334946
+3 1602627357.9469378
+4 1602627359.449835
+Ende Thread
+Ende Hauptprogramm
+```
+
+Zur Erzeugung eines parallelen Threads wird ein Objekt der Klasse `Thread` erstellt. der Konstruktor erwartet mindestens den benannten Parameter `target`, der den Namen einer Callback-Funktion übermittelt, die zu Beginn des Threads durchlaufen wird. Ein Thread wird durch den Aufruf der Methode `start()` für das Thread-Objekt gestartet. Bei den hier genutzten Zeiteinstellungen endet das Hauptprogramm erst, nachdem der parallel laufende Thread bereits beendet ist.
+
+#### 7.3.3 Identifizierung eines Threads
+
+Zur Unterscheidung der Auswirkung unterschiedlicher Threads hat jeder Thread eine eindeutige Identifikationsnummer (ID), die Sie mithilfe der Methode `get_ident()` ermitteln können. Das Hauptprogramm sit ebenfalls ein Thread - auch dieser *Haupt-Thread* verfügt über eine ID.
+
+Das vorherige Programm wird erweitert. Aus dem Haupt-Thread werden, zeitlich versetzt, insgesamt zwei Threads mit der Funktion `show()` gestartet. Für jeden Thread, auch für den Haupt-Thread, wird die ID ermittelt und bei jeder Ausgabe zusätzlich angezeigt.
+
+```py
+# Module
+
+import time, threading
+
+# Thread-Funktion
+
+def show():
+    id = threading.get_ident()
+    print("Start Thread", id)
+    for i in range(5):
+        print(i, "Thread", id)
+        time.sleep(1.5)
+    print("Ende Thread", id)
+    return
+
+# Hauptprogramm 
+id = threading.get_ident()
+print("Start Hauptprogramm", id)
+
+t1 = threading.Thread(target=show)
+t1.start()
+time.sleep(0.5)
+
+t2 = threading.Thread(target=show)
+t2.start()
+
+time.sleep(10)
+print("Ende Hauptprogramm", id)
+```
+```
+Start Hauptprogramm 13932
+Start Thread 2836
+0 Thread 2836
+Start Thread 13304
+0 Thread 13304
+1 Thread 2836
+1 Thread 13304
+2 Thread 2836
+2 Thread 13304
+3 Thread 2836
+3 Thread 13304
+4 Thread 2836
+4 Thread 13304
+Ende Thread 2836
+Ende Thread 13304
+Ende Hauptprogramm 13932
+```
+
+Der Haupt-Thread hat hier die ID 13932, der erste Unter-Thread die ID 2836, und der zweite Unter-Thread die ID 13304. Den parallelen Ablauf der Threads können sie anhand der IDs beobachten.
+
+#### 7.3.4 Gemeinsame Daten und Objekte
+
+Alle Threads haben Zugriff auf alle globalen Daten und Objekte des übergeordneten Threads. Im folgenden Beispiel wird gezeigt, wie eine Variable vom Haupt-Thread und zwei weiteren Threads gemeinsam genutzt und verändert wird.
+
+```py
+# Module
+import time, threading
+
+# Thread-Funktion
+def show():
+    global counter
+    id = threading.get_ident()
+    for i in range(5):
+        counter += 1
+        print(i, id, counter)
+        time.sleep(1.5)
+    return
+
+# Hauptprogramm
+id = threading.get_ident()
+counter = 0
+print(id, counter)
+
+t1 = threading.Thread(target=show)
+t1.start()
+time.sleep(0.5)
+
+t2 = threading.Thread(target=show)
+t2.start()
+
+time.sleep(10)
+
+counter += 1
+print(id, counter)
+```
+```
+2592 0
+0 4036 1
+0 6596 2
+1 4036 3
+1 6596 4
+2 4036 5
+2 6596 6
+3 4036 7
+3 6596 8
+4 4036 9
+4 6596 10
+2592 11
+```
+
+Die Variable `counter` ist global im Haupt-Thread und wird dort mit `0` vorbesetzt. Sie wird mithilfe des Schlüsselworts `global` (siehe 5.7.6) in der Thread-Funktion bekannt gemacht, um 1 erhöht und angezeigt. In beiden Unter-Threads ist die Variable bekannt und kann verändert werden. Am Ende wird sie auch im Haupt-Thread um 1 erhöht und angezeigt.
+
+#### 7.3.5 Threads und Exceptions
+
+Tritt eine unbehandelte Ausnahme auf, betrifft das nur den Thread, in dem sie auftritt. Weder der aufrufende Thaupt-Thread noch die anderen Threads werden dadurch gestört.
+
+Das vorherige PRogramm wird erweitert. Falls die Variable `counter` den Wert 5 hat, wird die unbehandelte Ausnahme `ZeroDivisionError` künstlich hervorgerufen. Der Thread, in dem das geschieht, wird unmittelbar beendet. Die anderen Threads - auch der Haupt-Thread - laufen unbeeinflusst zu Ende. Es folgt das geänderte Programm:
+```py
+# Module
+import time, threading
+
+# Thread-Funktion
+def show():
+    global counter
+    id = threading.get_ident()
+    for i in range(5):
+        counter += 1
+        print(i, id, counter)
+        
+        # Div/0 Error
+        if counter == 5:
+            erg = counter/0
+    
+        time.sleep(1.5)
+
+    return
+
+# Hauptprogramm
+id = threading.get_ident()
+counter = 0
+print(id, counter)
+
+t1 = threading.Thread(target=show)
+t1.start()
+time.sleep(0.5)
+
+t2 = threading.Thread(target=show)
+t2.start()
+
+time.sleep(10)
+
+counter += 1
+print(id, counter)
+```
+```
+15600 0
+0 300 1
+0 17400 2
+1 300 3
+1 17400 4
+2 300 5
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "C:\Python39\lib\threading.py", line 950, in _bootstrap_inner
+    self.run()
+  File "C:\Python39\lib\threading.py", line 888, in run
+    self._target(*self._args, **self._kwargs)
+  File "c:\Users\Dennis Zorn\Documents\GitHub\Learn_Python\Einstieg in Python\Beispiele\thread_ausnahme.py", line 14, in show
+    erg = counter/0
+ZeroDivisionError: division by zero
+2 17400 6
+3 17400 7
+4 17400 8
+15600 9
+```
+Der Thread mit der ID 300 endet aufgrund der unbehandelten Ausnahme. Der Thread mit der ID 17400 läuft regulär zu Ende, ebenso der Haupt-Thread mit der ID 156000.
+
+### 7.4 Reguläre Ausdrücke
