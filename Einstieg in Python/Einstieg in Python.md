@@ -189,6 +189,8 @@
     - [7.2 Warteschlangen](#72-warteschlangen)
       - [7.2.1 Klasse SimpleQueue](#721-klasse-simplequeue)
       - [7.2.2 Klasse LifoQueue](#722-klasse-lifoqueue)
+      - [7.2.3 Klasse PriorityQueue](#723-klasse-priorityqueue)
+      - [7.2.4 Klasse deque](#724-klasse-deque)
 
 
 ## 1 Einführung
@@ -6007,5 +6009,58 @@ Zur Bearbeitung einer Double-Ended Queue gibt es im Modul `collections` die Klas
 Es folgt ein erstes Beispiel, in dem einige Operationen an eine Double-Ended Queue vorgenommen werden:
 
 ```py
+# Modul
+import collections
 
+# Neu erzeugen
+d = collections.deque([8, 18, 28])
+print("Neu erzeugt:", d)
+
+# Kopie
+dk = d.copy()
+print("Kopie:", dk)
+
+# Alle Elemente einzeln 
+print("Alle elemente einzeln: ", end="")
+for x in d:
+    print(x, end=" ")
+print()
+
+
+
+# Einzelne Elemente
+try:
+    print("Zweites Element von links:",d[1])
+except:
+    print("Dieser Index existiert nicht")
+
+try:
+    print("Erstes Element von rechts:", D[-1])
+except:
+    print("Dieser Index existiert nicht")
+
+# Multiplizieren
+
+d = d * 2
+print("Mit 2 multipliziert:", d)
+
+# Addieren
+dzwei = collections.deque([9,19,29])
+d = d + dzwei
+print("Zweide deque addiert:", d)
+
+# Deque leeren
+d.clear()
+print("Nach Leerung:", d)
 ```
+```
+Neu erzeugt: deque([8, 18, 28])
+Kopie: deque([8, 18, 28])
+Alle elemente einzeln: 8 18 28 
+Zweites Element von links: 18
+Erstes Element von rechts: 28
+Mit 2 multipliziert: deque([8, 18, 28, 8, 18, 28])
+Zweide deque addiert: deque([8, 18, 28, 8, 18, 28, 9, 19, 29])
+Nach Leerung: deque([])
+```
+Die Funktion `deque()` 
