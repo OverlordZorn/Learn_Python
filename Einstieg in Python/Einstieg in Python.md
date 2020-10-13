@@ -184,6 +184,11 @@
       - [7.1.3 Zeitangabe erzeugen](#713-zeitangabe-erzeugen)
       - [7.1.4 Mit Zeitangaben rechnen](#714-mit-zeitangaben-rechnen)
       - [7.1.5 Programm anhalten](#715-programm-anhalten)
+      - [7.1.6 Spiel, version mit Zeitmessung](#716-spiel-version-mit-zeitmessung)
+      - [7.1.7 Spiel, objektorientierte Version mit Zeitmessung](#717-spiel-objektorientierte-version-mit-zeitmessung)
+    - [7.2 Warteschlangen](#72-warteschlangen)
+      - [7.2.1 Klasse SimpleQueue](#721-klasse-simplequeue)
+      - [7.2.2 Klasse LifoQueue](#722-klasse-lifoqueue)
 
 
 ## 1 Einführung
@@ -5719,4 +5724,288 @@ Das Alter wird zunächst aus der Differenz der Jahresangaben errechnet. Falls di
 #### 7.1.5 Programm anhalten
 Die Funktion `sleep()` aus dem Modul `time` ermöglicht das Anhalten eines Programms für einen bestimmten Zeitraum.
 
-Im folgenden Beispielprogramm wird innerhalb einer Schleife
+Im folgenden Beispielprogramm wird innerhalb einer Schleife mehrmals die aktuelle Zeit ausgegeben. Nach jeder Ausgabe wird das Programm für zwei Sekundenmithilfe der Funktion `sleep()` angehalten. Am Ende wird die Zeitdiffferenz zwischen Start und Ende berechnet.
+
+```py
+# Modul time
+import time
+
+# Start
+startzeit = time.time()
+print("Start:", startzeit)
+
+# Zeitangaben, jeweils mit Pause
+for i in range(5):
+    time.sleep(2)
+    print(time.time())
+
+# Ende
+endzeit = time.time()
+print("Ende:", endzeit)
+
+# Abstand
+differenz = endzeit - startzeit
+print("Differenz:", differenz)
+```
+
+```
+Start: 1602503299.944386
+1602503301.9462929
+1602503303.9493608
+1602503305.9507918
+1602503307.951159
+1602503309.951241
+Ende: 1602503309.9512918
+Differenz: 10.006905794143677
+```
+
+Wie die Ausgabe der Differenz zeigt, lässt sich die Funktion `sleep()` nur für eine zeitliche Steuerung von begrenzter Genauigkeit einsetzen, und zwar aus den folgenden Gründen:
+* zum einen benötigen die einzelnen Programmschritte eine eigene, wenn auch kurze Laufzeit, abhängig von der Geschwindigkeit und der Auslastung des Rechners
+* zum anderen unterscheiden sich die Zeitabstände geringfügig
+
+Dennoch können Sie die Funktion `sleep()` für viele Anwendungen sinnvoll einsetzen, u.a. im Bereich von grafischen Animationen, Simulationen oder der Spieleprogrammierung.
+
+#### 7.1.6 Spiel, version mit Zeitmessung
+
+In dieser Version des Kopfrechenspiels werden fünf Additionsaufgaben mit Zahlen aus dem bereich von 10 bis 30 gestellt. Der Spieler hat pro aufgabe nur einen Versuch. Ungültige Eingaben oder falsche Ergebnisse werden einfach mit dem Text `Falsch` kommentiert und bewertet. Am ende wird die Gesamtzeit angegeben, die der Spieler benötigt hat.
+
+```py
+# Module
+import random, time
+
+# Initialisierung
+
+random.seed()
+richtig = 0
+startzeit = time.time()
+
+
+# 5 Aufgaben
+
+for aufgabe in range(5):
+    # aufgabe mit Ergebnis
+    a = random.randint(10,30)
+    b = random.randint(10,30)
+    c = a + b
+    print("Aufgabe", aufgabe+1, "von 5:", a, "+", b, "= ?")
+
+    #Eingabe
+    try:
+        zahl = int(input("Bitte eine Zahl eingeben: "))
+        if zahl == c:
+            print("Richtig!")
+            richtig += 1
+        else:
+            raise
+    except:
+        print("Falsch")
+
+# Auswertung
+endzeit = time.time()
+differenz = endzeit - startzeit
+print(f"Richtig: {richtig:d} von 5 in {differenz:.2f} Sekunden")
+print("Ergebnis erzielt:", time.strftime("%d.%m.%Y %H:%M:%S"))
+```
+```
+Aufgabe 1 von 5: 30 + 17 = ?
+Bitte eine Zahl eingeben: 47
+Richtig!
+Aufgabe 2 von 5: 12 + 16 = ?
+Bitte eine Zahl eingeben: 28
+Richtig!
+Aufgabe 3 von 5: 11 + 22 = ?
+Bitte eine Zahl eingeben: 33
+Richtig!
+Aufgabe 4 von 5: 25 + 13 = ?
+Bitte eine Zahl eingeben: 38
+Richtig!
+Aufgabe 5 von 5: 28 + 21 = ?
+Bitte eine Zahl eingeben: 49
+Richtig!
+Richtig: 5 von 5 in 27.35 Sekunden
+Ergebnis erzielt: 12.10.2020 17:31:27
+```
+
+Am Anfang und am Ende wird die Zeit genommen und anschließend die Differenz berechnet. Die richtigen Ergebnisse werden mitgezählt. Im Fall einer ungültigen Eingabe oder eines falschen Ergebnisses wird eine Ausnahme erzeugt.
+
+#### 7.1.7 Spiel, objektorientierte Version mit Zeitmessung
+
+Die objektorientierteVersion des Kopfrechenspiels mit Zeitmessung basiert auf der objektorientierten Version ohne Zeitmessung, siehe Datei spiel_oop.py in Abschnitt 6.11. Hier stelle ich nur die Erweiterung vor. Zunächst die Importanweisung und das kurze Hauptprogramm:
+
+```py
+import random, time ## Add import time module
+
+# Definition der Klasse Spiel
+class Spiel:
+    def __init__(self):
+
+        # Start des Spiels
+        random.seed()
+        self.richtig = 0
+
+        # Anzahl bestimmen
+        self.anzahl = -1
+        while self.anzahl < 0 or self.anzahl>10:
+            try:
+                self.anzahl = int(input("Wie viele Aufgaben? 1-10: "))
+            except:
+                continue # Beendet die momentane Iteration und fängt mit der nächsten an
+
+    # Methode spielen() definieren
+    def spielen(self):
+            
+        #Spielablauf
+        for i in range(1,self.anzahl+1):
+            a = Aufgabe(i, self.anzahl)
+            print(a)
+            self.richtig += a.beantworten()
+
+    def __str__(self): ## modified Method
+        # Ergebnis
+        datum = time.strftime("%d.%m.%Y")
+        uhrzeit = time.strftime("%H:%M:%S")
+        ausgabe = f"Richtig: {self.richtig:d} von {self.anzahl:d} Aufgaben in {self.zeit:.2f} Sekunden \nam {datum} um {uhrzeit}"
+        return ausgabe
+
+
+    def messen(self, start): ## Adding Method
+        # Zeitmessen
+        if start:
+            self.startzeit = time.time()
+        else:
+            endzeit = time.time()
+            self.zeit = endzeit - self.startzeit
+
+
+# Defintion der Klasse Aufgabe
+class Aufgabe:
+    # Aufgabe initialisieren
+    def __init__(self, i, anzahl):
+        self.nr = i
+        self.gesamt = anzahl
+
+    # Aufgabe stellen
+    def __str__(self):
+        a = random.randint(10,30)
+        b = random.randint(10,30)
+        self.ergebnis = a + b
+        return "Aufgabe " + str(self.nr) + " von " + str(self.gesamt) + ": " + str(a) + " + " + str(b) + " = ?"
+
+    # Aufgabe beantworten
+    def beantworten(self):
+        try:
+            if self.ergebnis == int(input()):
+                print(self.nr, ": *** Richtig ***")
+                return 1
+            else:
+                raise
+        except:
+            print(self.nr, ": *** Falsch ***")
+            return 0
+            
+ 
+
+# Hauptprogramm
+
+s = Spiel()
+s.messen(True)      # added
+s.spielen()
+s.messen(False)     # added
+print(s)
+```
+
+In der Methode `messen()` wird die Startzeit ermittelt, falls der Parameterwert `True` übermittelt wird. Andernfalls wird die Endzeit und die Spieldauer ermittelt. Die Spieldauer (`zeit`) ist eine Eigenscahft der Klasse  `Spiel`. in der Ausgabemethode wird das Ergebnis des Spies zusammen mit Spieldauer, Datum und Uhrzeit veröffentlicht.
+
+### 7.2 Warteschlangen
+
+Eine Warteschlange (queue) im allgemeinen Sinne entsteht immer dann, wenn ein System innerhalb eines Zeitraums mehr Anforderungen erhält, als es verarbeiten kann. Dabei kann es sich um eine Warteschlange von Personen an einer Kinokasse oder um eine Warteschlange von gesendeten Daten in einem Netzwerk handeln.
+
+Ziel ist es, eine Warteschlange möglichst schnell zu leeren. Abhängig von der Problemstellung kann dies auf unterschiedliche Weise geschehen:
+
+* In einer *FIFO-Queue* wird diejenige Anforerung, die als Erste eingetroffen ist, auch als Erste behandelt. FIFO steht als Abkürzung für *First In First Out* Anforderungen können nur am Ende der Warteschlange eintreffen und nur am Anfang der Warteschlange behandelt werden.
+* In einer *LIFO-Queue* wird diejenige Anforderung, die als Letzte eingetroffen ist, als Erste bheandelt. LIFO steht für *Last In First Out*. Anforderungen können nur am Ende der Warteschlange eintreffen und auch nur dort behandelt werden.
+* Eine *Double-Ended Queue* besitzt keinen Anfang, aber dafür zwei Enden. Anforderungen können an beiden Enden der Warteschlagne eintreffen und auch an beiden Enden behandelt werden.
+
+Die Module `queue` und `collections` bieten einige spezialisierte Datentypen zur Bearbeitung von Warteschlangen Sie ähneln den eingebauten Datentype (wie Dictionary, Liste, Set oder Tupel), haben aber zusätzliche Fähigkeiten und bieten einen sehr schnellen Zugriff.
+
+#### 7.2.1 Klasse SimpleQueue
+
+Seit Python 3.7 gibt es im Modul `queue` die Klasse `SimpleQueue` zur Bearbeitung einer FIFO-Queue.
+
+```py
+import queue
+
+x = queue.SimpleQueue()
+print("Anzahl Elemente:", x.qsize())
+
+x.put(5)
+x.put(19)
+x.put(-2)
+x.put(12)
+print("Anzahl Elemente:", x.qsize())
+
+while not x.empty():
+    print(x.get())
+print("Anzahl Elemente:", x.qsize())
+```
+Es wird das Objekt `x` der Klasse `SimpleQueue()` erzeugt. Die Methode `qsize()` liefert die Anzahl der Elemente. Die Methode `put()` fügt einzelne Elemente am Ende der Warteschleife hinzu. Die Methode `empty()` liefert die Information, ob die Warteschlange leer ist. Die Methode `get()` entfernt ein Element vom Anfang er Warteschleife und liefert gleichzeitig seinen Wert.
+
+```
+Anzahl Elemente: 0
+Anzahl Elemente: 4
+5
+19
+-2
+12
+Anzahl Elemente: 0
+```
+
+Der Wert 5 wurde der Warteschlange als erstes hinzugeführt. Er wird auch als erster Wert wieder entnommen (FIFO).
+
+#### 7.2.2 Klasse LifoQueue
+Zur Bearbeitung einer LIFO-Queue bietet das Modul `queue` die Klasse `Lifo-Queue`.
+
+```py
+import queue
+x = queue.LifoQueue()
+for y in 5, 19, -2, 12:
+    x.put(y)
+while not x.empty():
+    print(x.get())
+```
+Der Name de Klasse ist geändert. Zudem entfallen hier die Aufrufe der Methode `qsize()`. Die Methode `get()` entfoert diesmal jeweils ein element vom Ende der Warteschlange. Daher erfolgt die Ausgabe der Elemente in umgekehrter Reihenfolge
+```
+12
+-2
+19
+5
+```
+
+#### 7.2.3 Klasse PriorityQueue
+
+Die Klasse `PriorityQueue` aus dem Modul `queue` bietet eine Besonderheit: Die Elemente werden in einer sortierten Reihenfolge geliefert. Nachfolgend ein Beispiel:
+
+```py
+import queue
+x = queue.PriorityQueue()
+for y in 5, 19, -2, 12:
+    x.put(y)
+while not x.empty():
+    print(x.get())
+```
+Der Name der Klasse ist wiederum geändert. Die Methode `get()` entfernt die Elemente aus der Warteschlange gemäß einer aufsteigenden Sortiertung. Die Ausgabe sieht daher wie folgt aus:
+```
+-2
+5
+12
+19
+```
+
+#### 7.2.4 Klasse deque
+Zur Bearbeitung einer Double-Ended Queue gibt es im Modul `collections` die Klasse `deque` (gesprochen: deck). Sie bietet weitaus mehr Möglichkeiten als die zuvor behandelten Queue-Klassen.
+
+Es folgt ein erstes Beispiel, in dem einige Operationen an eine Double-Ended Queue vorgenommen werden:
+
+```py
+
+```
