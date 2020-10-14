@@ -1,5 +1,7 @@
 # Einstieg in Python
 
+Quelle: Buch: Einstieg in Python - Thomas Theis
+
 - [Einstieg in Python](#einstieg-in-python)
   - [1 Einführung](#1-einführung)
     - [1.1 Vorteile von Python](#11-vorteile-von-python)
@@ -198,6 +200,11 @@
       - [7.3.4 Gemeinsame Daten und Objekte](#734-gemeinsame-daten-und-objekte)
       - [7.3.5 Threads und Exceptions](#735-threads-und-exceptions)
     - [7.4 Reguläre Ausdrücke](#74-reguläre-ausdrücke)
+      - [7.4.1 Suchen von Teiltexten](#741-suchen-von-teiltexten)
+      - [7.4.2 Ersetzen von Teiltexten](#742-ersetzen-von-teiltexten)
+    - [7.5 Audioausgabe](#75-audioausgabe)
+  - [Kapitel 8 Dateien](#kapitel-8-dateien)
+    - [8.1 Dateitypen](#81-dateitypen)
 
 
 ## 1 Einführung
@@ -6370,3 +6377,300 @@ ZeroDivisionError: division by zero
 Der Thread mit der ID 300 endet aufgrund der unbehandelten Ausnahme. Der Thread mit der ID 17400 läuft regulär zu Ende, ebenso der Haupt-Thread mit der ID 156000.
 
 ### 7.4 Reguläre Ausdrücke
+
+Reguläre Ausdrücke erleichtern das Suchen und Ersetzen von bestimmten Texten oder Teiltexten oder von einzelnen Zeichen. Sie kommen z.B. bei der Kontrolle und Auswertung von Benutzereingaben oder bei der Suche nach Dateien zum Einsatz.
+
+Wenn festgestellt wird, dass ein Benutzer eine falsche oder unvollständige Eingabe gemacht hat, kann dies zu einer HIlfestellung und einer erneuten Eingabeaufforderung führen. In Python wird das Modul `re` zum Arbeiten mit regulären Ausdrücken benötigt. Zei Programmbeispiele zeigen einen Teil der umfangreichen Möglichkeiten.
+
+#### 7.4.1 Suchen von Teiltexten
+
+Zum Suchen von Teiltexten wird im folgenden Programm die Methode `findall()` eingesetzt. Sie finden alle Teiltexte, die zum regulären Ausdruck passen, und liefert eine Liste dieser Teiltexte zur weiteren Auswertung zurück. Zur besseren übersicht ist das Programm unterteilt. Außerdem sind die einzelnen Blöcke des Programms und die zugehörigen Ausgaben nummeriert.
+
+```py
+# Modul
+import re
+
+
+tx = "Haus und Maus und Laus"
+print(tx)
+
+# 1: Exater Text
+erg = re.findall("Maus", tx)
+print("1:", erg)
+
+# 2: Wahl zwischen bestimmten Zeichen
+erg = re.findall("[HM]aus", tx)
+print("2:", erg)
+
+# 3: Alle Buchstaben aus Bereich
+erg = re.findall("[L-M]aus", tx)
+print("3:", erg)
+
+# 4: Alle Buchstaben nicht aus Bereich
+erg = re.findall("[^L-M]aus", tx)
+print("4:", erg)
+
+# 5: Beliebiges Zeichen
+erg = re.findall(".aus", tx)
+print("5:", erg)
+
+# 6: Suchbegriff nur am Anfang des Texts
+erg = re.findall("^.aus", tx)
+print("6:", erg)
+
+# 7: Suchbegriff nur am Ende des Texts
+erg = re.findall(".aus$", tx)
+print("7:", erg)
+```
+```
+Haus und Maus und Laus
+1: ['Maus']        
+2: ['Haus', 'Maus']
+3: ['Maus', 'Laus']
+4: ['Haus']
+5: ['Haus', 'Maus', 'Laus']
+6: ['Haus']
+7: ['Laus']
+```
+
+Die ersten sieben regulären Ausdrücke beziehen sich auf den Text `Haus und Maus und Laus`.
+1. `"Maus"`      - Im ersten Beispiel wird genau die Zeichenfolge `Maus` gesucht. Alle Vorkommen dieser Zeichenfolge werden geliefert.
+2. `"[HM]aus"`   - Es werden die Teiltexte gesucht, die mit einem `H` oder einem `M` beginnen und mit `aus` enden.
+3. `"[L-M]aus"`  - Es werden die Teiltexte gesucht, die mit einem der Zeichen von `L` bis `M` beginnen und mit `aus` enden. Die eckigen Klammern geben einen Bereich an. Gefunden werden `Maus` und `Laus`, aber nicht `Haus`.
+4. `"[^L-M]aus"` - Es werden die Teiltexte gesucht, die * nicht*  mit einem der Zeichen von `L` bis `M` beginnen, aber mit `aus` enden. Das Zeichen `^` bedeutet im Zusammenhang mit einem Bereich eine logische Verneinung. Gefunden wird `Haus` aber nicht `Maus` und `Laus`.
+5.  `".aus"`     - Es werden die Teiltexte gesucht, die mit einem beliebigen Zeichen beginnen und mit `aus` enden. Das Zeichen `.` Punkt beduetet: Beliebiges Zeichen, Gefunden werden `Haus`, `Maus` und `Laus`.
+6.  `"^.aus"`    - Es werden die Teiltexte gesucht, die mt einem beliebigen Zeichen beginnen und mit `aus` enden. Dies gilt allerdings nur für Teiltexte, die *zu Beginn* des untersuchten Textes stehen. Das Zeichen `^` bedeutet in diesem Zusammenhang: Zu beginn. Gefunden wird nur `Haus`.
+7.  `".aus$"`    - Es werden die Teiltexte gesucht, die mit einem beliebigen Zeichen beginnen und mit `aus` enden. Dies gilt allerdings nur für Teiltexte, die *am Ende* des untersuchten TExtes stehen. Das Zeichen `$` beduetet in diesem Zusammenhang: Am Ende. Gefunden wird nur `Laus`.
+
+Es folgt Teil 2 des Programms:
+
+```py
+tx = "0172-445633"
+print(tx)
+
+# 8: Alle Ziffern aus Bereich
+erg = re.findall("[0-2]", tx)
+print("8:", erg)
+
+# 9: Alle Zeichen nicht aus Ziffernbereich
+erg = re.findall("[^0-2]", tx)
+print("9:", erg)
+
+# 10: Alle Zeichen oder Ziffern, die angegeben sind
+erg = re.findall("[047-]", tx)
+print("10:", erg)
+```
+```
+0172-445633
+8: ['0', '1', '2']
+9: ['7', '-', '4', '4', '5', '6', '3', '3']
+10: ['0', '7', '-', '4', '4']
+```
+Die nächsten drei Ausdrücke beziehen sich auf den Text `0172-445633`.
+1. Es wird als Teiltext eine der Ziffern von 0 bis 2 gesucht. Zusammenhängende Bereiche können sich also auch auf Ziffern beziehen. Gefunden werden die Ziffern 0, 1 und 2.
+2. Es wird als Teiltext ein Zeichen gesucht, das `nicht` im Ziffernbereich von 0-2 liegt. Gefunden werden alle Ziffern außerhalb von 0-2 sowie alle Nicht Ziffern.
+3. Es wird als Teiltext eines der Zeichen aus der angegebenen Menge von Zeichen gesucht. Gefunden werden alle Zeichen, sowie Ziffern aus dem Bereich 0, 4, 7 und -.
+
+Es folgt der letzt Teil des Programms:
+
+```py
+tx = "aa und aba und abbaa und abbba und aca"
+print(tx)
+
+# 11: Wiederholung, beliebig oft
+erg = re.findall("ab*a", tx)
+print("11:", erg)
+
+# 12: Wiederholung, 1 oder mehr
+erg = re.findall("ab+a",tx)
+print("12:", erg)
+
+# 13: Wiederholung, 0 oder 1
+erg = re.findall("ab?a",tx)
+print("13:", erg)
+
+# 14: Wiederholung, m bis n
+erg = re.findall("ab{2,3}",tx)
+print("14:", erg)
+
+tx = "aa und aba und abba und aca und addda"
+print(tx)
+# 15: Wiederholung der max. Menge von Zeichen
+erg = re.findall("a.*a",tx)
+print("15:", erg)
+
+# 16: Wiederholung der min. Menge von Zeichen
+erg = re.findall("a.*?a",tx)
+print("16:", erg)
+```
+```
+aa und aba und abbaa und abbba und aca
+11: ['aa', 'aba', 'abba', 'abbba']
+12: ['aba', 'abba', 'abbba']
+13: ['aa', 'aba', 'aa']
+14: ['abb', 'abbb']
+aa und aba und abba und aca und addda
+15: ['aa und aba und abba und aca und addda']
+16: ['aa', 'aba', 'abba', 'aca', 'addda']
+```
+
+Die letzten sechs regulären Ausdrücke beziehen sich auf den Text `aa und aba und abba und abbba und aca`.
+ An diesemText wird das Verhalten bei der Wiederholung von Zeichen verduetlicht.
+
+ 1. `*`   Gefunden werden alle Teiltexte, die wie folgt aussehen: ein `a`, eine beliebige Zahl (auch 0) des Zeichens `b`, wiederum ein `a`. `*` bedeutet beliebige Wiederholungszahl.
+ 2. `+`   Gefunden werden alle Teiltexte, die wie folgt aussehen: ein `a`, mindestens ein `b`, wiederum ein `a`. `+` beliebige wiederholungsanzahl, min. 1.
+ 3. `?`   Gefunden werden alle Teiltexte, die wie folgt aussehen: ein `a`, kein oder ein `b`, wiederum ein `a`. `?` 1 oder 0 Wiederholungsanzahl.
+ 4. `{}`  Gefunden werden alle Teiltexte, die wie folgt aussehen: ein `a`, 2 oder 3mal das zeichen `b`, wiederum ein `a`. `{2,3}` - gewünschte Wiederholungsanzahl.
+ 5. `.*`  Gefunden werden alle Teiltexte, die wie folgt aussehen: ein `a`, anschließend so viele beliebe Zeichen wie möglich, wiederum ein `a`. `.` beliebiger Zeichen + `*` maximale Anzahl.
+ 6. `.*?` Gefunden werden alle Teiltexte, die wie folgt aussehen: ein `a`, anschließend so wenig beliebige Zeichen wie möglich, wiederum ein `a`. Es wird eine ganze Reihe von Zeichenfolgen gefunden, die dazu passen.
+
+#### 7.4.2 Ersetzen von Teiltexten
+
+Die Methode `sub()` ersetzt alle Teiltexte, die zum regulären Ausdruck passen, durch einen anderen Text. Zum leichteren Verständnis werden in diesem Programm die gleichen regulären Ausdrücke eingsetzt wie im vorherigen Programm. Alle Teiltexte, die gemäß dem Ausdruck gefunden werden, werden durch `x` ersetzt.
+
+```py
+# Modul
+import re
+
+
+tx = "Haus und Maus und Laus"
+print(tx)
+
+# 1: Exater Text
+txneu = re.sub("Maus", "x", tx)
+print("1:", txneu)
+
+# 2: Wahl zwischen bestimmten Zeichen
+txneu = re.sub("[HM]aus", "x", tx)
+print("2:", txneu)
+
+# 3: Alle Buchstaben aus Bereich
+txneu = re.sub("[L-M]aus", "x", tx)
+print("3:", txneu)
+
+# 4: Alle Buchstaben nicht aus Bereich
+txneu = re.sub("[^L-M]aus", "x", tx)
+print("4:", txneu)
+
+# 5: Beliebiges Zeichen
+txneu = re.sub(".aus", "x", tx)
+print("5:", txneu)
+
+# 6: Suchbegriff nur am Anfang des Texts
+txneu = re.sub("^.aus", "x", tx)
+print("6:", txneu)
+
+# 7: Suchbegriff nur am Ende des Texts
+txneu = re.sub(".aus$", "x", tx)
+print("7:", txneu)
+
+tx = "0172-445633"
+print(tx)
+
+# 8: Alle Ziffern aus Bereich
+txneu = re.sub("[0-2]", "x", tx)
+print("8:", txneu)
+
+# 9: Alle Zeichen nicht aus Ziffernbereich
+txneu = re.sub("[^0-2]", "x", tx)
+print("9:", txneu)
+
+# 10: Alle Zeichen oder Ziffern, die angegeben sind
+txneu = re.sub("[047-]", "x", tx)
+print("10:", txneu)
+
+tx = "aa und aba und abbaa und abbba und aca"
+print(tx)
+
+# 11: Wiederholung, beliebig oft
+txneu = re.sub("ab*a", "x", tx)
+print("11:", txneu)
+
+# 12: Wiederholung, 1 oder mehr
+txneu = re.sub("ab+a", "x", tx)
+print("12:", txneu)
+
+# 13: Wiederholung, 0 oder 1
+txneu = re.sub("ab?a", "x", tx)
+print("13:", txneu)
+
+# 14: Wiederholung, m bis n
+txneu = re.sub("ab{2,3}", "x", tx)
+print("14:", txneu)
+
+tx = "aa und aba und abba und aca und addda"
+print(tx)
+# 15: Wiederholung der max. Menge von Zeichen
+txneu = re.sub("a.*a", "x", tx)
+print("15:", txneu)
+
+# 16: Wiederholung der min. Menge von Zeichen
+txneu = re.sub("a.*?a", "x", tx)
+print("16:", txneu)
+```
+```
+Haus und Maus und Laus
+1: Haus und x und Laus
+2: x und x und Laus
+3: Haus und x und x
+4: x und Maus und Laus
+5: x und x und x
+6: x und Maus und Laus
+7: Haus und Maus und x
+0172-445633
+8: xx7x-445633
+9: 01x2xxxxxxx
+10: x1x2xxx5633
+aa und aba und abbaa und abbba und aca
+11: x und x und xa und x und aca
+12: aa und x und xa und x und aca
+13: x und x und abbx und abbba und aca
+14: aa und aba und xaa und xa und aca
+aa und aba und abba und aca und addda
+15: x
+16: x und x und x und x und x
+```
+
+### 7.5 Audioausgabe
+
+Das Modul `winsound` bietet unter Windows die Möglichkeit zur Ausgabe von Systemtönen und `WAV`-Dateien. Ein kleines Beispiel:
+
+```py
+import winsound, time
+
+# Folge von Tönen mit unterschiedlicher Frequenz
+for i in range (600, 1500, 200):
+    print(i)
+    winsound.Beep(i, 500)
+    time.sleep(0.2)
+
+# Beispiel für Systemton
+print("SystemQuestion")
+winsound.PlaySound("SystemQuestion", winsound.SND_ALIAS)
+
+# Beispiel für WAV-Datei
+print("GAkkord.wav")
+winsound.PlaySound("GAkkord.wav", winsound.SND_FILENAME)
+```
+
+Die Funktio `Beep()` sendet ein Tonsignal. Der erste Parameter steht für die Frequenz, der zweite Parameter für die Dauer des Tonsignals.
+
+Mithilfe der Funktion `PlaySound()` können Windows-Systemtöne oder WAV-Dateien abgespielt werden. Dabei steht der erste Parameter für den Namen des Systemtons oder den Namen der WAV-Datei. Beim zweiten Parameter handelt es sich um eine Konstante. Im Fall eines Systemtons muss `SND_ALIAS` angegeben werden. Bei einer WAV-Datei ist es `SND_FILENAME`.
+
+In Abschnitt 8.9 * Beispielprojekt Morsezeichen, sehen Sie ein weiteres Beispiel für die Nutzung des Moduls `winsound`. Dabei wird ein Text in Morsecode umgesetzt, der wiederum als Tonsignal per Lautsprecher ausgegeben wird.
+
+**Unterschiede in Ubuntu Linux und macOS**
+Das Modul `winsound` steht nicht zur Verfügung.
+
+
+## Kapitel 8 Dateien
+
+Die dauerhafte Speicherung von Daten kann in einfachen Dateien oder in Datenbanken erfolgen. In diesem Abschnitt lernen Sie verschiedene Methoden zur Speicherung von Daten in Dateien kennen.
+
+Abschließend stele ich Ihnen das bereits bekannte Kopfrechenspiel in einer Version vor, die das dauerhafte Abspeichern des Namens und der benötigen Zeit in einer Datei ermöglicht.
+
+### 8.1 Dateitypen
+
+Bei der Ein- und Ausgabe von Daten in Dateien sollten Sie wissen, welcher Dateityp vorliegt und welche Zugriffsart Sie verwenden können. Wir untesrcheiden zwischen folgenden Zugriffsarten:
+
+* Sequenzieller Zugriff: Diese Möglichkeit wird bei einer Datei bevorzugt, deren einzelne Zeilen utnerschiedlich lang sind und jeweils mit einem einfachen Editor bearbeitet werden.
