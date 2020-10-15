@@ -1,0 +1,4 @@
+  Nr        Name Anz           EP           GP
+0023       Apfel   1    3.55 Euro    3.35 Euro
+0008      Banane   2    1.45 Euro    2.90 Euro
+0042    Pfirsich   5    3.05 Euro   15.25 Euro

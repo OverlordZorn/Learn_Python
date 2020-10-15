@@ -216,6 +216,12 @@ Quelle: Buch: Einstieg in Python - Thomas Theis
       - [8.3.3 CSV-Datei schreiben](#833-csv-datei-schreiben)
       - [8.3.4 CSV-Datei lesen](#834-csv-datei-lesen)
     - [8.4 Dateien mit festgelegter Struktur](#84-dateien-mit-festgelegter-struktur)
+      - [8.4.1 Formatiertes Schreiben](#841-formatiertes-schreiben)
+      - [8.4.2 Lesen anbeliebiger Stelle](#842-lesen-anbeliebiger-stelle)
+      - [8.4.3 Schreiben an beliebiger Stelle](#843-schreiben-an-beliebiger-stelle)
+    - [8.5 Serialisierung](#85-serialisierung)
+      - [8.5.1 Objekte in Datei schreiben](#851-objekte-in-datei-schreiben)
+      - [8.5.2 Objekte aus Datei lesen](#852-objekte-aus-datei-lesen)
 
 
 ## 1 Einführung
@@ -7038,3 +7044,222 @@ Zuletzt werden die Elemente der zweidimensionalen liste zeilenweise formatiert a
 
 ### 8.4 Dateien mit festgelegter Struktur
 
+Falls eine Datei *formatiert* beschrieben wird, ist ihre Struktur festgelegt. Es ist genau bekannt, an welcher Stelle welche information steht. Somit können die gewünschten Informationen direkt aus der Datei gelesen werden, ohne die gesamte Datei Zeile für Zeile einlesen zu müssen.
+
+Außerdem ist es möglich, bestimmte Informationen *punktuell* zu verändern, ohne den restlichen Inhalt der Datei zu beeinflussen. Beide Möglichkeiten werden in den foolgenden Abschnitten vorgeführt.
+
+#### 8.4.1 Formatiertes Schreiben
+
+Das formatierte Schreiben in eine Datei ähnelt einer formatierten Ausgabe auf dem Bildschirm. Es werden Datensätze mit gleicher Länge und gleichem Aufbau gebildet.
+
+Optional können Sie nach jedem Datensatz ein Zeilenende-Zeichen einfügen, um die Datei in einem Editor leichter lesbar zu machen. sie können die Datei auch mithilfe des Editors verändern, solange Sie sich an die festgelegte Struktur halten.
+
+Ein Beispiel:
+
+```py
+import sys
+# Zugriffsversuch
+try:
+    d = open("obst.txt", "w")
+except:
+    print("Dateizugriff nicht erfolgreich")
+    sys.exit(0)
+
+# Tabelle mit vesrchiendenen Objekten
+artname = {23:"Apfel", 8:"Banane", 42:"Pfirsich"}
+anzahl = {23:1, 8:2, 42:5}
+epreis = {23:2.95, 8:1.45, 42:3.05}
+
+
+d.write(f"{'Nr':>4}{'Name':>12}{'Anz':>4}{'EP':>13}{'GP':>13}\n")
+
+for x in 23, 8, 42:
+    d.write(f"{x:04d}{artname[x]:>12}{anzahl[x]:>4d}{epreis[x]:>8.2f} Euro{anzahl[x]*epreis[x]:>8.2f} Euro\n")
+
+# Schliessen der Datei
+d.close()
+```
+```
+  Nr        Name Anz           EP           GP
+0023       Apfel   1    2.95 Euro    2.95 Euro
+0008      Banane   2    1.45 Euro    2.90 Euro
+0042    Pfirsich   5    3.05 Euro   15.25 Euro
+```
+
+Die Datei wird zum Schreiben geöffet. Die einzelnen Datensätze werden mithifle von formatierten String-LIteralen erzeugt, wie in Abschnitt 5.2.2, 'Formatierung mit String-Literalen', beschrieben. Zusätzlich wird jeweils eine `\n` ans Zeilenende angefügt.
+
+#### 8.4.2 Lesen anbeliebiger Stelle
+
+Die Funktion `seek()` ermöglicht die Änderung der katuellen Lese- oder Schreibposition innerhalb der Datei. Sie kann mit einem oder zwei Parametern aufgerufen werden. Wird sie mit einem Parameter aufgerufen, handelt es sich dabei um den Abstand Byte, gemessen vom Dateianfang. Der Dateianfang entspricht dem Wert 0, der Aufruf würde in diesem Fall lauten: `d.seek(0)`
+
+Die gewünschte Position wird direkt erreicht, ohne LEsen der Informationen, die von der Position stehn. Ausgehend von der erreichten Position kann gelesen oder geschrieben werden.
+
+Die Funktion `seek()` wird hier zusammen mit einer Variante der Funktion `read()` eingeführt. Diese Funktion gestattet neben dem Einlesen einer ganzen Datei (wie am Anfang dieses Kapitels gezeigt) auch das Einlesen einer bestimmten Anzahl von Bytes, falls die Funktion mit der entsprechenden Zahl als Parameter angegeben wird. Ein Beispiel:
+
+```py
+import sys
+
+# Zugriffsversuch
+
+try:
+    d = open("obst.txt")
+except:
+    print("Dateizugriff nicht erfolgreich")
+    sys.exit(0)
+
+# Gezieltes Lesen
+for i in range (1,4):
+    # Nr Lesen
+    d.seek(48*i)
+    nr = int(d.read(4))
+
+    # EP lesen
+    d.seek(20 + 48*i)
+    ep = float(d.read(8))
+
+    # Ausgabe
+    print("Arikel Nr:", nr, "EP:", ep)
+
+# Schließen der Datei
+```
+```
+Arikel Nr: 23 EP: 2.95
+Arikel Nr: 8 EP: 1.45
+Arikel Nr: 42 EP: 3.05
+```
+
+Jeder Datensatz(also jede Zeile) hat eine Gesamtlänge von 48 Byte inklusive der zwei Zeichen, die durch das `\n` erzeugt werden. Die erste Zeile beginnt an Position 0 und enthält die Überschrift. Die zweite Zeile beginnt an Position 48 und enthält den ersten Datzensatz. DIe dritte Zeile beginnt an Position 96 und enthält den zweiten Datensatz uswl.
+
+Im Programm wird die Datei zunächst zum Lesen geöffnet. Anschließend werden mithifle der Funktion `seek()` nacheinander POsitionenen im ersten, zweiten und dritten Datensatz erreicht. Dies sind:
+* die Positionen 48, 96 und 144 zum Lesen der Artikelnummer am Anfang jedes Datensatzes
+* die Positionen (48 + 20 =)68, 116 und 164 zum Lesen des Einzelpreises jedes Artikels
+
+An diesen Positionenen werden die nächsten 4 Byte (die Artikelnummer) bzw. die nächsten 8 Byte (der Einzelpreis) mithilfe der Funktion `read()` gelesen. Sie liefert jeweils eine Zeichenkette, die mithilfe von `int()` bzw. `float()` in eine Zahl umgewandelt wird. Die Zahlen werden anschließend ausgegeben.
+
+**Unterschiede unter Ubuntu Linux und macOS:** Das Zeichen `\n` für das Zeilenende erzeugt beim Schreiben der Datensätze nur ein Zeichen, nicht zwei Zeichen wie unter Windows. Daher ist ein Datensatz 47 statt 48 Zeichen lang.
+
+#### 8.4.3 Schreiben an beliebiger Stelle
+
+Sie können eine Datei im Modus `r+` öffnen. Anschließend können Sie sie sowohl lesen als auch schreibend ändern. Im nachfolgenden Programm werden der aktuelle Einzelpreis under zugehörige Gesamtpreis eines bestimmten Artikels gelesen, verändert und neu in die Datei geschrieben.
+
+```py
+import sys
+
+# Zugriffsversuch
+try:
+    d = open("obst.txt", "r+")
+except:
+    print("Dateizugriff nicht erfolgreich")
+    sys.exit(0)
+
+
+# Lesen des Einzelpreises
+d.seek(68)
+ep_str = d.read(8)
+ep = float(ep_str)
+
+# Schreiben des Einzelpreises
+d.seek(68)
+ep = ep + 0.2
+d.write(f"{ep:8.2f}")
+
+# Lesen des Gesamtpreises
+d.seek(81)
+gp_str = d.read(8)
+gp = float(gp_str)
+
+# Schreiben des Gesamtpreises
+d.seek(81)
+gp = gp + 0.2
+d.write(f"{gp:8.2f}")
+
+# Schließen der Datei
+d.close()
+```
+```
+  Nr        Name Anz           EP           GP
+0023       Apfel   1    3.15 Euro    3.15 Euro
+0008      Banane   2    1.45 Euro    2.90 Euro
+0042    Pfirsich   5    3.05 Euro   15.25 Euro
+```
+
+Der Einzelpreis des Artikel 23 im ersten Datensatz wird von 2,95 Euro auf 3,15 Euro erhöht. Dazu wird die Datei zunächst im Modus `r+` geöffnet. Der Einzelpreis steht als Zeichenkette in der 8 Byte ab der Position 68. Diese Zeichenkette wird gelesen und in eine Zahl umgewandelt.
+
+Diese Zahl wird gändert, in eine Zeichenkette umgewandelt, mit einer Breite von 8 Byte formatiert und ab der Position 68 in die Datei geschrieben. Das gleiche geschieht mit dem Gesamtpreis ab Position 81.
+
+**Unterschiede Ubuntu Linux und macOS**: Weil `\n` auch hier nur 1 Byte einnimmt anstelle von 2 wie bei Windows verschieben sich hier die Positionen um eins nach links.
+
+### 8.5 Serialisierung
+
+Das Modul `pickle` dient zur Serialisierung und Deserialisierung von Objekten. Das können Objekte der eingebauten Objekttypen oder Objekte eingener Klassen sein.
+
+Bei der Serialisierung werden die Objekte als Bytefolge in einer Datei gespeichert. Bei der Deserialisierung werden die Objekte wieder aus einer Datei geladen. Beim Speichern wird der Typ des Objekts hinzugefügt, sodass er beim Laden bekannt ist.
+
+Neben den Beispielen in diesem Abschnitt finden Sie in Abschnitt 8.10 eine weitere Version des bereits bekannten Kopfrechenspiels. Die Daten des Spielers (Name und Zeit) werden mithilfe der Serialisierung dauerhaft gespeichert, sodass eine Highscore-Liste geführt werden kann.
+
+
+#### 8.5.1 Objekte in Datei schreiben
+Zum Serialisieren von Objekten dient die Methode `dump()`. Im folgenden Beispiel werden ein Objekt eines eingebauten Objekttyps und ein Objekt einer eigenen Klasse nacheinander in einer Datei gespeichert.
+
+```py
+import pickle, sys
+
+# Definition der Klasse Fahrzeug
+
+class Fahrzeug:
+    def __init__(self, bez, ge):
+        self.bezeichnung = bez
+        self.geschwindigkeit = ge
+    def __str__(self):
+        return self.bezeichnung + " " + str(self.geschwindigkeit) + "km/h"
+
+# Zugriffsversuch
+try:
+    d = open("objekt.bin", "wb")
+except:
+    print("Dateizugriff nicht erfolgreich")
+    sys.exit(0)
+
+# Eingebautes Objekt
+x = ([4, "abc", 8], "xyz")
+print(x)
+pickle.dump(x, d)
+
+# Objekt der eigenen Klasse
+opel = Fahrzeug("Opel Admiral", 40)
+print(opel)
+pickle.dump(opel, d)
+
+# Variable Anzahl an Objekten
+pickle.dump(3, d)
+pickle.dump("Berlin", d)
+pickle.dump("Hamburg", d)
+pickle.dump("Dortmund", d)
+
+# Datei schliessen
+d.close()
+```
+
+DAs Programm beginnt mit der Definition der Klasse `Fahrzeug`, die Sie bereits aus Kapitel 6 zur objektorientierten Programmierung kennen.
+
+Die Datei wird im Modus `wb` geöffnet, also zum Schreiben im Binärmodus. Als zusätzlicher Hineis auf den Binärmodus habe ich die Dateiendung *.bin* gewählt.
+
+Es wird eine zweidimensionale Liste erzeugt und zur Kontrolle auf dem Bildschirm ausgegeben. Mithilfe der Funktion `dump()` aus dem Modul `pickle` wird die Liste binär in der geöffneten Datei gespeichert. Der erste Parameter der Funktion ist der Name des Objekts, der zweite Parameter ist das Dateiobjekt.
+
+Außerdem wird ein Objekt der Klasse `Fahrzeug` erzeugt. Dieses Objekt wird zur Kontorlle auf dem Bildschirm ausgegeben. Anschließend wird es binär in der geöffneten Datei gespeichert.
+
+Falls Sie eine bestimmte Anzahl von Objekten speichern möchten, hier z.B. drei Zeichenketten, speicher Sie zunächst diese Anzahl. Anschließend speicher sie die Objekte selbst. Auf diese Weiße kann später die richtige Anzahl von Objekten wieder geladen werden (siehe auch nachfolgend den Abschnitt 8.5.2).
+
+**Hinweise:** Ein potenzieller Inhalt der Datei wird überschrieben. Es könnten auch Objekte an vorhandene Objekte angehängt werden. Zz diesem Zweck hätten Sie die Datei im Öffnungsmodus `ab` öffnen müssen.
+
+ Mithilfe eines Editors können sie ledigleich die Zeichenketten innerhalb der Binärdatei erkennen. Die Datei kann nur mithilfe der genannten Methoden geschrieben oder gelesen werden.
+
+ #### 8.5.2 Objekte aus Datei lesen
+
+ Objekte, die mit der Funktion `dump()` in einer Datei gespeichert wurden, können Sie mit `load()` wieder in der gleichen Reihenfolge aus der Datei in ein Programm übernehmen. Handelt es sich um ein Objekt einer eigenen Klasse, muss die Definition dieser Klasse bekannt sein.
+
+ Es folgt ein Beispiel, in dem die Objekte, die mithilfe des Programms aus dem vorhiergen Abschnitt serialisiert wurden, wieder deserialisiert und in ein Programm übernommen werden.
+
+ ```py
+
+ ```
