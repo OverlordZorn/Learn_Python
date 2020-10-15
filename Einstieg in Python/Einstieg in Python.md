@@ -205,6 +205,17 @@ Quelle: Buch: Einstieg in Python - Thomas Theis
     - [7.5 Audioausgabe](#75-audioausgabe)
   - [Kapitel 8 Dateien](#kapitel-8-dateien)
     - [8.1 Dateitypen](#81-dateitypen)
+    - [8.2 Öffnen und Schließen einer Datei](#82-öffnen-und-schließen-einer-datei)
+    - [8.3 Sequenzielle Dateien](#83-sequenzielle-dateien)
+      - [8.3.1 Sequenzielles Schreiben](#831-sequenzielles-schreiben)
+    - [8.3.2 Sequenzielles Lesen](#832-sequenzielles-lesen)
+      - [Beispiel 1](#beispiel-1)
+      - [Beispiel 2](#beispiel-2)
+      - [Beispiel 3](#beispiel-3)
+      - [Beispiel 4](#beispiel-4)
+      - [8.3.3 CSV-Datei schreiben](#833-csv-datei-schreiben)
+      - [8.3.4 CSV-Datei lesen](#834-csv-datei-lesen)
+    - [8.4 Dateien mit festgelegter Struktur](#84-dateien-mit-festgelegter-struktur)
 
 
 ## 1 Einführung
@@ -6669,8 +6680,361 @@ Die dauerhafte Speicherung von Daten kann in einfachen Dateien oder in Datenbank
 
 Abschließend stele ich Ihnen das bereits bekannte Kopfrechenspiel in einer Version vor, die das dauerhafte Abspeichern des Namens und der benötigen Zeit in einer Datei ermöglicht.
 
+
 ### 8.1 Dateitypen
 
 Bei der Ein- und Ausgabe von Daten in Dateien sollten Sie wissen, welcher Dateityp vorliegt und welche Zugriffsart Sie verwenden können. Wir untesrcheiden zwischen folgenden Zugriffsarten:
 
-* Sequenzieller Zugriff: Diese Möglichkeit wird bei einer Datei bevorzugt, deren einzelne Zeilen utnerschiedlich lang sind und jeweils mit einem einfachen Editor bearbeitet werden.
+* Sequenzieller Zugriff: Diese Möglichkeit wird bei einer Datei bevorzugt, deren einzelne Zeilen unteschiedlich lang sind und jeweils mit einem Zeilenumbruch beendet werden. Der Inhalt der Datei kann mit einem einfachen Editor bearbeitet werden. Die Zeilen werden rein sequenziell gelesen und geschrieben. Der direkte Zugriff auf eine bestimmte Zeile ist nicht möglich, da die Länge der Vorgängerzeilen nicht bekannt ist.
+* Wahlfreier Zugriff: Diese Möglichkeit haben Sie bei einer Datei, die Datensätze mit bekannter Länge enthält. Zeilenumbrüche können, müssen aber nicht existieren. Neben der Länge sollte die Struktur eines Datensatzes bekannt sein oder innerhalb der Datei an einer vereinbarten Stelle stehen. Die Zeilen können direkt gelesen und verändert werden, da man den Ort jedes Datensatzen berechnen kann.
+* Binärer Zugriff: Diese Zugriffsmöglichkeit steht für alle Dateitypen zur Verfügung. Sie arbeiten mit den reinen Bytefolgen; diese können Sie mithilfe eines darauf angepassten Python-Programms lesen oder verändern. Allerdings kann das zur Folge haben, dass die Dateien nicht mehr mit den zugehörigen Anwendungsprogrammen gelesen werden können. Überschreiben Sie bspw. in einer Oracle-Datenbank die Stelle, an der die Anzahl der Datensätze einer bestimmten Tabelle steht, kann das dazu führen, dass diese Tabelle oder auch alle Tabellen zerstört werden.
+
+Ohne Kenntnis der Struktur einer Datei ist es nicht möglich, sie richtig zu bearbeiten. Neben den genannten Typen gibt es auch Mischformen.
+
+
+### 8.2 Öffnen und Schließen einer Datei
+
+Eine Datei, die bearbeitet werden soll, muss vorher geöffnet werden. Dies geschieht mithilfe der eingebauten Funktion `open()`. Dabei werden der Name der Datei (eventuell mit Pfadangabe) und der Öffnungsmodus angegeben.
+
+Es wird davon ausgegangen, dass sich die zu öffnende Datei im gleichen Verzeichnis wie das Python-Programm befindet. Andernfalls müssen Sie den absoluten oder relativen Pfad zur Datei angeben. Der Pfad kann gemäßg Tabelle 8.1 angegeben werden.
+
+|Beschreibung |Pfad |
+|--|--|
+|zur Datei *ein.txt* im Unterverzeichnis *unt*|unt/ein.txt |
+|zur Datei *ein.txt* im übergeordneten Verzeichnis |../ein.txt |
+|zur Datei *ein.txt* im parallelen Verzeichnis *neb* |../neb/ein.txt |
+|zur Datei *ein.txt* im Verzeichnis *C:\Temp* |C:/Temp/ein.txt |
+*Tabelle 8.1 Relative und absolute Pfadangaben*
+
+**Hinweis:**
+Bei Python unte Windows sind sowohl der Forward-Slash(`/`) als auch der Back-Slash (`\`) zum Verzeichniswechsel erlaubt. Häufig wird ein Dateizugriff im Zusammenhang mit Internetserver-Programmierung genutzt. Im Internet herrschen Unix-Server vor, daher nutze ich hier die Unix-freundliche Variante mit `/` (Forward-Slash).
+
+Die Datei kann zum Beispiel in den Modi geöffnet werden, die Sie in Tabelle 8.2 sehen.
+
+Rückgabewert der Funktion `open()` ist ein Dateiobjekt, das für den weiteren Zugrif auf die Datei verwendet wird.
+
+|Modus|Erläuterung |
+|-|-|
+|r | zum Lesen (kann auch weggelassen werden, Standard) |
+|w | zum Schreiben|
+|a | zum Anhängen am Ende der Datei|
+|r+| zum Lesen und schreiben, aktuelle Position am Anfang|
+|w+| zum Lesen und Schreiben, Datei wird geleert|
+|a+| zum Lesen und Schreiben, aktuelle Position am Ende|
+|b | zum Öffnen einer Datei im Binärmodus, die gelesen oder geschrieben werden soll. Es handelt sich um eine zusätzliche Angabe, siehe auch Abschnitt 8.5, Serialisierung.|
+*Tabelle 8.2 Öffnungsmodi* 
+
+In jedem Dateiobjekt ist die aktuelle Zugriffsposition gespeichert. Dies ist die Position, an der aktuell gelesen oder geschrieben wird. Sie verändert sich mit jedem Lese- oder Schreibvorgang. Außerdem kann sie mit der Funktion `seek()` verändert werden, ohne lesen und schreiben zu müssen.
+
+Nach er Bearbeitung muss eine Datei mit de rFunktion `close()` geschlossen werden. Wird sie nicht geschlossen, ist sie eventuell für weitere Zugriffe gesperrt.
+
+### 8.3 Sequenzielle Dateien
+Dateien können sequenziell beschrieben oder gelesen werden.
+
+#### 8.3.1 Sequenzielles Schreiben
+
+Zum Schreiben in eine Datei muss diese zunächst mit der Funktion `open()` und dem Öffnungsmodus `w` geöffnet werden. Wenn die Datei noch nicht existiert, wird sie in diesem Moment erzeugt. Achtung: Wenn sie bereits existiert, wird sie ohne Vorwarnung überschrieben!
+
+Beim Öffnen einer Datei im Schreibmodus kann ein Laufzeitfehler auftreten (z. B. beim Schreiben auf ein schreibgeschütztes Medium oder ein nicht vorhandenes Laufwerk). In diesem Fall sollten Sie eine Ausnahmebehandlung mit einem Programmabbruch durchführen. Dazu können Sie die Methode `exit()` aus dem Modul `sys` nutzen.
+
+Falls es keinen Abbruch gibt, können Sie mithilfe der Funktion `write()` einzelne Strings und mit der Funktion `writelines()` eine Liste von Strings in die Datei schreiben. Zahlen können Sie zuvor mitilfe der Funktion `str()` in einen String umwandeln. Das Zeichen `\n` (new line) für das Zeilenende müssen Sie jeweils hinzufügen.
+
+```py
+import sys
+
+# Zugriffsversuch
+try:
+    d = open("schreiben.txt","w")
+except:
+    print("Dateizugriff nicht erfolgreich")
+    sys.exit(0)
+
+# Schreiben von einzelnen Strings, mit Zeilenende
+d.write("Die erste Teile \n")
+for i in range(2, 11, 2):
+    d.write(str(i) + " ")
+d.write("\n")
+
+# Schreiben einer Liste
+x = ["abc\n", str(12/7.5)+"\n", "xyz\n"]
+d.writelines(x)
+
+# Schliessen der Datei
+d.close()
+```
+Die Datei *schreiben.txt* ha anschließend den folgenden Inhalt:
+```
+Die erste Teile 
+2 4 6 8 10 
+abc
+1.6
+xyz
+```
+Zunächst wird eine einzelne Textzeile mit der Funktion `write()` in die Datei geschrieben. Anschließend werden die Zahlen der Zahlenfolge `2, 4, 6, 8, 10` jeweils in einen String umgewandelt und in die Datei geschrieben. Nach jdeder Zeile wird zusätzlich ein Zeilenende ausgegeben.
+
+Es wird die Liste `x` erzeugt. Die Elemente dieser Liste sind Strings, die mit dem Zeilenende-Zeichen enden. Die Liste wird mithilfe der Funktion `writelines()` in die Datei geschrieben.
+
+**Hinweis:** Verwenden Sie beim Öffnen der Datei den Öffnungsmodus `a` statt `w` (`d = open("schreiben.txt", "a")`), werden die Ausgaben an den bisherigen Dateiinhalt angehängt. Die Datei wird also immer größer.
+
+**Unterschiede unter Ubuntu Linux und macOS:** Das Erzeugen von dateien mithilfe eines Python-Programms kann misslingen, alls nicht Sie der Besitzer der Datei mit dem Python-Programm sind, sondern gegebenenfalls der Benutzer "root".
+
+
+### 8.3.2 Sequenzielles Lesen
+
+Die Zeilen einer sequenziellen Datei können Sie mithilfe verschiedener Funktionen lesen.
+Die Funktion `readlines()` liest alle Zeilen der Datei auf einmal in eine Liste von Strings. Die Funktion `readline()`liest jeweils eine einzelne Zeile einer Datei in einem String. Die Funktion `read()` liest alle Zeilen der Datei auf einmal in einen String.
+
+#### Beispiel 1
+Zunächst werden alle Zeilen einer Datei mithifle der Funktion `readlines()` auf einmal in eine Liste gelesen:
+
+```py
+import sys
+# Zugriffsversuch
+try:
+    d = open("lesen.txt")
+except:
+    print("Dateizugriff nicht erfolgreich")
+    sys.exit(0)
+
+# Lesen aller Zeilen in eine Liste
+allezeilen = d.readlines()
+
+# Schliessen der Datei
+d.close()
+
+# Ausgabe und Summierung der Listenlelemente
+summe = 0
+for zeile in allezeilen:
+    print(zeile, end="")
+    summe += float(zeile)
+
+# Ausgabe der Summe
+print("Summe:", summe)
+```
+Die Datei lesen.txt hat folgenden Inhalt
+```
+6.
+2.5
+4
+```
+Die Ausgabe des Programms lautet:
+```
+6
+2.5
+4
+Summe: 12.5
+```
+Zunächst öffnen Sie die Datei mithilfeder FUnktion `open()` zum Lesen. Den Öffnungsmodus können Sie in diesem Fall weglassen. Gelingt das Öffnen der Datei nicht, tritt eine Ausnahme auf. Dies geschieht z. B., wenn Folgendes der Fall ist:
+* Die Datei existiert nicht.
+* Der Name der Datei ist falsch geschrieben
+* Die Datei beindet sich in einem anderen Verzeichnis.
+  
+Die Funktion `readlines()` wird auf das Dateiobjekt angewendet. Sie liefert eine Liste von Strings. jede String enthält eine Zeile inklusive Zeilenende. Die Strings können unterschiedlich lang sein.
+
+Alle Elemente der Liste werden auf dem Bildschirm ausgegeben. Sie beinhalten bereits das Zeichen für das Zeilenende. Daher wird kein zusätzliches Zeichenende ausgegeben. Ansonsten würden unnötige Leerzeilen entstehen.
+
+Die Elemente der liste werden mithilfe der Funktion `float()` in Zahlen umgewandelt und anschließend summiert. Die Summe wird ausgegeben
+
+#### Beispiel 2
+Im folgenden Programm werden einzelne Zeilen einer Datei mithilfe der Funktion `readline()` gelesen:
+
+```py
+import sys
+
+# Zugriffsversuch
+try:
+    d = open("lesen.txt")
+except:
+    print("Dateizugriff nicht erfolgreich")
+    sys.exit()
+
+# Lesen und Ausgabe einzelner Zeilen
+zeile1 = d.readline()
+print(zeile1, end="")
+zeile2 = d.readline()
+print(zeile2, end="")
+
+# Summierung und Ausgabe
+summe = float(zeile1) + float(zeile2)
+print("Summe:", summe)
+
+# Schliessen der Datei
+d.close()
+```
+
+Nach dem erfolgreichen Öffnen der Datei sit die aktuelle Leseposition der Anfang der ersten Zeile. Die Funktion `readline()` ergibt einen String, der eine Zeile inklusive Zeilenende enthält. Nach einem Aufruf von `readline()` ist die aktuelle Leseposition der Anfang der nächsten Zeile. Daher wird beim zweiten Aufruf die zweite Zeile gelesen usw.
+
+#### Beispiel 3
+Auch mit der Funktion `readline()` können Sie alle Zeilen einer Datei lesen.
+
+Dazu ist es notwendig, dass Ende der Datei zu erkennen. Zu diesem Zweck prüfen Sie den gelieferten String.
+
+```py
+import sys
+
+# Zugriffsversuch
+try:
+    d = open("lesen.txt")
+except:
+    print("Dateizugriff nicht erfolgreich")
+    sys.exit(0)
+
+# Lesen, Ausgabe und Summierung aller Zeilen
+
+summe = 0
+
+zeile = d.readline()
+while zeile:
+    summe += float(zeile)
+    print(zeile, end="")
+    zeile = d.readline()
+
+# Ausgabe der Summe
+print("Summe:", summe)
+
+# Schließen der Datei
+d.close()
+```
+Das Lesen der Zeilen wird mithilfe einer `while`-Schleife gesteuert:
+
+* Falls das Dateiende noch nciht erreicht ist, ist der String `zeile` nicht leer. Die Bedingung `while zeile` ist wahr, und die Schleife wird weiter ausgeführt.
+* Falls das Dateiende erreicht ist, ist der String `zeile` leer. Die Bedingung `while zeile` ist falsch, und die Schleife wird beendet.
+
+#### Beispiel 4
+
+Die Funktion `read()` liest den gesmaten Inhalt einer Datei in einen einzigen String. Dieser muss anhand des Zeilenende-Zeichens in einzelne Zeilen zerlegt werden. 
+
+```py
+import sys
+
+# Zugriffsversuch
+try:
+    d = open("lesen.txt")
+except:
+    print("Dateizugriff nicht erfolgreich")
+    sys.exit()
+
+# Lesen des gesamten Texts
+gesamtertext = d.read()
+
+# Schliessen der Datei
+d.close()
+
+# Umwandeln in eine Liste
+zeilenliste = gesamtertext.split(chr(10))
+
+# Summieren und Ausgeben
+summe = 0
+for zeile in zeilenliste:
+    if zeile:
+        summe += float(zeile)
+    print(zeile)
+
+# Summe ausgeben
+print("Summe:", summe)
+```
+All Zeilen werden mithilfe der Funktion `read()` in einen String gelesen. Der String wird anhand des Zeilenende-Zeichens (Unicode-Zahl 10) mithilfe der Funktion `split()` in einzelne Zeilen zerlegt.
+
+Über eine `while`-Schleife wird das Bearbeiten der einzelnen Zeilen gesteuert. Die Inhalte der Zeilen werden umgewandelt, summiert und ausgegeben. Anschließend wird die Summe ausgegeben.
+
+#### 8.3.3 CSV-Datei schreiben
+CSV-Dateien (Comma-separated Values) sind Textdateien, in denen ein Datzensatz pro Zeile steht. Die Daten des Datensatzes sind durch festgelegte Zeichen (wie Semikola) voneinander getrennt. solche Dateien haben meist die Dateiendung *.csv*. Sie können von bestimmten Programmen (z.B. MS Excel oder Libreoffice Calc) erkannt und richtig genutzt werden.
+
+Neben den Beispielen in diesem Abschnitt finden Sie in Abschnitt 8.10 >Spiel, Version mit Highscore-Datei<, eine weitere Version des bereits bekannten Kopfrechenspiels. Darin werden die Daten des Spielers (Name und benötigte Zeit) in einer CSV-Datei gespeichert, sodass Sie eine Highscore-Liste führen können.
+
+Ein beispiel, in dem eine einfache Liste und eine zweidimensionale Liste als CSV-Datensätze in eine Datei geschrieben werden:
+
+```py
+import sys
+# Zugriffsversuch
+try:
+    d = open("daten.csv","w")
+except:
+    print("Dateizugriff nicht erfolgreich")
+
+# Schreiben einer Liste als CSV-Datensatz
+li = [42, "Maier", 3524.52]
+d.write(str(li[0]) + ";" + li[1] + ";" + str(li[2]).replace(".",",") +"\n")
+
+# Schreiben einer zweidim. Liste als Datensatztabelle
+dli = [[55, "Göçlü", 3185.00], [57, "Wäßmann", 2855.20]]
+for element in dli:
+    d.write(str(element[0]) + ";" + element[1] + ";" + str(element[2]).replace(".",",") +"\n")
+
+# schliessen der Datei
+d.close()
+
+```
+Die Ausgabedatei *daten.csv* hat anschließend den folgenden Inhalt:
+```
+42;Maier;3524,52
+55;Göclü;3185,0
+57;Wäßmann;2855,2
+```
+
+Nach dem erfolgreichen öffnen werden die einzelnen Elemente der einfachen Liste mithilfe der Funktion `write()` in die Datei geschrieben. Zwischen den Elementen wird jeweils ein Semikolon eingefügt.
+
+Handelt es sich bei einem Element um eine Zahl, so wird sie in eine Zeichenkette umgewandelt. Bei Zahlen mit Nachkommastellen wird anschließend der Dezimalpunkt mithilfe der Funktionen `replace()` in ein Komma verwandelt. Damit können diese Zahlen problemlos von einer deutschen Version von MS Excel eingelesen werden.
+
+Zur Gewährleistung eines erfolgreichen Exports muss also die Struktur der Daten bekannt sein. Die Daten der verschiedenen Datentypen müssen individuell verarbeitet werden. Falls MS Excel unter Windows installiert ist, genügt ein Doppelklick auf die Ausgabedatei *daten.csv*, um den Inhalt als Tabelle in MS Excel darzustellen. Dank der UTF-8-Kodierung sind auch Umlaute, Eszetts oder Zeichen aus anderen Zeichensätzen kein Problem, siehe Abildung 8.1.
+
+**Unterschiede unter Ubuntu Linux und macOS** Unter Ubuntu Linux und macOS können sie die Datei mithilfe eines doppelklicks auf den Datennamen in der Verzeichnisanzeige mit LibreOffice Calc öffnen. Es wird das Dialogfeld Textimport geöffnet.
+
+Achten Sie darauf, dass im Bereich Trennoption nur die Option Getrennt und Semicolon makiert sind. Falls Sie zusätzlich die Option Komma markierne, würden die Zahlen mit Nachkommastellen auf zwei Spalten aufgeteilt. Anschließend werden die Daten korrekt dargestellt wie in MS Excel unter Windows.
+
+Gegebenenfalls müssen Sie in der Liste Zeichensatz den Eintrag System auswählen.
+
+#### 8.3.4 CSV-Datei lesen
+
+Zum erfolgreichen Import einer CSV-Datei müssen die Strktur und die datentypen der Daten bekannt sein. Für das nachfolgende beispiel wird die CSV-Datei uas dem vorherigen beispiel in MS Excel ergänzt und abgespeichert, siehe Abbildung 8.2.
+
+Die Datei wird mit dem folgenden Programm gelesen. Die Datensätze werden in einer zweidimensionalen Liste abgelegt.
+
+```py
+import sys
+# Zugriffsversuch
+
+try:
+    d = open("daten.csv")
+except:
+    print("Dateizugriff nicht erfolgreich")
+    sys.exit(0)
+
+# Lesen des gesamten Texts
+gesamtertext = d.read()
+
+# Schliessen der Datei
+
+d.close()
+
+# Umwandeln in eine Liste von Zeilen
+
+zeilenliste = gesamtertext.split(chr(10))
+
+# Jede Zeile umwandeln in Liste von int, string, float
+li = []
+for zeile in zeilenliste:
+    zwliste = zeile.split(";")
+    li.append([ int(zwliste[0]), zwliste[1], float( zwliste[2].replace(",",".") ) ])
+
+# Ausgabe
+for p in li:
+    print(f"{p[0]:d} {p[1]} {p[2]:.2f}")
+```
+```
+42 Maier 3524.52
+55 Göclü 3185.00
+57 Wäßmann 2855.20
+98 Esser 3120.66
+```
+
+Zunächst wird der gesamte Text der Datei mit der Funktion `read()` in einen String eingelesen. Dieser String wird mithilfe der Funktion `split()` anhand des Zeilenende-Zeichens (Unicode-Zahl 10) in eine Liste von Zeilen zerelgt. Die Elemente der Liste enthalten nicht mehr das Zeilenende-Zeichen.
+
+Jedes Element der lsite, also jede Zeile, wird wiederum mithilfe der Funktion `split()` anhand des Semikolons in eine Zwischenliste (zwliste) mit den einzelnen Daten zerlegt. Diese Zerlegung wird nur durch geführt, wenn die Zeile nicht leer ist.
+
+Handelt es sich bei einem Element der Zwischenliste um eine Zahl, so wird sie mithilfe der Funktion `int()` oder mit der FUnktion `float()` umgewandelt. Bei Zahlen mit Nachkommastellen wird vorher das KOmma mithilfe der Funktion `replace()` in einen Dezimalpunkt verwandelt. Damit kann diese Zahl, die aus einer deutschen Version von MS Excel kommt, problemlos weiterverarbeitet werden.
+
+Zuletzt werden die Elemente der zweidimensionalen liste zeilenweise formatiert ausgegeben.
+
+### 8.4 Dateien mit festgelegter Struktur
+
