@@ -17,12 +17,11 @@ except:
     sys.exit(0)
 
 # Eingebautes Objekt
-
 x = pickle.load(d)
 print(x)
 
 # Objekt der eigenen Klasse
-opel = pickle.load(x)
+opel = pickle.load(d)
 print(opel)
 
 # Variable Anzahl an Objekten

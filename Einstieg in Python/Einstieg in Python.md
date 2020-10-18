@@ -222,6 +222,13 @@ Quelle: Buch: Einstieg in Python - Thomas Theis
     - [8.5 Serialisierung](#85-serialisierung)
       - [8.5.1 Objekte in Datei schreiben](#851-objekte-in-datei-schreiben)
       - [8.5.2 Objekte aus Datei lesen](#852-objekte-aus-datei-lesen)
+    - [8.6 Bearbeitung mehrer Datien](#86-bearbeitung-mehrer-datien)
+        - [8.6.1 Funktion `glob.glob()`](#861-funktion-globglob)
+      - [8.6.2 Funktion `os.scandir()`](#862-funktion-osscandir)
+    - [8.7 Informationen über Dateien](#87-informationen-über-dateien)
+    - [8.8 Dateien und Verzeichnisse verwalten](#88-dateien-und-verzeichnisse-verwalten)
+    - [8.9 Beispielprojekt Morsezeichen](#89-beispielprojekt-morsezeichen)
+      - [8.9.^Morsezeichen aus Datei lesen](#89morsezeichen-aus-datei-lesen)
 
 
 ## 1 Einführung
@@ -7261,5 +7268,319 @@ Falls Sie eine bestimmte Anzahl von Objekten speichern möchten, hier z.B. drei 
  Es folgt ein Beispiel, in dem die Objekte, die mithilfe des Programms aus dem vorhiergen Abschnitt serialisiert wurden, wieder deserialisiert und in ein Programm übernommen werden.
 
  ```py
+import pickle, sys
 
- ```
+# Definition der Klasse Fahrzeug
+class Fahrzeug:
+    def __init__(self, bez, ge):
+        self.bezeichnung = bez
+        self.geschwindigkeit = ge
+    def __str__(self):
+        return self.bezeichnung + " " + str(self.geschwindigkeit) + "km/h"
+
+
+# Zugriffsversuch
+try:
+    d = open("objekt.bin", "rb")
+except:
+    print("Dateizugriff nicht erfolgreich!")
+    sys.exit(0)
+
+# Eingebautes Objekt
+x = pickle.load(d)
+print(x)
+
+# Objekt der eigenen Klasse
+opel = pickle.load(d)
+print(opel)
+
+# Variable Anzahl an Objekten
+anzahl = pickle.load(d)
+for i in range(anzahl):
+    print(pickle.load(d))
+
+# Datei schliessen
+d.close()
+```
+```
+([4, 'abc', 8], 'xyz')
+Opel Admiral 40km/h
+Berlin
+Hamburg
+Dortmund
+```
+An der Ausgabe erkennen Sie, dass die Objekte wieder *originalgetreu* geladen werden. Das Programm beginnt mit der Definition der eigenen Klasse `Fahrzeug`. Die Datei wird im Modus `rb` geöffnet, also zum Lesen im Binärmodus.
+
+Mithilfe der Funktion `load()` aus dem Modul `pickle` werden nacheinander die Liste und das Objekt der Klasse `Fahrzeug` geladen. Anschließend wird die Anzahl der nachfolgdnen Objekte als Zahl geladen (hier: 3). Damit ist die Anzahl der zu landenden Objekte für die Schleife bekannt. Alle Objekte werden zur Kontorlle auf dem Bildschirm ausgegeben.
+
+### 8.6 Bearbeitung mehrer Datien
+
+Bisher wurde immer nur eine einzelne Datei bearbeitet, deren Name bekannt war. Falls Sie vor der Aufgabe stehen, mehrere Dateien aus einem Verziehcnis zu bearbeiten, deren Anzahl und Namen unbekannt sind, können Sie sich der Funktion `glob()` aus dem Modul `glob` und der Funktion `scandir()` aus dem Modul `os` beidneen. Sie liefern jeweils eine Liste, die einen Zugriff auf die einzlenen Dateien ermöglicht.
+
+##### 8.6.1 Funktion `glob.glob()`
+
+Im folgenden Beispiel werden zunächst die Namen bestimmter Dateien aus dem aktuellen Verzeichnis mithilfe der Funktionen `glob()` in eine Liste gespeichert. Diese Dateien werden der Reihe nach geöffnet und durchsucht.Wir in einer der Dateien ein bestimmter Suchtext gefunden, so wird ihr Name jweils ausgegeben.
+
+```py
+import glob
+
+# Liste der Dateien
+dateiliste = glob.glob("schr*.py")
+print(dateiliste)
+
+# Jedes Element der Liste durchsuchen
+for datei in dateiliste:
+    # Zugriffsversuch
+    try:
+        d = open(datei)
+    except:
+        print("Dateizugriff nicht erfolgreich")
+        continue
+
+    gesamtertext = d.read()
+
+    # Zugriff beenden
+    d.close()
+
+    # Suchtext suchen
+    if gesamtertext.find("obst") != -1:
+        print(datei)
+```
+```
+schreiben_beliebig.py
+schreiben_formatiert.py
+```
+
+Der Parameter der Funktion `glob()` ist eine Zeichenkette, die als Filter für die Dateisuche dient. Die Zeichenkette kann auch einen der Platzhalter `*` (für mehrere beliebige Zeichen) oder `?` (für ein einzelnes beliebiges Zeichen) enthalten. Hier wird nur nach Dateien gesucht, deren Name mit `schr` beginnt und mit `.py` endet.
+
+Jedes Element der erzeugten Liste entsrpicht einem Dateinamen. Jede dieser Dateien wird geöffnet. Falls das Öffnen nicht erfolgreich war, wird mit der nächsten Datei fortgefahren.
+
+Der vollständige Inhalt der jeweiligen Datei wird mithilfe der Funktion `read()` in eine Zeichenkette eingelesen. Anschließend wird die Datei wieder geschlossen.
+
+Die Zeichenkette wird mithilfe der Funktion `find()` durchsucht. Dird der Suchtext gefunden, so wird der Dateiname ausgegeben.
+
+Seit Python 3.5 können Sie mit der Funktion `glob.glob()` und der Zeichenfolge `**` auch rekursiv einen gesamten Verzeichnisbaum druchsuchen. In den folgenden Vergelichsbeispielen wird eine Liste aller Dateien mit der Endung `.py` geliefert, deren Name mit `c` beginnt:
+* `glob.glob("c*.py")` durchläuft nur das aktuelle Verzeichnis.
+* `glob.glob("**/c*.py")` durchläuft nur direkte Unterverzeichnisse.
+* `glob.glob("**/c*.py", recursive=True)` durchläuft das aktuelle Verzeichnis, direkte Unterverzeichnisse, deren Unterverzeichnisse usw., also den gesamten Verziehcnisbaum.
+
+#### 8.6.2 Funktion `os.scandir()`
+
+Seit Python 3.5 gibt es mit der FUnktion `scandir()` aus dem Modul `os` eine schnellere Alternative zum Durchlaufen eines Verzeichnisses. Das nachfolgende Programm liefert dasselbe Ergebnis wie oben:
+
+```py
+import os
+eintrag_iterator = os.scandir(".")
+
+# Alle Dateien eines Verzeichnisses
+for x in eintrag_iterator:
+    # Nur falls gemäß schr*.py
+    if x.name.startswith('schr') and x.name.endswith('.py'):
+        # Zugriffsversuch
+        try:
+            d = open(x)
+        except:
+            print("Dateizugriff nicht erfolgreich")
+            continue
+
+        # Text einelsen
+        gesamtertext = d.read()
+
+        # Zugriff auf Datei beenden
+        d.close()
+
+        # Suchtext suchen
+
+        if gesamtertext.find("obst") != -1:
+            print(x.name)
+        
+# Schließt den Iterator
+eintrag_iterator.close()
+```
+Die FUnktion `scandir()` erwartet den Namen eines Prads als Parameter. Hier wird das aktuelle Verzeichnis angegeben. Die Funktion liefert ein Iterator-Objekt vom Type `os.DirEntry`, mit dessen hilfe alle Einträge des Verzeichnisses durchlaufen werden.
+
+Die Eigenschaft `name` des `DirEntry`-Objekts beinhaltet den Namen des Verzeichniseintrags. Falls dieser mit `schr` beginnt und mit `.py` endet, wird die betreffende ZDatei wie oben weiterbearbeitet.
+
+Seit Python 3.6 haben sie die Möglichkeit, den Iterator mithifle von `close()` zu schließen und die genutzten Ressourcen wieder freizugeben.
+
+### 8.7 Informationen über Dateien
+
+Die funktion `stat()` aus dem Modul `os` liefert eine Reihe von Informationen über Dateien in Form eines Tupels.
+
+Ein Beispiel:
+
+```py
+import os, time
+
+# Informationstupel
+tu = os.stat("obst.txt")
+print(tu)
+
+# Elemente des Tupels
+groesse = tu[6]
+print("Byte:", groesse)
+
+zugr = time.localtime(tu[7])
+print("Letzter Zugriff:", time.strftime("%d.%m.%Y %H:%M:%S", zugr))
+
+mod = time.localtime(tu[8])
+print("Letzte Modifikation:", time.strftime("%d.%m.%Y %H:%M:%S", mod))
+```
+```
+Byte: 192
+Letzter Zugriff: 15.10.2020 18:58:01
+Letzte Modifikation: 15.10.2020 16:27:04
+```
+As dem gelieferten Tupel werden die folgenden Informationen geholt:
+* aus Element 6 die Größe der Datei in Byte
+* aus Element 7 der Zeitpunkt des letzten Zugriffs auf die Datei
+* aus Element 8 der Zeitpunkt der letzten Änderung der Datei
+  Beide Zeitangaben werden mithilfe der Funktion `localtime()` umgewandelt, mithilfe der Funktion `strftime()` formatiert und anschließend ausgegeben.
+
+**Unterschiede unter Ubuntu Linux und macOS**
+Die Datensätze haben nur eine Länge von 47 statt 48 Zeichen. Damit ergibt sich eine Dateigröße von 188 Byte.
+
+### 8.8 Dateien und Verzeichnisse verwalten
+Die Module `os` und `shutil` bieten weitere Funktionen zur Verwaltung von Dateien und Verzeichnissen. Im folgenden Beispiel werden Dateien kopiert, umbenannt und gelöscht.
+
+```py
+import sys, shutil, os, glob
+
+def check():
+    print(glob.glob("le*.txt"))
+
+check()
+
+# Existenz feststellen
+if not os.path.exists("lesen.txt"):
+    print("Datei nicht vorhanden")
+    sys.exit(0)
+
+# Datei kopieren
+shutil.copy("lesen.txt", "lesen_kopie.txt")
+check()
+
+# Datei umbennen
+try:
+    shutil.move("lesen_kopie.txt","lesen_neu.txt")
+except:
+    print("Fehler beim umbenennen")
+check()
+```
+```
+['lesen.txt']
+['lesen.txt', 'lesen_kopie.txt']
+['lesen.txt', 'lesen_neu.txt']
+['lesen.txt']
+```
+
+Die erste Zeile er Ausgabe liefert die ursprüngliche Liste derjenigen Dateien, die mit `le` beginnen und mit `.txt` enden.
+
+Mithilfe der FUnktion `exists()` aus dem Modul `os.path` wird geprüft, ob eine bestimmte Datei existiert, die kopiert werden soll. Falls sie nicht existiert, wird das Programm vorzeitig beendet.
+
+Anschließen wird die Datei *lesen.txt* mithilfe der Funktion `copy()` aus dem Modul `shutil` kopipert. Die Kopie heißt *lesen_kopie.txt*. Die zweite Zeile der Ausgabe liefert die geänderte Liste der Dateien.
+
+Nun wird die Datei * lesen_kopie.txt* mithilfe der Funktion `move()` aus dem Modul `shutil` in *lesen_neu.txt* umbenannt. Die nächste Zeile der Ausgabe liefert die geänderte Liste der Dateien. Die Methode `move()` kann auch zum Verschieben einer Datei in ein anderes Verzeichnis genutzt werden.
+
+Als Letztes wird die Datei *lesen_kopie.txt* mithilfe der Funktion *remove()* aus dem Modul `os` wieder gelöscht. Die letzte Zeile der Ausgabe liefert wiederum die geänderet Liste der Dateien.
+
+### 8.9 Beispielprojekt Morsezeichen
+
+In diesem Abschnitt sehen Sie ein Beispielprojekt, in dem auf Dateien, externe Module, Zeichenketten, Dictionarys, einige Funktionen und das Modul `winsound` zur Ausgabe von Tönen (siehe 7.5) zugegriffen wird.
+
+Ein Beispieltext wird in Morsecode umgesetzt. Es besteht aus einzelnen Morsezeichen und Pausen. Ein Morsezeichen steht für ein einzelnes Zeichen eines Texts und setzt sich aus einer Folge von kurzen und lnagen Signalen zusammen. Damit werden bereits seit langer Zeit Texte als eine Folge von Ton-, Funk- oder LIchtsignalen übermittelt.
+
+#### 8.9.1 Morsezeichen aus Datei lesen
+
+Zunächst werden die verschiedenen Zeichen und das jeweils zugehörige Morsezeichen aus der Datei *morsen.txt*  in ein Dictionary gelesen. In der Datei wird ein kurzes Signal durch einen Punkt dargestellt, ein langes Signal durch einen Strich. Die einzelnen Zeichen und das dazugehörige Morsezeichen sind jeweils durch ein Leerzeichen getrennt:
+
+```
+A .-
+B -...
+C -.-.
+D -..
+E .
+...
+```
+Zum Lesen dient eine Funktion im nachfolgenden Modul `morsen`, die anderen Python-Programmen zur Verfügung gestellt werden kann:
+
+```py
+import sys
+# Erstellt Dictionary mit Morsezeichen aus Datei
+
+def leseCode():
+    # Lesen der Datei mit Zeichen und Morsezeichen
+    try:
+        d = open("morsen.txt")
+    except:
+        print("Dateifehler")
+        sys.exit(0)
+    
+    allezeilen = d.readlines()
+    print(allezeilen)
+    d.close
+
+    # Erste Zeichenketet in dder Zeile ist das Zeichen
+    # Es dient als Schlüssel für das Dictionary
+    code = {}
+    for zeile in allezeilen:
+        worte = zeile.split()
+        code[worte[0]] = worte[1]
+
+    # Morsezeichen gleich, ob kleine oder große Buchstaben
+    for i in range(97,123):
+        code[chr(i)] = code[chr(i-32)]
+    
+    # Liste zurückliefern
+    return code
+```
+In der Funktion `leseCode()` werden zuerst alle Zeilen der Datei *morsen.txt* gelesen. Anschließend wird ein leeres Dictionary erzeugt.
+
+Jede Zeile wird anhand des Leerzeichens in zwei Zeichenketten zerlegt. Die erste Zeichenkette beinhaltet ein Unicode-Zeichen, die zweite Zeichenkette das zugehörige Morsezeichen. Das Unicode-Zeichen wird als Schlüssel üfr den Eintrag des Morsezeichens im Dictionary genutzt.
+
+Beim Orsen wird nicht zwischen Groß- und Kleinschreibung unterschieden. Daher wird den Dictionary-Elementen für die KLeinbuchstaben das gleiche Morsezeichen zugewiesen wie den entsprechenden Elementen für die Großbuchstaben.
+
+Als Ergebnis der Funktion wird das Dictionary zurückgeliefert.
+
+#### 8.9.2 Ausgabe auf dem Bildschirm
+
+In diesem Abschnitt werden die Morsezeichen eines Beispieltexts auf dem Bildschirm ausgegeben. Die einzelnen Morsezeichen werden jeweils durch ein Leerzeichen getrennt. Es folgt das Programm:
+
+```py
+import sys, morsen
+
+# Beispieltext codieren
+def schreibeCode(text, code):
+    for zeichen in text:
+        try:
+            print(code[zeichen], end=" ")
+
+        except KeyError:
+            print(" ", end=" ")
+    print()
+
+# Lesefunktion aufrufen
+
+code = morsen.leseCode()
+
+# Schreibfunktion aufrufen
+schreibeCode("Hallo Welt", code)
+```
+```
+.... .- .-.. .-.. ---   .-- . .-.. - 
+```
+
+Im Hauptprogramm wird die Funktion `leseCode()` aus dem oben beschriebenen Modul `morsen` aufgerufen. Sie liefert ein Dictionary zurück. Anschließend wird die Funktion `schreibeCode()` mit einem Beispieltext aufgerufen.
+
+In der Funktion `schreibeCode()` wird ein übergebener Beispieltext in Morsezeichen codiert und ausgegeben. Falls es zu einem Zeichen keine Entsprechung im Dictionary gibt, tritt ein `KeyError` auf. In diesem Fall wird ein Leerzeichen ausgegeben.
+
+#### 8.9.3 Ausgabe mit Tonsignalen
+
+In diesem Abschnitt werden die Morsezeichen eines Beispieltexts als Tonsignale ausgegeben. Bevor Sie das nachfolgende Programm starten, sollten Sie den Lautsprecher Ihres Windows-PCs einschalten:
+
+```py
+
+```
+```
+
+```
