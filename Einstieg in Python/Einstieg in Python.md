@@ -228,7 +228,13 @@ Quelle: Buch: Einstieg in Python - Thomas Theis
     - [8.7 Informationen über Dateien](#87-informationen-über-dateien)
     - [8.8 Dateien und Verzeichnisse verwalten](#88-dateien-und-verzeichnisse-verwalten)
     - [8.9 Beispielprojekt Morsezeichen](#89-beispielprojekt-morsezeichen)
-      - [8.9.^Morsezeichen aus Datei lesen](#89morsezeichen-aus-datei-lesen)
+      - [8.9.1 Morsezeichen aus Datei lesen](#891-morsezeichen-aus-datei-lesen)
+      - [8.9.2 Ausgabe auf dem Bildschirm](#892-ausgabe-auf-dem-bildschirm)
+      - [8.9.3 Ausgabe mit Tonsignalen](#893-ausgabe-mit-tonsignalen)
+    - [8.10 Spiel, Version mit Highscore-Datei](#810-spiel-version-mit-highscore-datei)
+      - [8.10.1](#8101)
+      - [8.10.2 Aufbau des PRogramms](#8102-aufbau-des-programms)
+      - [8.10.3 Code des Programms](#8103-code-des-programms)
 
 
 ## 1 Einführung
@@ -7579,8 +7585,291 @@ In der Funktion `schreibeCode()` wird ein übergebener Beispieltext in Morsezeic
 In diesem Abschnitt werden die Morsezeichen eines Beispieltexts als Tonsignale ausgegeben. Bevor Sie das nachfolgende Programm starten, sollten Sie den Lautsprecher Ihres Windows-PCs einschalten:
 
 ```py
+import sys, morsen, time, winsound
 
-```
+# Beispieltext codieren
+def tonCode(text):
+
+    code = morsen.leseCode()
+    
+    # Zeitschema, Dauer eines Signals in Millisekunden
+    signalDauer = {".":100, "-":300}
+
+    # Zeitschema, Dauer einer Pause in Sekunden
+    signalPause = 0.1
+    zeichenPause = 0.3
+    wortPause = 0.7
+
+    # Text in Wörter zerlegen
+    alleWorte = text.split()
+    
+
+    # Jedes Wort im Text
+    for w in range(len(alleWorte)):
+        wort = alleWorte[w]
+        print()
+        print(wort)
+        
+        
+        # Jedes Zeichen im Wort
+        for z in range(len(wort)):
+            # Übernahme des Zeichens
+            zeichen = wort[z]
+            
+            # Kontrollausabe des Zeichens
+            print(str(zeichen) + ":", end=" ")
+
+            # Versuch, ein Zeichen auszugeben
+            try:
+                # Übernahme des Morsezeichens für das Zeichen
+                # Falls kein Eintrag im Dictionary: KeyError
+                alleSignale = code[zeichen]
+                
+                # Jedes Signal des Morsezeichens
+                for s in range(len(alleSignale)):
+                    # Übernahme eines Symbols
+                    signal = alleSignale[s]
+                    print(signal, end="")
+                    # Ausgabe des Symbols, kurz oder lang
+                    winsound.Beep(800, signalDauer[signal])
+                    # Nach jedem Singal eine Signalpause,
+                    # außer nach dem letzten Signal
+                    if s < len(alleSignale)-1:
+                        time.sleep(signalPause)
+                print()
+                # Nach jedem Zeichen eine Zeichenpause,
+                # außer nach dem letzten Zeichen
+                if z < len(wort)-1:
+                    time.sleep(zeichenPause)
+            # Falls kein Eintrag im Dictionary: ignorieren 
+            except KeyError:
+                print("keyerror")
+                pass
+
+            # Nach jedem Wort eine Wortpause,
+            # außer nach dem letzten Wort
+            if w <len(alleWorte)-1:
+                print("", end="")
+                time.sleep(wortPause)
+# Lesefunktion aufrufen
+
+code = morsen.leseCode()
+
+# Schreibfunktion aufrufen
+
+tonCode("Der braune schnelle Fuchs springt ueber den faulen alten Hund und wiederholt das Spielchen hundert mal am Tag")
 ```
 
+In der Funktion `tonCode()` wird ein übergebener Beispieltext in Morsezeichen codiert und als Folge von Tonsignalen ausgegeben. Dazu wird zunächst ein weiteres Dictionary angelegt. Darin wird die Signaldauer für ein kurzes Signal mit 100ms festgelegt. Ein langes Signal muss dreimal so lang sein. Daher bekommt es eine Länge von 300ms.
+
+Nach jedem Signal folgt eine Signalpause in der Dauer eines kurzen Signals, nach jedem Zeichen in der Dauer eines langen Signals und nach jedem Wort in einer Dauer von sieben kurzen Signalen.
+
+Der gesamte Text wird anhand der Leerzeichen in einzelne Wörter zerlegt. Jedes Wort wird in einzelne Zeichen zerlegt. Zu jedem Zeichen wird der zugehörige Eintrag im Dictionary der MOrsezeichen gesucht. Jedes gefundene Morsezeichen wird in einzelne Signale zerlegt. Jedes Signal wird mithilfe der Funktion `Beep()` aus dem Modul `winsound` als Ton ausgegeben.
+
+Falls es zu einem Zeichen keine Entsprechung im Dictionary gibt, tritt ein `KeyError` auf. In diesem Fallwird das Zeichen ignoriert.
+
+Die Funktion `sleep()` aus dem Modul `time` sorgt für die Pausen zwischen den Signalen, Zeichen und Wörtern.
+
+Im Hauptprogramm wird zunächst die Funktion `leseCode()` aus dem Modul morsen aufgerufen. Sie liefert ein Dictionary zzurück. Dann wird die Funktion `tonCode()` mit einem Beispieltext aufgerufen.
+
+**Unterschiee in Ubuntu Linux und macOS:** Das Modul `winsound` steht nicht zur Verfügung.
+
+
+### 8.10 Spiel, Version mit Highscore-Datei
+
+Es folgt eine weiter Version des bereist bekannten Kopfrechenspiels. Die Daten des Spielers (Name und Zeit) werden mithilfe der Serialisierung dauerhaft gespeichert, sodass eine Highscore-Liste geführt werden kann.
+
+Es wird zunächst nach dem Namen des Spielers gefragt. Anschließend bekommt de Spieler fünf Additionsaufgaben mit Zahlen aus dem Bereich von 10 bis 30 gestellt. Pro Aufgabe hat er nur einen Versuch. Ungültige Eingaben oder falsche Ergebnisse werden mit dem Text `Falsch` kommentiert. Zuletzt wird die Gesamtzeit angegeben, die de rSpieler für die LÖsungsversuche benötigt hat.
+
+Fals der Spieler alle fünf Aufgaben richtig löst, werden sein Name und die benötigte Zeit in eine Highscore-Liste aufgenommen, die in einer Datei abgespeichert wird.
+
+#### 8.10.1
+```
+Bitte eingeben (0: Ende, 1: Highscores, 2: Spielen): 1
+P. Name         Zeit
+1. Ole          8.3s
+[...]
+Bitte eingeben (0: Ende, 1: Highscores, 2: Spielen): 2
+Bitte geben Sie ihren Namen ein (max. 10 Zeichen): Paul
+Aufgabe 1 von 5: 20 + 30 : 50
+* * * Richtig * * *
+[...]
+Ergebnis: 5 von 5 in 9.48 Sekunden, Highscore
+P. Name         Zeit
+1. Ole          8.3s
+[...]
+Bitte eingeben (0: Ende, 1: Highscores, 2: Spielen): 0
+```
+Der Benutzer schaut sich zuerst die Highscores an. Dort gibt es bereits einige Einträge. Anschließend spielt er eine Runde, löst alle fünf Aufgaben richtig, in sein Name erscheint ebenfalls im Highscore. Als Letztes verlässt er das Programm.
+
+#### 8.10.2 Aufbau des PRogramms
+
+Das Programm enthält ein Hauptprogramm und vier Funktionen.
+Im Hauptprogramm wird innerhalb einer Endlosschelife ein Hauptmenü aufgerufen. Darin kann sich der Spieler entwerde die Highscores anzeigen lassen, spielen oder das Programm beenden.
+
+Es folgen die 4 Funktionen des Programms.
+* `hs_lesen()`: Lesen der Highscores aus der Datei in eine Liste
+* `hs_anzeigen()`: Anzeigen der Highscore_liste auf dem Bildschirm
+* `hs_schreiben()`: Schreiben der Highscore-Liste in die Datei
+* `spiel()`: Stellen der Aufgaben, Lösen der Aufgaben, Einfügen der ermittelten Zeit in die Highscore-Liste
+  
+  #### 8.10.3 Code des Programms
+
+  Im nachfolgenden Listing sehen Sie den Beginn des Programms mit der Funktion zum Lesen der Highscore-Daten aus der Datei:
+
+```py
+# Module
+import random, time, glob, pickle
+
+# Funktion Highscore lesen
+
+def hs_lesen():
+    # Liste wird hier erzeugt
+    global hs_liste
+    
+    # Kein Highscore vorhanden, leere Liste
+    if not glob.glob("highscore.bin"):
+        hs_liste = []
+        return
+
+    # Highscore vorhanden, laden
+    d = open("highscore.bin", "rb")
+    hs_liste = pickle.load(d)
+    d.close()
+```
+Es werden die Module `random`, zur Erzeugund der Zufallszahlen, `time` zur Zeitmessung und `glob` zur Prüfung der Datei benötigt.
+
+Nach dem Einlesen aus der Datei stehen in der Liste `hs_liste` die Namen und Ergebniszeiten der Spieler. Da die Liste in dieser Funktion erstmalig benutzt, aber im gesamten Programm benötigt wird, wird sie hier mit `global` im globalen Namensraum bekannt gemacht.
+
+Falls die Datei nicht vorhanden ist, wird eine leere Liste erzeugt. Ist die Datei vorhandne, wird der gesamte Inhalt mithilfe der Funktion `load()` aus dem Modul `pickle` in die Liste `hs_liste` gelesen.
+
+Es folgt die FUnktion zum Anzeigen des Highscores:
+
+```py
+# Funktion Highscore anzeigen
+def hs_anzeigen():
+    # Highscore nicht vorhanden
+    if not hs_liste:
+        print("Keine Highscores vorhanden")
+        return
+
+    # Ausgabe Highscore
+    print(f"{'P':>2}. {'Name':10}{'Zeit':>5}")
+    for i in range(len(hs_liste)):
+        print(f"{(i+1):>2d}. {hs_liste[i][1]:10}{hs_liste[i][1]:5.2f}")
+        if i >= 9:
+            break
+```
+
+Falls die Highscore-Liste leer ist, wird eine entsprechende Meldung angezeigt. Ist die Liste nicht leer, werden nach einer Überschrift maximal zehn Highscores formatiert ausgegeben, und zwar mit den Informationen *Platzierung*, *Name*, *Ergebniszeit*.
+
+Es folgt die FUnktion zum Schreiben der Highscore-LIste in die Datei:
+
+```py
+# Funktion Highscore schreiben
+def hs_schreiben():
+    # Zugriff
+    d = open("highscore.bin", "wb")
+    pickle.dump(hs_liste,d)
+    d.close()
+```
+
+Die gesamte Liste wird mithilfe der Funktion `dump()` aus dem Modul `pickle` in die Datei geschrieben.
+
+Es folgt die FUnktion zum Spielen:
+```py
+# Funkton Spiel
+def spiel():
+    # Eingabe des Namens
+    name = input("Bitte geben Sie ihren Namen ein (max. 10 Zeichen): ")
+    name = name[0:10]
+
+    # Initialisierung Counter und Zeit
+    richtig = 0
+    startzeit = time.time()
+
+    #  5 Aufgaben
+    for aufgabe in range(5):
+        # Aufgabe mit Ergebnis
+        a = random.randint(10,100)
+        b = random.randint(10,100)
+        c = a + b
+
+        # Eingabe
+        try:
+            zahl = int(input("Aufgabe " + str(aufgabe+1) + "von 5: " + str(a) + " + " + str(b) " = "))
+            if zahl == c:
+                print("*** Richtig ***")
+                richitg += 1
+            else:
+                raise
+        except:
+            print("*** Falsch ***")
+
+    # Auswertung
+    endzeit = time.time()
+    differenz = endzeit - startzeit
+    print(f"Ergebnis: {richtig:d} von 5 in {differenz:.2f} Sekunden", end="")
+    if richtig == 5:
+        print(", Highscore!")
+    else:
+        print(", leider kein Highscore")
+        return
+    
+    # Mitten in Liste schreiben
+    gefunden = False
+    for i in range(len(hs_liste)):
+        # Einsetzen in Liste
+        if differenz < hs_liste[i][1]:
+            hs_liste.insert(i, [name, differenz])
+            gefunden = True
+            break
+    # Ans Ende der Liste schreiben
+    if not gefunden:
+        hs_liste.append([name, differenz])
+    
+    # Highscore-Liste anzeigen
+    hs_anzeigen()
+```
+
+Nach der Eingabe des Namens wird er zur einheitlichen Ausgabe auf maximal zehn Zeichen verkürzt. Es folgen einige Programmteile, die bereits aus früheren Versionen des Spiels bekannt sind: Stellen der fünf Aufgaben, Eingabe der Lösung, Bewertung der Lösung, Messung der Zeit. Beachten Sie, dass die Zahlenvariablen `aufgabe`, `a` und `b` für die Funktion `input()` in Zeichneketten umgewandelt werden müssen.
+
+Falls nicht alle fünf Aufgaben richtig gelöst werden, kann kein Eintrag in die Highscore-Liste erfolgen.
+
+Die Highscore-Liste wird Element für Element durchsucht. Wird ein Element gefunden, in dem eine größere als die neue Ergebniszeit eingetragen sit, so wird die neue Ergebniszeit mithilfe der Funktion `insert()` an dieser Stelle in die Highscore-Liste eingefügt.
+
+Falls kein Eintrag durch Einfügen erfolgte, wird die neue ERgebniszeit mit hilfe der Funktion `append()` ans Ende der Liste angehängt. Auf diese Weise ist dafür gesorgt, dass die Highscore-Liste immer aufsteigend nach Ergebniszeit sortiert ist. Sie wird nach jeder Änderung angezeigt.
+
+Es folgt das Hauptprogramm mit dem Hauptmenü:
+
+```py
+# Hauptprogramm
+
+# Initialisierung Zufallsgenerator
+random.seed()
+
+# Highscore aus Datei in Liste lesen
+hs_lesen()
+
+# Endlosschleife
+while True:
+    # Hauptmenü, Auswahl
+
+    try:
+        menu = int(input("0: Ende \n1: Highscores \n2: Spielen\nBitte Wählen: "))
+    except:
+        print("Falsche Eingabe")
+        continue
+
+    # Aufruf einer FUnktion oder Ende
+    if menu == 0:
+        break
+    if menu == 1:
+        hs_anzeigen()
+    if menu == 2:
+        spiel()
+    else:
+        print("Falsche Eingabe")
+    # Highscore aus Lsite in Datei schreibne
+    hs_schreiben()
 ```
