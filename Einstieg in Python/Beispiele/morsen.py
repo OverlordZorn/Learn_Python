@@ -12,7 +12,7 @@ def leseCode():
     allezeilen = d.readlines()
     d.close
 
-    # Erste Zeichenketet in dder Zeile ist das Zeichen
+    # Erste Zeichenkette in der Zeile ist das Zeichen
     # Es dient als Schlüssel für das Dictionary
     code = {}
     for zeile in allezeilen:
