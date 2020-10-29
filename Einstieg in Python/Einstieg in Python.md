@@ -235,6 +235,9 @@ Quelle: Buch: Einstieg in Python - Thomas Theis
       - [8.10.1](#8101)
       - [8.10.2 Aufbau des PRogramms](#8102-aufbau-des-programms)
       - [8.10.3 Code des Programms](#8103-code-des-programms)
+    - [8.11 Spiel, objektorientierte Version mit Highscore-Datei](#811-spiel-objektorientierte-version-mit-highscore-datei)
+  - [9 Internet](#9-internet)
+    - [9.1 Laden und Senden von Internetdaten](#91-laden-und-senden-von-internetdaten)
 
 
 ## 1 Einführung
@@ -7713,9 +7716,9 @@ Es folgen die 4 Funktionen des Programms.
 * `hs_schreiben()`: Schreiben der Highscore-Liste in die Datei
 * `spiel()`: Stellen der Aufgaben, Lösen der Aufgaben, Einfügen der ermittelten Zeit in die Highscore-Liste
   
-  #### 8.10.3 Code des Programms
+#### 8.10.3 Code des Programms
 
-  Im nachfolgenden Listing sehen Sie den Beginn des Programms mit der Funktion zum Lesen der Highscore-Daten aus der Datei:
+Im nachfolgenden Listing sehen Sie den Beginn des Programms mit der Funktion zum Lesen der Highscore-Daten aus der Datei:
 
 ```py
 # Module
@@ -7873,3 +7876,179 @@ while True:
     # Highscore aus Lsite in Datei schreibne
     hs_schreiben()
 ```
+
+* Nach der Initialisierung des Zufallsgenerators wird die Highscore-Datei eingelesen. Es beginnt die Endlosschleife mit dem Hauptmenü. 
+* Nach der Eingabe von `2` beginnt das Spiel, anschließend erscheint wieder das Hauptmenü.
+* Nach der Eingabe von `0` wird die Endlosschleife verlassen. Die Highscore-Liste wird in die Datei geschrieben. Das Programm endet.
+
+### 8.11 Spiel, objektorientierte Version mit Highscore-Datei
+
+Es folgt eine weitere objektorientiere Version des Kopfrechenspiels. Diesmal werden die Daten des Spielers (Name und Zeit) in einer CSV-Datei gespeichert. Diese CSV-Datei können Sie sich mithilfe von MS Excel unter Windows oder mit LibreOffice Calc unter Linux und macOS ansehen.
+
+Neben den beiden Klassen `Spiel` und `Aufgabe` benötigen Sie die KLasse `Highscore`. Die Klasse `Aufgabe` hat sich gegenüber der Version in der Datei *spiel_oop.py*  nicht verändert.
+
+Zunächst die Importanweisung und das Hauptprogramm
+
+```py
+import random, time, glob
+
+# Hauptprogramm
+while True:
+    # Hauptmenü, Auswahl
+    try:
+        menu = int(input("0: Ende \n1: Highscores \n2: Spielen\nBitte Wählen: "))
+    except:
+        print("Falsche Eingabe")
+        continue
+
+    # Anlegen eines Objekts oder Ende
+    
+    if menue == 0:
+        break
+    elif menue == 1:
+        hs = Highscore()
+        print(hs)
+    elif menue == 2:
+        s = Spiel()
+        s.messen(True)
+        s.spielen()
+        s.messen(False)
+        print(s)
+    else:
+        print("Falsche Eingabe")
+```
+Es werden die Module `random` (zur Erzeugung der Zufallszahlen), `time` (zur Zeitmessung) und  `glob` (zur Prüfung der Datei) benötigt.
+
+Falls der Benutzer die Highscore-Liste sehen möchte, wird ein Objekt der Klasse `Highscore` erzeugt und ausgegeben. Falls er speilen möchte, wird ein Objekt der Klasse `Spiel` erzeugt. Nach der messung der Zeit und dem eigentlichen Spielvorgang werden die Ergebnisse ausgegeben.
+
+Es folgt die KLasse `Spiel`:
+
+```py
+# Klasse "Spiel"
+
+class Spiel:
+    def __int__(self):
+        random.seed()
+        self.richtig = 0
+        self.anzahl = 5
+        s = input("Bitte geben Sie ihren Namen ein (max. 10 Zeichen):")
+        self.spieler = [0:10]
+
+    def spielen(self):
+        # Spielablauf
+        for i in range(1, self.anzahl+1):
+            a = Aufgabe(i, self.anzahl)
+            print(a)
+            self.richtig += a.beantworten()
+    
+    def messen(self, start):
+        if start:
+            self.startzeit = time.time()
+        else:
+            endzeit = time.time()
+            self.zeit = endzeit - self.startzeit
+    
+    def __str__(self):
+        # Ergebnis
+        ausgabe = f"Richtig: {self.richtig:d} von {self.anzahl:d} in {self.zeit:.2f} Sekunden"
+        if self.richtig == self.anzahl:
+            ausgabe += ", Highscore"
+            hs = Highscore()
+            hs.speichern(self.spieler, self.zeit)
+            print(hs)
+        else:
+            ausgabe += ", leider kein Highscore")
+        return ausgabe
+```
+
+Im Konstrutkor der Klasse wird er Zufallsgenerator initialisiert. Der Zähler für die richtig gelösten Aufgaben wird auf 0, die Anzahl der Aufgaben auf 5 gesetzt. Es wird der Name des Spielers ermittelt. Dabei werden drei Eigenschaften der Klasse `Spiel` gesetzt. `richtig`, `anzahl` und `spieler`.
+
+In der Methode `spielen()` werden insgesamt fünf Aufgaben gestellt und beantwortet. Die Methode `messen()` dient zur Zeitmessung. Es wird die Eigenscaht `zeit` der Klasse `Spiel` gesetzt.
+
+Falls der Spieler alle Aufgaben richtig löst, wird in der Ausgabenmethode ein Objekt der Klasse `Highscore` erzeugt und gespeichert. Anschließend wird die Liste ausgegeben.
+
+Die neue Klasse `Highscore` sieht wie folgt aus:
+
+```py
+# Klasse "Highscore"
+
+class Highscore:
+    # Liste aus Datei lesen
+    def __init__(self):
+        self.liste = []
+        if not glob.glob("highscore.csv"):
+            return
+        d = open("highscore.csv")
+        zeile = d.readline()
+        while zeile:
+            teil = zeile .split(";")
+            name = teil[0]
+            zeit = teil[1][0:len(teil[1])-1]
+            zeit = zeit.replace(",", ".")
+            self.liste.append([name, float(zeit)])
+            zeile = d.readline()
+        d.close()
+
+    # Liste ändern
+    def aendern(self, name, zeit):
+        # Mitten in Liste schreiben
+        gefunden = False
+        for i in range(len(self.liste)):
+            # Einsetzen in Liste
+            if zeit < self.liste[i][1]:
+                self.liste.insert(i, [name, zeit])
+                gefunden = True
+                break
+        
+        # Ans Ende der Liste schreiben:
+        if not gefunden:
+            self.liste.append([name, zeit])
+
+    # Liste ändern, in Datei speichern
+    def speichern(self, name, zeit):
+        self.aendern(name, zeit)
+        d = open("highscore.csv", "w")
+        for element in self.liste:
+            name = element[0]
+            zeit = str(element[1]).replace(".", ",")
+            d.write(name + ";" + zeit + "\n")
+        d.close()
+
+    # Liste Anzeigen
+
+    def __str__(self):
+        # Highscore nicht vorhanden
+        if not self.liste:
+            return "Keine Highscores vorhanden"1
+
+        # Ausgabe Highscore
+        ausgabe = "P. Name      Zeit\n"
+        for i in range(len(self.liste)):
+            ausgabe += f"{i+1:2d}. {self.liste[i][0]:10} {self.liste[i][1]:5.2f} sec\n"
+
+            if i >= 9:
+                break
+        return ausgabe
+```
+
+Im Konstruktor der Klasse wird die wichtigste Eigenschaft gesetzt: die Highscore-Liste mit dem Namen `liste`. Sie ist zunächst leer. Falls keine CSV-Datei existiert, bleibt sie leer. Falls es keine SV-Datei exisiert, blebit sie leer. Falls es eine CSV-Datei gibt, werden alle Zeilen daraus gelesen. Anschließend werden die Zeilen zerlegt. Aus dem Dezimalkomma (für MS Excel oder LibreOffice Calc) wird ein Dezimalpunkt. Die beiden Bestandteile werden der Highscore-Liste als Unterliste angehängt.
+
+Die Methode `aendern()` wird klassenintern von der Methode `speichern()` benötigt. Ein neu ermittelter Highscore wird entweder in die Liste eingefügt oder der Liste angehängt.
+
+In der Methode `speichern()` wird zunächst die Highscore-Liste geändert. Anschließend wird aus dem Dezimalpunkt ein Dezimalkomma für MS Excel oder LibreOffice calc. Die gesamte Liste wird in der CSV-Datei gespeichert. Zudem wird sie in der Ausgabemethode veröffentlicht, falls sie nicht leer ist.
+
+
+## 9 Internet
+
+Dieses Kapitel beschäftigt sich mit dem Empfangen und Senden von Internetdaten und mit der Erstellung von Programmen, die auf einem Webserver laufen. Sie können mithilfe von Python auf Daten im Internet zugreifen, Daten ins Internet senden und Daten anderen Benutzern im Internet zur Verfügung stellen.
+
+Zum Testen der Programme dieses Kaptiels wird ein lokaler Webserver benötigt. XAMPP ist ein vorkonfiguriertes und einfach zu installierenedes Paket, das neben einem *Apache-Webserver* weitere Software umfasst, z. B. die Webserver-Sprache *PHP* und das Datenbanksystem *MySQL* bzw. seine Abspaltung *MariaDB*. Bezüglich der Beispiele in diesem Buch stellt es keinen Unterschied dar, ob die jeweilige XAMPP-Version mit MySQL oder mit MariaDB arbeitet.
+
+Sie erreichen die Website zum Herunterladen von XAMPP über die Adresse *www.apachefriends.org*, sowohl für Windows als auch für Ubuntu Linux und für macOS. Die Installation von XAMPP wird in Abschnitt A.2 beschrieben.
+
+Am Ende dieses Kapitels wird das bereits bekannt Kopfrechenspiel in einer Version vorgestellt, die das Spielen im Internet ermöglicht. Die Aufgaben werden aus dem Internet abgerufen, die Benutzereingaben ins Internet gesendet und die Spielerergebnisse mithifle der Serialisierung dauerhaft auf einem Webserver im Internet gespeichert.
+
+### 9.1 Laden und Senden von Internetdaten
+
+Das Modul `urllib` mit den Untermodulen `urllib.request` und `urllib.parse` kann zum Laden von Daten aus dem Internet und zum Senden von Daten in das Internet verwendet werden.
+

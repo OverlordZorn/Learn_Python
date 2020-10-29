@@ -1,4 +1,4 @@
-# Module
+1# Module
 import random, time, glob, pickle
 
 # Funktion Highscore lesen
