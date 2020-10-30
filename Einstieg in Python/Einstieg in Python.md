@@ -238,6 +238,7 @@ Quelle: Buch: Einstieg in Python - Thomas Theis
     - [8.11 Spiel, objektorientierte Version mit Highscore-Datei](#811-spiel-objektorientierte-version-mit-highscore-datei)
   - [9 Internet](#9-internet)
     - [9.1 Laden und Senden von Internetdaten](#91-laden-und-senden-von-internetdaten)
+      - [9.1.1 Daten Lesen](#911-daten-lesen)
 
 
 ## 1 Einführung
@@ -8042,7 +8043,7 @@ In der Methode `speichern()` wird zunächst die Highscore-Liste geändert. Ansch
 
 Dieses Kapitel beschäftigt sich mit dem Empfangen und Senden von Internetdaten und mit der Erstellung von Programmen, die auf einem Webserver laufen. Sie können mithilfe von Python auf Daten im Internet zugreifen, Daten ins Internet senden und Daten anderen Benutzern im Internet zur Verfügung stellen.
 
-Zum Testen der Programme dieses Kaptiels wird ein lokaler Webserver benötigt. XAMPP ist ein vorkonfiguriertes und einfach zu installierenedes Paket, das neben einem *Apache-Webserver* weitere Software umfasst, z. B. die Webserver-Sprache *PHP* und das Datenbanksystem *MySQL* bzw. seine Abspaltung *MariaDB*. Bezüglich der Beispiele in diesem Buch stellt es keinen Unterschied dar, ob die jeweilige XAMPP-Version mit MySQL oder mit MariaDB arbeitet.
+Zum Testen der Programme dieses Kapitels wird ein lokaler Webserver benötigt. XAMPP ist ein vorkonfiguriertes und einfach zu installierenedes Paket, das neben einem *Apache-Webserver* weitere Software umfasst, z. B. die Webserver-Sprache *PHP* und das Datenbanksystem *MySQL* bzw. seine Abspaltung *MariaDB*. Bezüglich der Beispiele in diesem Buch stellt es keinen Unterschied dar, ob die jeweilige XAMPP-Version mit MySQL oder mit MariaDB arbeitet.
 
 Sie erreichen die Website zum Herunterladen von XAMPP über die Adresse *www.apachefriends.org*, sowohl für Windows als auch für Ubuntu Linux und für macOS. Die Installation von XAMPP wird in Abschnitt A.2 beschrieben.
 
@@ -8052,3 +8053,38 @@ Am Ende dieses Kapitels wird das bereits bekannt Kopfrechenspiel in einer Versio
 
 Das Modul `urllib` mit den Untermodulen `urllib.request` und `urllib.parse` kann zum Laden von Daten aus dem Internet und zum Senden von Daten in das Internet verwendet werden.
 
+Bei existierender Verbindung zu einem Webserver, ob lokal oder im Internet, haben Sie folgende Möglichkeiten:
+* Sie können mithilfe der Funktion `urlopen()` eine Verbindung zu einer URL öffnen und anschließend die Ihalte in eine Variable eines Python-Programms einlesen.
+* Sie können mithilfe der Funktion `urlretrieve()` Daten direkt von einer URL in eine Datei auf der Festplatte kopieren.
+
+Mitder Funktion `urlopen()` können Sie auch Daten ur weiteren Verarbeitung auf dem Webserver an eine URL senden.
+
+#### 9.1.1 Daten Lesen
+
+Im folgenden Programm wird der Inhalt der Internetseite *http://local-host/Python38/url_lesen.thm* mithilfe der Funktion `urlopen()` aus dem Modul `urllib.request` in eine Liste gelesen. Diese Liste wird anschließend ausgegeben.
+
+Es folgt zunächst der INhalt der einfachen HTML-Datei `url_lesen.htm`:
+
+```html
+<!DOCTYPE html><html>
+<head>
+    <meta charset="utf-8">
+    <title>Titelzeile</title>
+</head>
+<body>
+    <b>Hallo Python</b>
+</body>
+</html>
+```
+
+Standardmäßg wird XAMPP im Verzeichnis *C:\xampp\htdocs* installiert. Die Datei *url_lesen.htm* wird im Verzeichnis *C:\xampp\htdocs\Python38* gespeichert. Alle HTML_Dateiein dieses Kapitels sollten die Kodierung UTF-8 besitzen. Falls Sie zu ihrer Erstellung den Editor Notepad++ nutzen, können Sie die Datei bei Darf über den Menüpunkt *Kodierung* konvertieren.
+
+Es handelt sich nur um einfache HTML-Codebeispiele, da eine weitereEinführung in HTML nicht Gegenstand dieses Buchs ist.
+
+Geben sie die Adresse *http://localhost/Python38/url_lesen.htm* in einem Webbrowser ein.
+
+Das Python-Programm zum Lesen des HTML-Codes dieses internetseite sieht wie folgt aus:
+
+```py
+
+```
