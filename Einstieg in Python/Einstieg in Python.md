@@ -8086,5 +8086,46 @@ Geben sie die Adresse *http://localhost/Python38/url_lesen.htm* in einem Webbrow
 Das Python-Programm zum Lesen des HTML-Codes dieses internetseite sieht wie folgt aus:
 
 ```py
+import sys, urllib.request
+
+# Verbindung zu einer URL
+try:
+    u = urllib.request.urlopen("http://localhost/Python38/url_lesen.htm")
+except:
+    print("Fehler")
+    sys.exit(0)
+
+# Liest alle Zeilen in eine Liste
+li = u.readlines()
+
+# Schliesst die Verbindung
+u.close()
+
+# Ausgabe der Liste
+for element in li:
+    print(element)
+```
 
 ```
+b'\xef\xbb\xbf<!DOCTYPE html><html>\r\n'
+b'<head>\r\n'
+b'meta charset="uft-8">\r\n'
+b'<title>Titelzeile</title>\r\n'
+b'</head>\r\n'
+b'<body>\r\n'
+b'<b>Hallo Python</b>\r\n'
+b'</body>\r\n'
+b'</html>\r\n'
+```
+
+Erscheint eine Fehlermeldung, dann haben Sie eventuell vergessen, den lokalen Webserver zu starten (siehe im Anhang unter Abschnitt A.2, "Installation von XAMPP").
+
+Die Verbindung zur URL wird mithilfe der FUnktion `urlopen()` geöffnet. Ihr Rückgabewert ähnelt einem Dateiobjekt. Auf die geöffnete Datei können sie lesend zugreifen, wie im Abschnitt 8.3.2, "Sequenzielles Lesen", beschrieben.
+
+Die Funktion `readlines()` liefert eine LIste. Jedes Listenelement umfasst eine Zeile des HTML-Codes der Internetseite.
+
+Nach dem Abspeichern der Zeilen in der Liste können Sie die Datei mit der Funktion `close()` wieder schließen.
+
+Jedes Element der Liste ist eine Zeichenkette, die als Byte-Literal ausgegeben wird. Byte-Literale sind Zeichenketten des Datentyps `bytes`(siehe 4.2.7). Zu Beginn der ersten Zeile sehen sie einige Steuerzeichen bezüglich der UTF-8-Kodierung.
+
+ 
