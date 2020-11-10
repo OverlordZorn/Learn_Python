@@ -239,6 +239,8 @@ Quelle: Buch: Einstieg in Python - Thomas Theis
   - [9 Internet](#9-internet)
     - [9.1 Laden und Senden von Internetdaten](#91-laden-und-senden-von-internetdaten)
       - [9.1.1 Daten Lesen](#911-daten-lesen)
+      - [9.1.2 Datei kopieren](#912-datei-kopieren)
+      - [9.1.3 Daten senden per "GET"](#913-daten-senden-per-get)
 
 
 ## 1 Einführung
@@ -8118,14 +8120,36 @@ b'</body>\r\n'
 b'</html>\r\n'
 ```
 
-Erscheint eine Fehlermeldung, dann haben Sie eventuell vergessen, den lokalen Webserver zu starten (siehe im Anhang unter Abschnitt A.2, "Installation von XAMPP").
+Erscheint eine Fehlermeldung, dann ahben Sie eventuell vergessen, den lokalen Webserver zu starten (siehe Anhang 2).
 
-Die Verbindung zur URL wird mithilfe der FUnktion `urlopen()` geöffnet. Ihr Rückgabewert ähnelt einem Dateiobjekt. Auf die geöffnete Datei können sie lesend zugreifen, wie im Abschnitt 8.3.2, "Sequenzielles Lesen", beschrieben.
+Die Verbindung zur URL wird mithilfe der Funktion `urlopen()` geöffnet. Ihr Rückgabewert ähnelt einem Dateiobjekt. Auf die geöffnete Datei können sie lesend zugreifen, wie in Abschnitt 8.3.2 beschrieben.
 
-Die Funktion `readlines()` liefert eine LIste. Jedes Listenelement umfasst eine Zeile des HTML-Codes der Internetseite.
+Die Funktion `readlines()` liefert eine Liste. Jedes Listenelement umfasst eine Zeile des HTML-Codes der Internetseite.
 
 Nach dem Abspeichern der Zeilen in der Liste können Sie die Datei mit der Funktion `close()` wieder schließen.
 
-Jedes Element der Liste ist eine Zeichenkette, die als Byte-Literal ausgegeben wird. Byte-Literale sind Zeichenketten des Datentyps `bytes`(siehe 4.2.7). Zu Beginn der ersten Zeile sehen sie einige Steuerzeichen bezüglich der UTF-8-Kodierung.
+Jedes Element der Liste ist eine Zeichenkette, die als Byte-Literal ausgegeben wird. Byte-Literale sind Zeichenketten des Datentyps `bytes` (4.2.7). Zu Beginn der ersten Zeile sehen sie einige Steuerzeichen bezüglich der UTF-8-Kodierung.
 
- 
+#### 9.1.2 Datei kopieren
+
+Das folgende Programm kopiert den HTML-Code der Internetseite *http://192.168.64.2/Python38/url_lesen.htm* direkt in eine Datei auf de Festplatte. Voraussetzung: Das gewünschte Verzeichnis exisitiert.
+
+```py
+import urllib.request
+
+urllib.request.urlretrieve("http://192.168.64.2/Python38/url_lesen.htm", "C:/Temp/url_kopieren.htm")
+```
+
+Die funktion `urlretrieve()` hat zwei Paramter: Die URL und den Namen der datei, in der der HTML-Code gespeichert wird (hier *url_kopieren.htm*).
+ Diese Datei kann anschließend bspw. offline mit einem Browser gelesen oder mit einem Editor bearbeitet werden.
+
+
+ #### 9.1.3 Daten senden per "GET"
+
+ Sie können dem Betrachter einer Website auch ermöglihen, spezifische Daten an den Webserver zu senden. Dies geschieht über Formulare, die der Betrachter ausfüllt und an den Webserver sendet.
+
+ Häufig werden diese Daten auf dem Webserver weiterverarbeitet und gespeichert, z.B. in einer Datenbank. Außerdem kann eine individuelle Antwort an den Benutzer zurückgesendet werden.
+
+ **HTML-PHP-Variante**
+
+Im folgenden Beispiel gibt der Betrachter seinen Vor- und Nachnamen ein und sendet diese Informationen an den Webserver. Er erhält daraufhin eine Bestätigung. 
