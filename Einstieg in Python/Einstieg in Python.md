@@ -241,6 +241,7 @@ Quelle: Buch: Einstieg in Python - Thomas Theis
       - [9.1.1 Daten Lesen](#911-daten-lesen)
       - [9.1.2 Datei kopieren](#912-datei-kopieren)
       - [9.1.3 Daten senden per "GET"](#913-daten-senden-per-get)
+      - [9.1.4 Daten senden per "POST"](#914-daten-senden-per-post)
 
 
 ## 1 Einführung
@@ -8152,4 +8153,150 @@ Die funktion `urlretrieve()` hat zwei Paramter: Die URL und den Namen der datei,
 
  **HTML-PHP-Variante**
 
-Im folgenden Beispiel gibt der Betrachter seinen Vor- und Nachnamen ein und sendet diese Informationen an den Webserver. Er erhält daraufhin eine Bestätigung. 
+Im folgenden Beispiel gibt der Betrachter seinen Vor- und Nachnamen ein und sendet diese Informationen an den Webserver. Er erhält daraufhin eine Bestätigung. Das wird, zunächst für die Ein- und Ausgabe in einem Browser, mithilfe einer HTML-Datei und einem zugehörigen PHP-Programm realisiert.
+
+Abbildung 9.2 zeigt zunächst das Formular:
+
+```
+Bitte senden Sie ihre Daten:
+[     ] Nachname
+[     ] Vorname
+[Daten absenden]
+```
+Die Antwort des Webservers sehen Sie in Abbildung 9.3
+```
+Ihre folgenden Daten werden registiert:
+Nachname: Maier
+Vorname: Werner
+```
+
+Der Quellcode des Formular lautet:
+
+```html
+<!DOCTYPE html><html>
+<head>
+    <meta charset="utf-b">
+</head>
+<body>
+    <b>Bitte senden Sie Ihre Daten:</b><p>
+    <form action="senden_get.php" method="get">
+        <input name="nn"> Nachname <p>
+        <input name="vn"> Vorname <p>
+        <input type="submit">
+    </form>
+</body>
+</html>
+```
+
+Das Formular wird mit `form` markiert, ein Eingabefeld mit `input`. Die im Formular verwendete GET-MEthode ist wichtig für das Senden und Empfangen der Daten, sowohl für die HTML-PHP-Variante als auch für die spätere gezeigte Python-PHP-Variante.
+
+Es folgt der PHP-Quellcode der zugehörigen Antwort:
+
+```html
+<!DOCTYPE html><html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+    <b>Ihre folgenden Daten werden registriert:</b><p>
+    <?php
+        echo "Nachname: " . $_GET["nn"] . "<br />"
+        echo "Vorname: " . $_GET["vn"];
+    ?>
+</body>
+</html>
+```
+
+Die Daten werden mit der GET-Methode gesendet. Daher stehen sie in PHP im globalen Array `$_GET` zur Verfügung. Wie bei HTML handelt es sich nur um einfach PHP-Codebeispiele, da auch eine weitere Einführung in PHP nicht Gegenstand dieses Buchs ist.
+
+
+**Python-PHP-Variante** 
+MIthilfe des foglenden Python-Formulars können diese Daten ebenfalls gesendet werden. Dabei wird wiederum das oben gezeigte PHP-Programm `senden_get.php` auf dem Webserver angesprochen.
+
+```py
+import urllib.request
+
+# Eingabedaten
+
+pnn = input("Bitte den Nachnamen eingeben: ")
+pvn = input("Bitte den Vornamen eingeben: ")
+
+# sendet Daten
+u = urlib.request.urlopen("http://192.168.64.2/Python38/senden_get.php?nn=" + pnn + "&vn=" + pvn)
+
+# Empfang de Antwort und Ausgabe
+
+li = u.readlines()
+u.close()
+for element in li:
+    print(element)
+```
+
+Zunächst werden die Eingabedaten vom Benutzer erfragt und in den beiden Variablen `pvn` und `pnn` gespeichert.
+
+Auf die URL wird mithifle der Fuunktion `urlopen()` zugegriffen. Die Eingabeinformationen werden im Format `urlencoded` an die URL angehängt:
+Nach einem Fragezeichen folgen ein oder mehrere Parre nach dem Muster `key=value`. Die Paare werden jeweils durch ein Ampersand-Zeichen voneinander getrennt. De rSchlüssel (`key`) entspricht dem Namen der Variablen, `value` entspricht dem Wert der Variablen.
+
+Anschließend wird der HTML-Code de Antwort des Webservers gelesen und ansgegeben.
+
+Falls die gleichen Eingaben wie oben getätgit werden, lautet die Ausgabe:
+
+```py
+b'<!DOCTYPE html><html>\n'
+b'<head>\n'
+b'    <meta charset="utf-8">\n'
+b'</head>\n'
+b'<body>\n'
+b'    <b>Ihre folgenden Daten werden registriert:</b><p>\n'
+b'    Nachname: Maier<br />Vorname: Meier</body>\n'
+b'</html>'
+```
+
+Wie man in der Ausgabe sieht, kommen die Datena uf dem Webserver an und werden vom PHP-Programm weiterverarbietet. In diesem Fall hätte man z.B. Nachname undVorname in einer Datenbank auf dem Webserver speichern können.
+
+#### 9.1.4 Daten senden per "POST"
+
+Eine weitere Möglichkeit bietet die Funktion `urlencode()`. Sie dient zur Codierung der Sendedaten und benötigt als Parameter ein Dictionary mit den zu sendenden Daten. Rückgabewert ist eine Zeichenkette im Format *url-encoded*, die an die URL angehängt wird.
+
+**HTML-PHP-Variante**
+Im folgenden Beispiel sehen Eingabe und Ausgabe wie im vorherigen Abschnitt aus. Das HTML-Formular gestaltet sich wie folgt:
+
+```html
+<!DOCTYPE html><html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+    <b>Bitte senden Sie Ihre Daten:</b><p>
+    <form action="senden_post.php" method="post">
+        <input name="nn"> Nachname<p>
+        <input name="vn"> Vorname<p>
+        <input type="submit">
+    </form>
+</body>
+</html>
+```
+
+Im Unterschied zu vorher wird die POST-Methode verwendet. Das ist wichtig ür das Senden und Empfangen der Daten, sowohl für die HTML-PHP-Variante als auch für die Python-PHP-Variante.
+
+Es folgt der pHP-Quellcode der zugehörigen Antowrt:
+
+```html
+<!DOCTYPE html><html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+    <b>Ihre folgendenDten wurden registriert:</b><p>
+    <?php
+        echo "Nachname: " . $_POST["nn"] . "<br/>";
+        echo "Vorname: " . $_POST["vn"];
+    ?>
+</body>
+</html>
+```
+
+Die Daten werden mit der POST-MEthode gesendet. Daher stehen sie in PHP im globalen Array `$_POST` zur Verfügung.
+
+**Python-PHP-Variante**
+Mithilfe des folgenden Python-Programms können diese Daten ebenfalls gesendet werden. Dabei wird auch das obige PHP-Programm `senden_post.php*  auf dem Webserver angesprochen.
