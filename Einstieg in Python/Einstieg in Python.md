@@ -458,7 +458,7 @@ Der folgende Programmierkurs mit ausführlichen Erläuterungen führt Sie schrit
 
 Damit Sie die Programmiersprache Python auf unterhaltsame Weise kennenlernen, werden Sie im Folgenden ein Spiel programmieren. Es wird im Verlauf des Buchs kontinuierlich erweitert und verbessert. Zunächst wird der Ablauf des Spiels beschrieben.
 Nach Aufruf des Programms wird dem Benutzer eine Kopfrechenaufgabe gestellt. Er gibt das von ihm ermittelte Ergebnis ein, und das Programm bewertet seine Eingabe.
-
+```
 Die Aufgabe: 9 + 26
 Bitte eine Zahl eingeben: 
 34
@@ -468,6 +468,7 @@ Bitte eine Zahl eingeben:
 35 ist richtig
 Ergebnis: 35
 Anzahl Versuche: 2
+```
 
 Das Spiel wird in mehreren Einzelschritten erstellt. Zunächst entsteht eine ganz einfache Version. Mit zunehmenenden Programmierkenntnissen entwickeln Sie immer komplexere Versionen. Die im jeweiligen Abschnitt erlernten Programmierfähigkeiten setzen Sie unmittelbar zur Verbesserung des Spielablaufs ein.
 
@@ -2807,9 +2808,9 @@ Mithilfe der Funktion `frozenset()` wird ein Frozenset erzeugt. Wie bei einem Se
 
 Die einzelnen Elemente geben Sie mithilfe von `for` und `in` wie gewohnt aus. Der Versuch, ein Frzoenset zu verändern, führt zu einem Fehler.
 
-### 4.7 Wahrheitswerte udn Nichts
+### 4.7 Wahrheitswerte und Nichts
 
-Objete und Ausdrücke können wahr oder falsch sein, außerdem gibt es auch das Nichts-Objekt. Betrachten wir einige Zusammenhänge.
+Objekte und Ausdrücke können wahr oder falsch sein, außerdem gibt es auch das Nichts-Objekt. Betrachten wir einige Zusammenhänge.
 
 #### 4.7.1 Wahrheitswerte True und False
 
